@@ -1,5 +1,5 @@
 const command = require('../command');
-const con_com = require('./con_com');
+const con_com = require('./con-com');
 module.exports = {
     //Parameter: Parameter,
     Client: Client

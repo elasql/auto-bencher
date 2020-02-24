@@ -1,0 +1,34 @@
+{
+  "name": "auto-bencher",
+  "version": "0.1.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "deepcopy": "^2.0.0",
+    "hashmap": "^2.4.0",
+    "java-properties": "^1.0.2",
+    "toml": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
+  },
+  "scripts": {
+    "eslint": "./node_modules/.bin/eslint src/**.js --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elasql/autobench.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elasql/autobench/issues"
+  },
+  "homepage": "https://github.com/elasql/autobench#readme"
+}

@@ -1,8 +1,9 @@
 const fs = require('fs');
-const command = require('../command');
+const command = require('../command')
+const logger = reuqire('../logger');
 
 function execute(config, argv){
-    console.log("Start initializing the environment");
+    logger.info("Start initializing the environment");
     check_local_jdk(config);
     send_jdk_to_all_machine(config);
 }

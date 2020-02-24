@@ -5,7 +5,7 @@ const config = toml.parse(fs.readFileSync('./config.toml', 'utf-8'));
 
 const init_env = require('./subcommand/init_env');
 const load = require('./subcommand/load');
-function autobench(argv){
+function main(argv){
     switch(argv[2]){
         case 'init_env':
             init_env.execute(config, argv);
@@ -19,4 +19,4 @@ function autobench(argv){
             console.log('No this command');
     }
 }
-autobench(process.argv);
+main(process.argv);

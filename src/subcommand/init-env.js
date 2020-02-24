@@ -1,12 +1,11 @@
 const fs = require('fs');
 const command = require('../command');
-module.exports = {
-    execute: function(config, argv){
-        console.log("Starts initializing the environment");
-        check_local_jdk(config);
-        send_jdk_to_all_machine(config);
-    }
-};
+
+function execute(config, argv){
+    console.log("Start initializing the environment");
+    check_local_jdk(config);
+    send_jdk_to_all_machine(config);
+}
 
 function check_local_jdk(config){
     console.log("Checking local jdk: ", config.jdk.package_path);
@@ -52,3 +51,7 @@ function remove_jdk_package(config,ip){
     console.log("Removing " + package_filename + " on " + ip);
     command.ssh(config.system.user_name, ip, 'rm ' + config.system.remote_work_dir + '/' + package_filename);
 }
+
+module.exports = {
+    execute: execute
+};

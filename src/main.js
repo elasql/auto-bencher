@@ -1,19 +1,10 @@
 const process = require('process');
 const fs = require('fs');
 const toml = require('toml');
-const {createLogger, format, transports} = require('winston');
 
+const logger = require('./logger');
 const initEnv = require('./subcommand/init-env');
 const load = require('./subcommand/load');
-
-// create logger
-const logger = createLogger({
-  level: 'info',
-  // TODO: we can add transports.File
-  transports: [
-    new transports.Console(),
-  ]
-});
 
 // load config
 const configPath = '../config.toml';

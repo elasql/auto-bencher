@@ -1,56 +1,70 @@
 const fs = require('fs');
 const command = require('../command')
 const logger = reuqire('../logger');
+const Config = require('../config-loader');
 
-function execute(config, argv){
-    logger.info("Start initializing the environment");
-    check_local_jdk(config);
-    send_jdk_to_all_machine(config);
+const param = {
+    jdkPackagePath: Config.getJdkPackagePath(),
+    jdkPackageFileName: Config.getJdkPackageFileName(),
+    jdkDirName: Config.getJdkDirName(),
+    involvedMachines: Config.getInvolvedMachines(),
+    systemUserName: Config.getSystemUserName(),
+    systemRemoteWorkDir: Config.getSystemRemoteWorkDir(),
 }
 
-function check_local_jdk(config){
-    console.log("Checking local jdk: ", config.jdk.package_path);
-    if(!fs.existsSync(config.jdk.package_path))
-        throw new Error("cannot find the JDK at: " + config.jdk.package_path);
+function execute(argv){
+    logger.info("start initializing the environment");
+    checkLocalJdk();
+    delpoyJdkToAllMachines();
 }
-function send_jdk_to_all_machine(config){
-    machines = Object.values(config.machines)
-    machines = [].concat.apply([], machines);
-    machines.forEach(ip => { 
-        console.log("Checking node " + ip + "...");
-        create_working_dir(config, ip);
-        if(!check_java_runtime(config, ip)){
-            send_jdk(config,ip);
-            unpack_jdk(config,ip);
-            remove_jdk_package(config,ip);
+
+function checkLocalJdk(){
+    logger.info("checking local jdk: ", param.jdkPackagePath);
+    if(!fs.existsSync(param.jdkPackagePath))
+        throw new Error("cannot find the JDK at: " + param.jdkPackagePath);
+}
+
+function delpoyJdkToAllMachines(){
+    param.involvedMachines.forEach(ip => { 
+        logger.info("checking node " + ip + "...");
+        
+        createWorkingDir(ip);
+        if(!checkJavaRuntime(ip)){
+            sendJdk(ip);
+            unpackJdk(ip);
+            removeJdkPackage(ip);
         }
-        const check = 'Node ' + ip + " checked";
-        console.log('\x1b[32m%s\x1b[0m', check);
+
+        const check = 'node ' + ip + " checked";
+        logger.info('\x1b[32m%s\x1b[0m', check);
     });
 }
-function create_working_dir(config, ip){
-    console.log("Creating a working directory on " + ip);
+
+function createWorkingDir(ip){
+    logger.info("creating a working directory on " + ip);
     ["databases", "results"].forEach(dir => { 
-        command.ssh(config.system.user_name, ip, 'mkdir -p ' + config.system.remote_work_dir + '/' + dir);
+        command.ssh(param.systemUserName, ip, 'mkdir -p ' + param.systemRemoteWorkDir + '/' + dir);
     });
 }
-function check_java_runtime(config, ip){
-    console.log("Checking java runtime on " + ip);
-    return command.ssh(config.system.user_name, ip, config.system.remote_work_dir + '/' + config.jdk.dir_name + '/bin/java -version');
+
+function checkJavaRuntime(ip){
+    logger.info("checking java runtime on " + ip);
+    return command.ssh(param.systemUserName, ip, param.systemRemoteWorkDir + '/' + param.jdkDirName + '/bin/java -version');
 }
-function send_jdk(config,ip){
-    console.log("Sending JDK to " + ip);
-    command.scp_to(false, config.system.user_name, ip, config.jdk.package_path, config.system.remote_work_dir);
+
+function sendJdk(ip){
+    logger.info("sending JDK to " + ip);
+    command.scp_to(false, param.systemUserName, ip, param.jdkPackagePath, param.systemRemoteWorkDir);
 }
-function unpack_jdk(config,ip){
-    package_filename = config.jdk.package_path.split("/").pop();
-    console.log("Unpacking " + package_filename + " on " + ip);
-    command.ssh(config.system.user_name, ip, 'tar -C ' + config.system.remote_work_dir + ' -zxf ' + config.system.remote_work_dir + '/' + package_filename);
+
+function unpackJdk(ip){
+    logger.info("unpacking " + param.jdkPackageFileName + " on " + ip);
+    command.ssh(param.systemUserName, ip, 'tar -C ' + param.systemRemoteWorkDir + ' -zxf ' + param.systemRemoteWorkDir + '/' + param.jdkPackageFileName);
 }
-function remove_jdk_package(config,ip){
-    package_filename = config.jdk.package_path.split("/").pop();
-    console.log("Removing " + package_filename + " on " + ip);
-    command.ssh(config.system.user_name, ip, 'rm ' + config.system.remote_work_dir + '/' + package_filename);
+
+function removeJdkPackage(ip){
+    logger.info("removing " + param.jdkPackageFileName + " on " + ip);
+    command.ssh(param.systemUserName, ip, 'rm ' + param.systemRemoteWorkDir + '/' + param.jdkPackageFileName);
 }
 
 module.exports = {

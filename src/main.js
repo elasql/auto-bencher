@@ -1,14 +1,18 @@
-const process = require('process');
 
+const process = require('process');
+const Config = require('../config');
 const logger = require('./logger');
 const initEnv = require('./subcommand/init-env');
 const load = require('./subcommand/load');
 
+const configPath = '../config.toml';
+const config = new Config(configPath);
+const params = config.getParams();
 
 function main (argv) {
   switch (argv[2]) {
   case 'init_env':
-    initEnv.execute(argv);
+    initEnv.execute(params, argv);
     logger.info('the environment has been initialized');
     break;
 

@@ -1,6 +1,10 @@
 const fs = require('fs');
+const execSync = require('child_process').execSync;
 const command = require('../command');
 const logger = require('../logger');
+const ShellCmdGenerator = require('../shell-cmd-generator');
+
+const defaultDirs = ['databases', 'results'];
 
 function execute (params, argv) {
   logger.info('start initializing the environment');
@@ -25,7 +29,7 @@ function delpoyJdkToAllMachines (params) {
     if (!checkJavaRuntime(ip)) {
       sendJdk(ip);
       unpackJdk(ip);
-      removeJdkPackage(ip);
+      removeJdk(ip);
     }
 
     const check = 'node ' + ip + ' checked';
@@ -35,35 +39,62 @@ function delpoyJdkToAllMachines (params) {
 
 function createWorkingDir (params, ip) {
   const { systemUserName, systemRemoteWorkDir } = params;
+  const cmdGen = new ShellCmdGenerator(systemUserName, ip);
+
   logger.info('creating a working directory on ' + ip);
 
-  ['databases', 'results'].forEach(dir => {
-    command.ssh(systemUserName, ip, 'mkdir -p ' + systemRemoteWorkDir + '/' + dir);
+  defaultDirs.forEach(dir => {
+    const remoteCmd = ShellCmdGenerator.getMkdir(
+      systemRemoteWorkDir,
+      dir
+    );
+    execSync(cmdGen.getSshCmd(remoteCmd));
   });
 }
 
 function checkJavaRuntime (params, ip) {
-  const { systemUserName, systemRemoteWorkDir, jdkDirName } = params;
+  const { systemUserName, systemRemoteWorkDir, jdkDir } = params;
+  const cmdGen = new ShellCmdGenerator(systemUserName, ip);
+  const remoteCmd = ShellCmdGenerator.getJavaVersion(systemRemoteWorkDir, jdkDir);
+
   logger.info('checking java runtime on ' + ip);
-  return command.ssh(systemUserName, ip, systemRemoteWorkDir + '/' + jdkDirName + '/bin/java -version');
+
+  try {
+    execSync(cmdGen.getSsh(remoteCmd));
+  } catch (e) {
+    // it is ok to not handle the error
+    return false;
+  }
+  return true;
 }
 
 function sendJdk (params, ip) {
   const { systemUserName, systemRemoteWorkDir, jdkPackagePath } = params;
+  const cmdGen = new ShellCmdGenerator(systemUserName, ip);
+
   logger.info('sending JDK to ' + ip);
-  command.scp_to(false, systemUserName, ip, jdkPackagePath, systemRemoteWorkDir);
+
+  execSync(cmdGen.getScp(false, jdkPackagePath, systemRemoteWorkDir));
 }
 
 function unpackJdk (params, ip) {
-  const { systemUserName, systemRemoteWorkDir, jdkPackageFileName } = params;
-  logger.info('unpacking ' + jdkPackageFileName + ' on ' + ip);
-  command.ssh(systemUserName, ip, 'tar -C ' + systemRemoteWorkDir + ' -zxf ' + systemRemoteWorkDir + '/' + jdkPackageFileName);
+  const { systemUserName, systemRemoteWorkDir, jdkPackageName } = params;
+  const cmdGen = new ShellCmdGenerator(systemUserName, ip);
+  const remoteCmd = ShellCmdGenerator.getTar(systemRemoteWorkDir, jdkPackageName);
+
+  logger.info('unpacking ' + jdkPackageName + ' on ' + ip);
+
+  execSync(cmdGen.getSsh(remoteCmd));
 }
 
-function removeJdkPackage (params, ip) {
-  const { systemUserName, systemRemoteWorkDir, jdkPackageFileName } = params;
-  logger.info('removing ' + jdkPackageFileName + ' on ' + ip);
-  command.ssh(systemUserName, ip, 'rm ' + systemRemoteWorkDir + '/' + jdkPackageFileName);
+function removeJdk (params, ip) {
+  const { systemUserName, systemRemoteWorkDir, jdkPackageName } = params;
+  const cmdGen = new ShellCmdGenerator(systemUserName, ip);
+  const remoteCmd = ShellCmdGenerator.getRm(systemRemoteWorkDir, jdkPackageName);
+
+  logger.info('removing ' + jdkPackageName + ' on ' + ip);
+
+  execSync(cmdGen.getSsh(remoteCmd));
 }
 
 module.exports = {

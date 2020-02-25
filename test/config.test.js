@@ -4,47 +4,54 @@ const Config = require('../src/config');
 
 describe('Config', () => {
   const config = new Config('./config.toml');
-  const params = config.getParams();
+  const {
+    jdkDir,
+    jdkPackageName,
+    jdkPackagePath,
+    involvedMachines,
+    systemUserName,
+    systemRemoteWorkDir
+  } = config.getParams();
 
   describe('params.jdkPackagePath', () => {
     it('should return a string', () => {
-      assert.isString(params.jdkPackagePath);
+      assert.isString(jdkPackagePath);
     });
   });
 
-  describe('params.jdkPackageFileName', () => {
+  describe('params.jdkPackageName', () => {
     it('should return a string', () => {
-      assert.isString(params.jdkPackageFileName);
+      assert.isString(jdkPackageName);
     });
     it('should not have slash in the string', () => {
-      assert.notInclude(params.jdkPackageFileName, '/');
+      assert.notInclude(jdkPackageName, '/');
     });
   });
 
-  describe('params.jdkDirName', () => {
+  describe('params.jdkDir', () => {
     it('should return a string', () => {
-      assert.isString(params.jdkDirName);
+      assert.isString(jdkDir);
     });
   });
 
   describe('params.involvedMachines', () => {
     it('should return an array', () => {
-      assert.isArray(params.involvedMachines);
+      assert.isArray(involvedMachines);
     });
     it('should not be empty', () => {
-      assert.isNotEmpty(params.involvedMachines);
+      assert.isNotEmpty(involvedMachines);
     });
   });
 
   describe('params.systemUserName', () => {
     it('should return a string', () => {
-      assert.isString(params.systemUserName);
+      assert.isString(systemUserName);
     });
   });
 
   describe('params.systemRemoteWorkDir', () => {
     it('should return a string', () => {
-      assert.isString(params.systemRemoteWorkDir);
+      assert.isString(systemRemoteWorkDir);
     });
   });
 });

@@ -22,8 +22,8 @@ class Config {
   getParams () {
     return {
       jdkPackagePath: this._getJdkPackagePath(),
-      jdkPackageFileName: this._getJdkPackageFileName(),
-      jdkDirName: this._getJdkDirName(),
+      jdkPackageName: this._getJdkPackageName(),
+      jdkDir: this._getJdkDir(),
       involvedMachines: this._getInvolvedMachines(),
       systemUserName: this._getSystemUserName(),
       systemRemoteWorkDir: this._getSystemRemoteWorkDir()
@@ -48,14 +48,14 @@ class Config {
   /*
         return a string of jdk package file name
     */
-  _getJdkPackageFileName () {
+  _getJdkPackageName () {
     return this._getJdkPackagePath().split('/').pop();
   }
 
   /*
         return a string of jdk directory name
     */
-  _getJdkDirName () {
+  _getJdkDir () {
     if (!Object.prototype.hasOwnProperty.call(this.config, jdk)) {
       throw new Error(`config has no property ${jdk}`);
     }

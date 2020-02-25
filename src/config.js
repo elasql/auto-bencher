@@ -21,19 +21,19 @@ class Config {
 
   getParams () {
     return {
-      jdkPackagePath: this.getJdkPackagePath(),
-      jdkPackageFileName: this.getJdkPackageFileName(),
-      jdkDirName: this.getJdkDirName(),
-      involvedMachines: this.getInvolvedMachines(),
-      systemUserName: this.getSystemUserName(),
-      systemRemoteWorkDir: this.getSystemRemoteWorkDir()
+      jdkPackagePath: this._getJdkPackagePath(),
+      jdkPackageFileName: this._getJdkPackageFileName(),
+      jdkDirName: this._getJdkDirName(),
+      involvedMachines: this._getInvolvedMachines(),
+      systemUserName: this._getSystemUserName(),
+      systemRemoteWorkDir: this._getSystemRemoteWorkDir()
     };
   }
 
   /*
     return a string of jdk package path
     */
-  getJdkPackagePath () {
+  _getJdkPackagePath () {
     if (!Object.prototype.hasOwnProperty.call(this.config, jdk)) {
       throw new Error(`config has no property ${jdk}`);
     }
@@ -48,14 +48,14 @@ class Config {
   /*
         return a string of jdk package file name
     */
-  getJdkPackageFileName () {
-    return this.getJdkPackagePath().split('/').pop();
+  _getJdkPackageFileName () {
+    return this._getJdkPackagePath().split('/').pop();
   }
 
   /*
         return a string of jdk directory name
     */
-  getJdkDirName () {
+  _getJdkDirName () {
     if (!Object.prototype.hasOwnProperty.call(this.config, jdk)) {
       throw new Error(`config has no property ${jdk}`);
     }
@@ -70,7 +70,7 @@ class Config {
   /*
         return ab array of IP of involved machines
     */
-  getInvolvedMachines () {
+  _getInvolvedMachines () {
     if (!Object.prototype.hasOwnProperty.call(this.config, machines)) {
       throw new Error(`config has no property ${machines}`);
     }
@@ -81,7 +81,7 @@ class Config {
   /*
         return a string of system user name
     */
-  getSystemUserName () {
+  _getSystemUserName () {
     if (!Object.prototype.hasOwnProperty.call(this.config, system)) {
       throw new Error(`config has no property ${system}`);
     }
@@ -96,7 +96,7 @@ class Config {
   /*
         return a string of system remote work directory
     */
-  getSystemRemoteWorkDir () {
+  _getSystemRemoteWorkDir () {
     if (!Object.prototype.hasOwnProperty.call(this.config, system)) {
       throw new Error(`config has no property ${system}`);
     }

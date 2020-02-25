@@ -5,6 +5,7 @@ const logger = require('./logger');
 const initEnv = require('./subcommand/init-env');
 const load = require('./subcommand/load');
 
+// Load parameters from config
 const configPath = '../config.toml';
 const config = new Config(configPath);
 const params = config.getParams();

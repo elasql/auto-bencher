@@ -43,7 +43,7 @@ describe('Config', () => {
   });
 
   describe('params.systemRemoteWorkDir', () => {
-    it('should return a string', ()=>{
+    it('should return a string', () => {
       assert.isString(params.systemRemoteWorkDir);
     });
   });

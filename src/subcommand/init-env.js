@@ -10,12 +10,15 @@ function execute (params, argv) {
 }
 
 function checkLocalJdk (params) {
-  logger.info('checking local jdk: ', params.jdkPackagePath);
-  if (!fs.existsSync(params.jdkPackagePath)) { throw new Error('cannot find the JDK at: ' + params.jdkPackagePath); }
+  const { jdkPackagePath } = params;
+  logger.info('checking local jdk: ', jdkPackagePath);
+  if (!fs.existsSync(jdkPackagePath)) { throw new Error('cannot find the JDK at: ' + jdkPackagePath); }
 }
 
 function delpoyJdkToAllMachines (params) {
-  params.involvedMachines.forEach(ip => {
+  const { involvedMachines } = params;
+
+  involvedMachines.forEach(ip => {
     logger.info('checking node ' + ip + '...');
 
     createWorkingDir(ip);
@@ -31,30 +34,36 @@ function delpoyJdkToAllMachines (params) {
 }
 
 function createWorkingDir (params, ip) {
+  const { systemUserName, systemRemoteWorkDir } = params;
   logger.info('creating a working directory on ' + ip);
+
   ['databases', 'results'].forEach(dir => {
-    command.ssh(params.systemUserName, ip, 'mkdir -p ' + params.systemRemoteWorkDir + '/' + dir);
+    command.ssh(systemUserName, ip, 'mkdir -p ' + systemRemoteWorkDir + '/' + dir);
   });
 }
 
 function checkJavaRuntime (params, ip) {
+  const { systemUserName, systemRemoteWorkDir, jdkDirName } = params;
   logger.info('checking java runtime on ' + ip);
-  return command.ssh(params.systemUserName, ip, params.systemRemoteWorkDir + '/' + params.jdkDirName + '/bin/java -version');
+  return command.ssh(systemUserName, ip, systemRemoteWorkDir + '/' + jdkDirName + '/bin/java -version');
 }
 
 function sendJdk (params, ip) {
+  const { systemUserName, systemRemoteWorkDir, jdkPackagePath } = params;
   logger.info('sending JDK to ' + ip);
-  command.scp_to(false, params.systemUserName, ip, params.jdkPackagePath, params.systemRemoteWorkDir);
+  command.scp_to(false, systemUserName, ip, jdkPackagePath, systemRemoteWorkDir);
 }
 
 function unpackJdk (params, ip) {
-  logger.info('unpacking ' + params.jdkPackageFileName + ' on ' + ip);
-  command.ssh(params.systemUserName, ip, 'tar -C ' + params.systemRemoteWorkDir + ' -zxf ' + params.systemRemoteWorkDir + '/' + params.jdkPackageFileName);
+  const { systemUserName, systemRemoteWorkDir, jdkPackageFileName } = params;
+  logger.info('unpacking ' + jdkPackageFileName + ' on ' + ip);
+  command.ssh(systemUserName, ip, 'tar -C ' + systemRemoteWorkDir + ' -zxf ' + systemRemoteWorkDir + '/' + jdkPackageFileName);
 }
 
 function removeJdkPackage (params, ip) {
-  logger.info('removing ' + params.jdkPackageFileName + ' on ' + ip);
-  command.ssh(params.systemUserName, ip, 'rm ' + params.systemRemoteWorkDir + '/' + params.jdkPackageFileName);
+  const { systemUserName, systemRemoteWorkDir, jdkPackageFileName } = params;
+  logger.info('removing ' + jdkPackageFileName + ' on ' + ip);
+  command.ssh(systemUserName, ip, 'rm ' + systemRemoteWorkDir + '/' + jdkPackageFileName);
 }
 
 module.exports = {

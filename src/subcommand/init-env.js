@@ -41,8 +41,12 @@ async function delpoyJdkToAllMachines (params) {
       deployJdkToMachine(params, ip);
     }
 
-  although it is concurrent code,
-  we need to wait all the jobs until they finish.
+  although it is concurrent code as well,
+  it doesn't wait all the jobs until they finish.
+
+  In other words, if you run the bad code,
+  "the environment has been initialized" will be printed and jobs is still running.
+
   */
 
   // Good code

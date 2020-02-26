@@ -17,7 +17,7 @@ async function execute (params, argv) {
   logger.info('start initializing the environment');
 
   await checkLocalJdk(params);
-  delpoyJdkToAllMachines(params);
+  await delpoyJdkToAllMachines(params);
 }
 
 async function checkLocalJdk (params) {
@@ -31,12 +31,26 @@ async function checkLocalJdk (params) {
   }
 }
 
-function delpoyJdkToAllMachines (params) {
+async function delpoyJdkToAllMachines (params) {
   const { involvedMachines } = params;
 
-  for (const ip of involvedMachines) {
-    deployJdkToMachine(params, ip);
-  }
+  /*
+  Bad Code
+
+    for (const ip of involvedMachines) {
+      deployJdkToMachine(params, ip);
+    }
+
+  although it is concurrent code,
+  we need to wait all the jobs until they finish.
+  */
+
+  // Good code
+  await Promise.all(
+    involvedMachines.map(
+      ip => deployJdkToMachine(params, ip)
+    )
+  );
 }
 
 async function deployJdkToMachine (params, ip) {

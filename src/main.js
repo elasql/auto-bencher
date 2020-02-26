@@ -16,7 +16,6 @@ function main (argv) {
     initEnv.execute(params, argv);
     logger.info('the environment has been initialized');
     break;
-
   case 'load':
     load.execute(config, argv);
     logger.info('data has been loaded');

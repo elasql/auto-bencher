@@ -37,11 +37,11 @@ async function delpoyJdkToAllMachines (params) {
   for (const ip of involvedMachines) {
     logger.info('checking node ' + ip + '...');
 
-    await createWorkingDir(ip);
-    if (!await checkJavaRuntime(ip)) {
-      await sendJdk(ip);
-      await unpackJdk(ip);
-      await removeJdk(ip);
+    await createWorkingDir(params, ip);
+    if (!await checkJavaRuntime(params, ip)) {
+      await sendJdk(params, ip);
+      await unpackJdk(params, ip);
+      await removeJdk(params, ip);
     }
 
     const check = 'node ' + ip + ' checked';

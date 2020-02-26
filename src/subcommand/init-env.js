@@ -34,7 +34,7 @@ async function checkLocalJdk (params) {
 async function delpoyJdkToAllMachines (params) {
   const { involvedMachines } = params;
 
-  await involvedMachines.forEach(async ip => {
+  for (const ip of involvedMachines) {
     logger.info('checking node ' + ip + '...');
 
     await createWorkingDir(ip);
@@ -46,7 +46,7 @@ async function delpoyJdkToAllMachines (params) {
 
     const check = 'node ' + ip + ' checked';
     logger.info(check.green);
-  });
+  }
 }
 
 async function createWorkingDir (params, ip) {
@@ -55,13 +55,13 @@ async function createWorkingDir (params, ip) {
 
   logger.info('creating a working directory on ' + ip);
 
-  await defaultDirs.forEach(async dir => {
+  for (const dir of defaultDirs) {
     const remoteCmd = ShellCmdGenerator.getMkdir(
       systemRemoteWorkDir,
       dir
     );
     await exec(cmdGen.getSshCmd(remoteCmd));
-  });
+  }
 }
 
 async function checkJavaRuntime (params, ip) {

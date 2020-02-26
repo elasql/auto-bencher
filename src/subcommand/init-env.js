@@ -60,7 +60,7 @@ async function createWorkingDir (params, ip) {
       systemRemoteWorkDir,
       dir
     );
-    await exec(cmdGen.getSshCmd(remoteCmd));
+    await exec(cmdGen.getSsh(remoteCmd));
   }
 }
 

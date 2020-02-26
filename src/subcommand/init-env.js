@@ -17,7 +17,7 @@ async function execute (params, argv) {
   logger.info('start initializing the environment');
 
   await checkLocalJdk(params);
-  await delpoyJdkToAllMachines(params);
+  delpoyJdkToAllMachines(params);
 }
 
 async function checkLocalJdk (params) {
@@ -31,22 +31,26 @@ async function checkLocalJdk (params) {
   }
 }
 
-async function delpoyJdkToAllMachines (params) {
+function delpoyJdkToAllMachines (params) {
   const { involvedMachines } = params;
 
   for (const ip of involvedMachines) {
-    logger.info('checking node ' + ip + '...');
-
-    await createWorkingDir(params, ip);
-    if (!await checkJavaRuntime(params, ip)) {
-      await sendJdk(params, ip);
-      await unpackJdk(params, ip);
-      await removeJdk(params, ip);
-    }
-
-    const check = 'node ' + ip + ' checked';
-    logger.info(check.green);
+    deployJdkToMachine(params, ip);
   }
+}
+
+async function deployJdkToMachine (params, ip) {
+  logger.info('checking node ' + ip + '...');
+
+  await createWorkingDir(params, ip);
+  if (!await checkJavaRuntime(params, ip)) {
+    await sendJdk(params, ip);
+    await unpackJdk(params, ip);
+    await removeJdk(params, ip);
+  }
+
+  const check = 'node ' + ip + ' checked';
+  logger.info(check.green);
 }
 
 async function createWorkingDir (params, ip) {

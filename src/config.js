@@ -1,6 +1,4 @@
-const fs = require('fs');
-const toml = require('toml');
-
+const { loadToml } = require('../utils');
 // string constant
 const jdk = 'jdk';
 const system = 'system';
@@ -12,11 +10,7 @@ const remoteWorkDir = 'remote_work_dir';
 
 class Config {
   constructor (configPath) {
-    this.config = Config.loadConfig(configPath);
-  }
-
-  static loadConfig (configPath) {
-    return toml.parse(fs.readFileSync(configPath, 'utf-8'));
+    this.config = loadToml(configPath);
   }
 
   getParams () {

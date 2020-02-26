@@ -2,7 +2,9 @@
 NOTICE!!
 
 Naming convention:
-1. path should contain directory name and file name
+path should contain directory name and file name
+
+path = dir / fileName
 
 */
 

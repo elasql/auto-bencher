@@ -1,6 +1,6 @@
-
+require('colors');
 const process = require('process');
-const Config = require('../config');
+const Config = require('./config');
 const logger = require('./logger');
 const initEnv = require('./subcommand/init-env');
 const load = require('./subcommand/load');
@@ -10,14 +10,18 @@ const configPath = '../config.toml';
 const config = new Config(configPath);
 const params = config.getParams();
 
-function main (argv) {
+async function main (argv) {
   switch (argv[2]) {
   case 'init_env':
-    initEnv.execute(params, argv);
-    logger.info('the environment has been initialized');
+    try {
+      await initEnv.execute(params, argv);
+      logger.info('the environment has been initialized'.green);
+    } catch (err) {
+      logger.error(err.message.red);
+    }
     break;
   case 'load':
-    load.execute(config, argv);
+    await load.execute(config, argv);
     logger.info('data has been loaded');
     break;
 

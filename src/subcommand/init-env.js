@@ -1,7 +1,4 @@
 /*
-  NOTICE!!!
-  please be careful of error handling abuse
-  DON'T try catch anything unless necessary
   for the maintainability, leave comments beside the try catch blocks
 */
 const fs = require('fs');
@@ -26,7 +23,7 @@ async function execute (params, argv) {
 async function checkLocalJdk (params) {
   const { jdkPackagePath } = params;
 
-  logger.info('checking local jdk: ', jdkPackagePath);
+  logger.info('checking local jdk: ' + jdkPackagePath);
 
   // fs.exists (async version) is deprecated
   if (!fs.existsSync(jdkPackagePath)) {
@@ -48,7 +45,7 @@ async function delpoyJdkToAllMachines (params) {
     }
 
     const check = 'node ' + ip + ' checked';
-    logger.info('\x1b[32m%s\x1b[0m', check);
+    logger.info(check.green);
   });
 }
 

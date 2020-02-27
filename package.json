@@ -4,22 +4,26 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "colors": "^1.4.0",
     "deepcopy": "^2.0.0",
     "hashmap": "^2.4.0",
     "java-properties": "^1.0.2",
-    "toml": "^3.0.0"
+    "toml": "^3.0.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-standard": "^4.0.1",
+    "mocha": "^7.0.1"
   },
   "scripts": {
     "eslint": "./node_modules/.bin/eslint src/**.js --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha"
   },
   "repository": {
     "type": "git",

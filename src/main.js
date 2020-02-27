@@ -1,22 +1,34 @@
+require('colors');
 const process = require('process');
-const fs = require('fs');
-const toml = require('toml');
-const config = toml.parse(fs.readFileSync('./config.toml', 'utf-8'));
-
-const init_env = require('./subcommand/init_env');
+const Config = require('./config');
+const logger = require('./logger');
+const initEnv = require('./subcommand/init-env');
 const load = require('./subcommand/load');
-function main(argv){
-    switch(argv[2]){
-        case 'init_env':
-            init_env.execute(config, argv);
-            console.log('initial environment done!!');
-            break;
-        case 'load':
-            load.execute(config, argv);
-            console.log('load done!!');
-            break;
-        default:
-            console.log('No this command');
+
+// Load parameters from config
+const configPath = '../config.toml';
+const config = new Config(configPath);
+const params = config.getParams();
+
+async function main (argv) {
+  switch (argv[2]) {
+  case 'init_env':
+    try {
+      await initEnv.execute(params, argv);
+      logger.info('the environment has been initialized'.green);
+    } catch (err) {
+      logger.error(err.message.red);
     }
+    break;
+  case 'load':
+    await load.execute(config, argv);
+    logger.info('data has been loaded');
+    break;
+
+  default:
+    logger.info('command is not found');
+    break;
+  }
 }
+
 main(process.argv);

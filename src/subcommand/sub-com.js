@@ -1,7 +1,7 @@
-const con_com = require('../connections/con_com');
+const con_com = require('../connections/con-com');
 const preparation = require('../preparation');
 const command = require('../command');
-const exe_com = require('../execute/exe_com')
+const exe_com = require('../execute/exe-com')
 module.exports = {
     run: function(config, parameter, db_name, action, report_dir){
         // console.log(config, parameter, db_name, action, report_dir);

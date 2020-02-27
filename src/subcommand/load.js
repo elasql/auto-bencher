@@ -1,6 +1,6 @@
 const parameter = require('../parameters');
-const sub_com = require('./sub_com');
-const con_com = require('../connections/con_com');
+const sub_com = require('./sub-com');
+const con_com = require('../connections/con-com');
 
 module.exports = {
     execute: function(config, argv){

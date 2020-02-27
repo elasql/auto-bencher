@@ -1,5 +1,5 @@
 const server = require('../connections/server');
-const con_com = require('../connections/con_com');
+const con_com = require('../connections/con-com');
 module.exports = {
     async_server_exec: async_server_exec
 }

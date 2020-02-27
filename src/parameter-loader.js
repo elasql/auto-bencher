@@ -9,7 +9,7 @@ class ParameterLoader {
     return 2D array = [ [combination1], [combination2]... ]
     */
   getParams () {
-    const params = this._flattenTomlToArr();
+    const tables = this._flattenTomlToTables();
 
     return params;
   }
@@ -34,20 +34,22 @@ array = [
 ]
 
   */
-  _flattenTomlToArr () {
+  _flattenTomlToTables () {
     // toml file consists of multiple tables!
     // a table consists of mutiple key-value pairs
 
-    const params = [];
+    const tables = [];
     for (const table in this.toml) {
       const pairs = [];
       for (const key in table) {
         pairs.push([key, table]);
       }
-      params.push([table, pairs]);
+      tables.push([table, pairs]);
     }
-    return params;
+    return tables;
   }
+
+  _flattenTablesToLines
 
   _parseCombination () {
 

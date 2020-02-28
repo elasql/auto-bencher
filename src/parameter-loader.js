@@ -44,7 +44,12 @@ array = [
     const tables = [];
     for (const table in this.toml) {
       const pairs = [];
+
       for (const key in this.toml[table]) {
+        if (typeof (this.toml[table[key]]) !== 'string') {
+          throw Error('value should be string, use white space to seperate values');
+        }
+
         pairs.push({
           key,
           value: this.toml[table][key]

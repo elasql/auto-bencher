@@ -1,4 +1,4 @@
-const { loadToml } = require('../utils');
+const { loadToml } = require('./utils');
 // string constant
 const jdk = 'jdk';
 const system = 'system';

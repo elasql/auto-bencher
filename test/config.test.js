@@ -3,7 +3,7 @@ const assert = require('chai').assert;
 const Config = require('../src/config');
 
 describe('Config', () => {
-  const config = new Config('./config.toml');
+  const config = new Config('./test/test-toml/config.test.toml');
   const {
     jdkDir,
     jdkPackageName,

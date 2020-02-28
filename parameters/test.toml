@@ -1,7 +1,7 @@
 [auto_bencher]
 jar_dir = "test"
-server_count = "3" # without the sequencer
-server_client_ratio = "1.0" # client / server
+server_count = "3 4 5 6 7" # without the sequencer
+server_client_ratio = "1.0 2.0" # client / server
 max_server_per_machine = "1"
 max_client_per_machine = "2"
 

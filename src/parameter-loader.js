@@ -9,54 +9,77 @@ class ParameterLoader {
     return 2D array = [ [combination1], [combination2]... ]
     */
   getParams () {
-    const tables = this._flattenTomlToTables();
-
-    return params;
+    const tables = this._parseTables();
+    const newArr = [];
+    const results = [];
+    this._findAllCombination(tables, 0, 0, newArr, results);
+    return results;
   }
 
   /*
   return an array
 
+    toml file consists of multiple tables!
+    a table consists of mutiple key-value pairs
+    each key-value pair may have several values
+
   example:
 ---------------------------------
     [table1]
-    "t1.key1" = "t1.value1"
-    "t1.key2" = "t1.value2"
+    "t1.key1" = "a b"
+    "t1.key2" = "c d"
 
     [table2]
-    "t2.key1" = "t2.value1"
-    "t2.key2" = "t2.value2"
+    "t2.key1" = "e f"
+    "t2.key2" = "g h"
 ---------------------------------
 
 array = [
-  [table1, [["t1.key1", "t1.value1"], ["t2.key2", "t2.value2"]]],
-  [table2, [["t2.key1", "t2.value1"], ["t2.key2", "t2.value2"]]],
+  [table1, [["t1.key1", "a b"], ["t1.key2", "c d"]]],
+  [table2, [["t2.key1", "e f"], ["t2.key2", "g h"]]],
 ]
 
   */
-  _flattenTomlToTables () {
-    // toml file consists of multiple tables!
-    // a table consists of mutiple key-value pairs
-
+  _parseTables () {
     const tables = [];
     for (const table in this.toml) {
       const pairs = [];
-      for (const key in table) {
-        pairs.push([key, table]);
+      for (const key in this.toml[table]) {
+        pairs.push({
+          key,
+          value: this.toml[table][key]
+        });
       }
-      tables.push([table, pairs]);
+      tables.push({
+        table,
+        pairs
+      });
     }
     return tables;
   }
 
-  _flattenTablesToLines
-
-  _parseCombination () {
-
-  }
-
-  _recursivelyCombine (tableIdx, lineIdx, current) {
-
+  _findAllCombination (tables, tableIdx, pairIdx, current, results) {
+    if (tableIdx < tables.length) {
+      const { table, pairs } = tables[tableIdx];
+      if (pairIdx < pairs.length) {
+        const { key, value } = pairs[pairIdx];
+        for (const subValue of value.split(' ')) {
+          // ... is spread operator, and it will help us to create new array
+          const newArr = [...current];
+          newArr.push({
+            table,
+            key,
+            value: subValue
+          });
+          this._findAllCombination(tables, tableIdx, pairIdx + 1, newArr, results);
+        }
+      } else {
+        this._findAllCombination(tables, tableIdx + 1, 0, current, results);
+      }
+    } else {
+      results.push(current);
+    }
+    return results;
   }
 }
 

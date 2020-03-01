@@ -1,8 +1,11 @@
 const command = require('../command');
-module.exports = {
-    //Parameter: Parameter,
-    Server: Server
-};
+
+class Server{
+
+}
+
+module.exports = Server;
+
 function Server(config, connection_info, db_name, vm_args, is_sequencer){
     if(is_sequencer){
         proc_name = 'sequencer';

@@ -1,8 +1,36 @@
-const INIT_PORT = 35000;
+
 const Action = {
-    loading : 1,
-    Benchmarking : 2
+  loading: 1,
+  benchmarking: 2
 };
+class Connection {
+  constructor (initPort) {
+    this.initPort = initPort;
+  }
+
+  getInfo (id, ip, port) {
+    return {
+      id,
+      ip,
+      port
+    };
+  }
+
+  getConnList (ips, totalConn, maxConnPerIp, INIT_PORT) {
+    const conns = [];
+    let id = 0;
+    let connPerIp = 1;
+
+    // TODO: here
+
+    // slice will return a new array(shallow copy)
+    ips.slice(0, totalConn).map(ip => {
+      const port = this.initPort + connPerIp - 1;
+      conns.push(getInfo(id, ip, port));
+    });
+  }
+}
+
 module.exports = {
     Action: Action,
     ConnectionInfo: ConnectionInfo,

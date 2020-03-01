@@ -1,4 +1,3 @@
-const { loadToml } = require('./utils');
 // string constant
 const jdk = 'jdk';
 const system = 'system';
@@ -9,8 +8,8 @@ const packagePath = 'package_path';
 const remoteWorkDir = 'remote_work_dir';
 
 class Config {
-  constructor (configPath) {
-    this.config = loadToml(configPath);
+  constructor (tomlObject) {
+    this.config = tomlObject;
   }
 
   getParams () {

@@ -1,24 +1,19 @@
-const { loadToml } = require('./utils');
-
 class ParameterLoader {
-  constructor (filePath) {
-    this.toml = loadToml(filePath);
+  /*
+  return 2D array
+  */
+  loadNormalLoad (tomlObject) {
+    const tables = this._parseTables(tomlObject);
+    const params = this._findAllCombination(tables, 0, 0, [], []);
+
+    if (params.length > 1) {
+      throw new Error('Combination in normal-load.toml is forbidden');
+    }
+
+    return params;
   }
 
   /*
-    return 2D array = [ [combination1], [combination2]... ]
-    */
-  getParams () {
-    const tables = this._parseTables();
-    const newArr = [];
-    const results = [];
-    this._findAllCombination(tables, 0, 0, newArr, results);
-    return results;
-  }
-
-  /*
-  return an array
-
     toml file consists of multiple tables!
     a table consists of mutiple key-value pairs
     each key-value pair may have several values
@@ -34,52 +29,64 @@ class ParameterLoader {
     "t2.key2" = "g h"
 ---------------------------------
 
+return an array like the below example
+
 array = [
   [table1, [["t1.key1", "a b"], ["t1.key2", "c d"]]],
   [table2, [["t2.key1", "e f"], ["t2.key2", "g h"]]],
 ]
 
   */
-  _parseTables () {
+  _parseTables (tomlObject) {
     const tables = [];
-    for (const table in this.toml) {
-      const pairs = [];
 
-      for (const key in this.toml[table]) {
-        if (typeof (this.toml[table][key]) !== 'string') {
-          throw Error('value should be string, use white space to seperate values');
-        }
-
-        pairs.push({
-          key,
-          value: this.toml[table][key]
-        });
-      }
+    for (const table in tomlObject) {
+      const pairs = this._parsePairs(tomlObject[table]);
       tables.push({
         table,
         pairs
       });
     }
+
     return tables;
   }
 
-  // TODO: USE functinonal programming to rewrite this function
-  // It is too hard to read
+  _parsePairs (table) {
+    const pairs = [];
+
+    for (const key in table) {
+      pairs.push({
+        key,
+        value: table[key]
+      });
+    }
+
+    return pairs;
+  }
+
+  // TODO: refurbish this function, because it is too fat
   _findAllCombination (tables, tableIdx, pairIdx, current, results) {
     if (tableIdx < tables.length) {
       const { table, pairs } = tables[tableIdx];
+
       if (pairIdx < pairs.length) {
         const { key, value } = pairs[pairIdx];
-        for (const subValue of value.split(' ')) {
-          // ... is spread operator, and it will help us to create new array
+
+        if (typeof (value) !== 'string') {
+          throw Error('value should be string type, use white space to seperate values');
+        }
+
+        value.split(' ').map(subValue => {
           const newArr = [...current];
+
           newArr.push({
             table,
             key,
             value: subValue
           });
+
           this._findAllCombination(tables, tableIdx, pairIdx + 1, newArr, results);
-        }
+        });
       } else {
         this._findAllCombination(tables, tableIdx + 1, 0, current, results);
       }

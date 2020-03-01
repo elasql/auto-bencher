@@ -1,9 +1,11 @@
 const assert = require('chai').assert;
 
+const { loadToml } = require('../src/utils');
 const Config = require('../src/config');
 
 describe('Config', () => {
-  const config = new Config('./test/test-toml/config.test.toml');
+  const tomlObject = loadToml('./test/test-toml/config.test.toml');
+  const config = new Config(tomlObject);
   const {
     jdkDir,
     jdkPackageName,

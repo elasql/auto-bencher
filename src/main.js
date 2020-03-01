@@ -17,6 +17,7 @@ async function main (argv) {
       await initEnv.execute(params, argv);
       logger.info('the environment has been initialized'.green);
     } catch (err) {
+      // this try catch block is used to color the error message only
       logger.error(err.message.red);
     }
     break;

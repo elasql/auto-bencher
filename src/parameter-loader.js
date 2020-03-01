@@ -46,7 +46,7 @@ array = [
       const pairs = [];
 
       for (const key in this.toml[table]) {
-        if (typeof (this.toml[table[key]]) !== 'string') {
+        if (typeof (this.toml[table][key]) !== 'string') {
           throw Error('value should be string, use white space to seperate values');
         }
 
@@ -63,6 +63,8 @@ array = [
     return tables;
   }
 
+  // TODO: USE functinonal programming to rewrite this function
+  // It is too hard to read
   _findAllCombination (tables, tableIdx, pairIdx, current, results) {
     if (tableIdx < tables.length) {
       const { table, pairs } = tables[tableIdx];

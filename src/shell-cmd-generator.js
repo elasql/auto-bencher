@@ -40,9 +40,7 @@ class ShellCmdGenerator {
 
   getScp (isDir, localPath, remotePath) {
     let cmd = 'scp ';
-    if (isDir) {
-      cmd += '-r ';
-    }
+    cmd = isDir ? cmd + '-r ' : cmd;
     return cmd + localPath + ' ' + this._getRemoteDest(remotePath);
   }
 
@@ -53,9 +51,7 @@ class ShellCmdGenerator {
 
   getCp (isDir, src, dest) {
     let cmd = 'cp ';
-    if (isDir) {
-      cmd += '-r ';
-    }
+    cmd = isDir ? cmd + '-r ' : cmd;
     return cmd + src + ' ' + dest;
   }
 }

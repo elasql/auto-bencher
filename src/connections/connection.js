@@ -3,12 +3,16 @@ const Action = {
   loading: 1,
   benchmarking: 2
 };
+
+const INIT_PORT = 30000;
+
 class Connection {
-  constructor (initPort) {
+  // use default port number if user doesn't provide it
+  constructor (initPort = INIT_PORT) {
     this.initPort = initPort;
   }
 
-  getInfo (id, ip, port) {
+  static getInfo (id, ip, port) {
     return {
       id,
       ip,
@@ -16,21 +20,35 @@ class Connection {
     };
   }
 
-  getConnList (ips, totalConn, maxConnPerIp, INIT_PORT) {
-    const conns = [];
-    let id = 0;
-    let connPerIp = 1;
+  getConnList (ips, totalConn, maxConnPerNode) {
+    const nodeNum = ips.length;
+    const connPerNode = Math.ceil(totalConn / nodeNum);
+    if (connPerNode > maxConnPerNode) {
+      throw Error('The number of machines is not enough');
+    }
 
-    // TODO: here
+    let id = 0;
+    const conns = [];
 
     // slice will return a new array(shallow copy)
-    ips.slice(0, totalConn).map(ip => {
-      const port = this.initPort + connPerIp - 1;
-      conns.push(getInfo(id, ip, port));
+    [...Array(connPerNode).keys()].map(currentConnPerNode => {
+      ips.map(ip => {
+        if (id >= totalConn) {
+          return;
+        }
+        const port = this.initPort + currentConnPerNode - 1;
+        conns.push(Connection.getInfo(id, ip, port));
+        id += 1;
+      });
     });
+
+    return conns;
   }
 }
 
+module.exports = Connection;
+
+/*
 module.exports = {
     Action: Action,
     ConnectionInfo: ConnectionInfo,
@@ -72,3 +90,4 @@ function generate_connection_list(ip_list, conn_count, max_conn_per_ip, prop){
 }
 
 
+*/

@@ -23,7 +23,7 @@
   },
   "scripts": {
     "eslint": "./node_modules/.bin/eslint src/**.js --fix",
-    "test": "./node_modules/.bin/mocha"
+    "test": "./node_modules/.bin/mocha test/**/**.js"
   },
   "repository": {
     "type": "git",

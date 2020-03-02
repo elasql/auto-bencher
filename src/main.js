@@ -2,8 +2,8 @@ require('colors');
 const process = require('process');
 const Config = require('./config');
 const logger = require('./logger');
-const initEnv = require('./subcommand/init-env');
-const load = require('./subcommand/load');
+const initEnv = require('./command/init-env');
+const load = require('./command/load');
 
 // Load parameters from config
 const configPath = '../config.toml';

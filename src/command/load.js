@@ -3,22 +3,22 @@ const sub_com = require('./sub-com');
 const con_com = require('../connections/con-com');
 
 module.exports = {
-    execute: function(config, argv){
-        db_name = argv[3];
-        param_file = argv[4];
-        console.log('Preparing for loading testbed into ' + db_name);
-        console.log('Using parameter file ' + param_file)
-        
-        // Prepare the parameter file
-        param_list = new parameter.ParameterList(param_file);
-        param_list = param_list.toVec();
+  execute: function (config, argv) {
+    db_name = argv[3];
+    param_file = argv[4];
+    console.log('Preparing for loading testbed into ' + db_name);
+    console.log('Using parameter file ' + param_file);
 
-        if(param_list.length > 1){
-            throw new Error("The parameter file contains more than one combination");
-        }
+    // Prepare the parameter file
+    param_list = new parameter.ParameterList(param_file);
+    param_list = param_list.toVec();
 
-        sub_com.run(config, param_list[0], db_name, con_com.Action.loading, null);
-
-        console.log('Loading testbed finished.')
+    if (param_list.length > 1) {
+      throw new Error('The parameter file contains more than one combination');
     }
+
+    sub_com.run(config, param_list[0], db_name, con_com.Action.loading, null);
+
+    console.log('Loading testbed finished.');
+  }
 };

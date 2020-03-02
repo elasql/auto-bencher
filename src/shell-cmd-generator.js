@@ -7,6 +7,7 @@ path should contain directory name and file name
 path = dir / fileName
 
 */
+const BIN_JAVA = '/bin/java';
 
 class ShellCmdGenerator {
   constructor (userName, ip) {
@@ -27,7 +28,7 @@ class ShellCmdGenerator {
   }
 
   static getJavaVersion (workDir, jdkDir) {
-    return workDir + '/' + jdkDir + '/bin/java -version';
+    return workDir + '/' + jdkDir + BIN_JAVA + ' -version';
   }
 
   static getTar (workDir, target) {
@@ -41,6 +42,17 @@ class ShellCmdGenerator {
     return cmd;
   }
 
+  static getCp (isDir, src, dest) {
+    let cmd = 'cp ';
+    cmd = isDir ? cmd + '-r ' : cmd;
+    return cmd + src + ' ' + dest;
+  }
+
+  static getRunJar (workDir, jdkDir, vmArgs, jarPath, progArgs, logPath) {
+    const binJava = workDir + '/' + jdkDir + BIN_JAVA;
+    return `${binJava} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
+  }
+
   getScp (isDir, localPath, remotePath) {
     let cmd = 'scp ';
     cmd = isDir ? cmd + '-r ' : cmd;
@@ -50,12 +62,6 @@ class ShellCmdGenerator {
   getSsh (remoteCmd) {
     const cmd = 'ssh ';
     return cmd + this._getHost() + ' ' + remoteCmd;
-  }
-
-  getCp (isDir, src, dest) {
-    let cmd = 'cp ';
-    cmd = isDir ? cmd + '-r ' : cmd;
-    return cmd + src + ' ' + dest;
   }
 }
 

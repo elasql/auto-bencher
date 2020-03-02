@@ -1,29 +1,89 @@
 const command = require('../command');
 const logger = require('../logger');
 const ShellCmdGenerator = require('../shell-cmd-generator');
+const { exec } = require('../child-process');
+
+const DATABASES = 'databases';
 
 class Server{
-    constructor(params, conns, dbName, vmArgs) {
+    constructor(systemUserName, systemRemoteWorkDir, conns, dbName, vmArgs, isSequencer) {
         this.params = params,
         this.conn = conn
         this.dbName = `${dbName}-${conn.id}`;
+        this.dbNameBackup = this.dbName + '-backup';
         this.procName = `server ${conn.id}`;
+        this.isSequencer = isSequencer;
 
-        const { systemUserName } = params;
-        this.scg = new ShellCmdGenerator(systemUserName, conns.ip);
+        // TODO: remove it
+        // const {
+        //     systemUserName,
+        //     systemRemoteWorkDir,
+        // } = params;
+
+        // move the below code to config
+        this.cmdGen = new ShellCmdGenerator(systemUserName, conns.ip);
+        this.dbDir = systemRemoteWorkDir + '/' + DATABASES;
+        this.jarPath = systemRemoteWorkDir + '/benchmarker/server.jar';
+        const progArgs = this.isSequencer ? `${this.dbName} ${this.conn.id} 1` : `${this.dbName} ${this.conn.id}`;
     }
 
-    sendBenchDir() {
-        logger.debug(`sending benchmarker to {}...`, this.procName);
+    async sendBenchDir() {
+        logger.info(`sending benchmarker to ${this.procName}...`);
+        const { systemRemoteWorkDir } = this.params;
+        const cmd = this.cmdGen.getScp(true, 'benchmarker', systemRemoteWorkDir);
+        await exec(cmd);
+    }
 
-        scg = new ShellCmdGenerator(this.)
+    async deleteDbDir() {
+        const cmd = ShellCmdGenerator.getRm(true, this.dbDir, this.dbName);
+        try {
+            await exec(this.cmdGen.getSsh(cmd));
+        } catch(err){
+            // catch the error if there is no previous database
+            logger.info(err);
+        }
+    }
+
+    async deleteBackupDbDir() {
+        const cmd = ShellCmdGenerator.getRm(true, this.dbDir, this.dbNameBackup);
+        try {
+            await exec(this.cmdGen.getSsh(cmd));
+        } catch(err){
+            // catch the error if there is no previous backup database
+            logger.info(err);
+        }
+    }
+
+    async backupDb() {
+        // sequencer does not have database
+        if (this.isSequencer) {
+            return;
+        }
+
+        logger.info(`backing up the db of ${this.procName}`);
+        const cmd = ShellCmdGenerator.getCp(true, this.dbDir, this.dbNameBackup);
+        await exec(this.cmdGen.getSsh(cmd));
+    }
+
+    async resetDbDir() {
+        // the only thing that sequencer has to do is to delete its own db directory
+        if (this.isSequencer) {
+            this.deleteDbDir()
+        }
+
+        logger.info(`resetting the db of ${this.procName}`);
+        const cmd = ShellCmdGenerator.getCp(true, this.dbDir, this.dbNameBackup);
+        await exec(this.cmdGen.getSsh(cmd));
+    }
+
+    start(){
+        // [dbName] [connection.id] ([isSequencer])
+        
+        const cmd = ShellCmdGenerator.getRunJar(
+            this.systemRemoteWorkDir, this.j)
     }
 }
 
-// TODO:Sequencer
-class Sequencer extends Server{
-
-}
 
 module.exports = Server;
 

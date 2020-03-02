@@ -7,8 +7,10 @@ describe('ShellCmdGenerator', () => {
   const ip = '140.114.87.87';
   const cmdGen = new ShellCmdGenerator(userName, ip);
 
-  const workDir = 'wordDir';
+  const workDir = 'workDir';
+  const jdkDir = 'jdkDir';
   const jdkPackageName = 'jdkPackageName';
+  const binJava = '/bin/java';
 
   describe('getScp', () => {
     const localPath = 'localPath';
@@ -38,11 +40,9 @@ describe('ShellCmdGenerator', () => {
   });
 
   describe('getJavaVersion', () => {
-    const jdkDir = 'jdkDir';
-
     it('should return a correct command', () => {
       const cmd = ShellCmdGenerator.getJavaVersion(workDir, jdkDir);
-      const expected = `${workDir}/${jdkDir}/bin/java -version`;
+      const expected = `${workDir}/${jdkDir}${binJava} -version`;
       assert.equal(cmd, expected);
     });
   });
@@ -76,18 +76,32 @@ describe('ShellCmdGenerator', () => {
     });
   });
 
+  describe('getRunJar', () => {
+    const vmArgs = '-vmarg1 -vmarg2';
+    const jarPath = 'jarPath';
+    const progArgs = '-progArg1 -progArg2';
+    const logPath = 'logPath';
+
+    it('should return a correct command', () => {
+      const cmd = ShellCmdGenerator.getRunJar(
+        workDir, jdkDir, vmArgs, jarPath, progArgs, logPath);
+      const expected = `${workDir}/${jdkDir}${binJava} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
+      assert.equal(cmd, expected);
+    });
+  });
+
   describe('getCp', () => {
     const src = 'src';
     const dest = 'dest';
 
     it('should return a correct command without -r', () => {
-      const cmd = cmdGen.getCp(false, src, dest);
+      const cmd = ShellCmdGenerator.getCp(false, src, dest);
       const expected = `cp ${src} ${dest}`;
       assert.equal(cmd, expected);
     });
 
     it('should return a correct command with -r', () => {
-      const cmd = cmdGen.getCp(true, src, dest);
+      const cmd = ShellCmdGenerator.getCp(true, src, dest);
       const expected = `cp -r ${src} ${dest}`;
       assert.equal(cmd, expected);
     });

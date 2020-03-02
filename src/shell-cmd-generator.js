@@ -34,8 +34,11 @@ class ShellCmdGenerator {
     return 'tar -C ' + workDir + ' -zxf ' + workDir + '/' + target;
   }
 
-  static getRm (workDir, target) {
-    return 'rm ' + workDir + '/' + target;
+  static getRm (isDir, workDir, target) {
+    let cmd = 'rm ';
+    cmd = isDir ? cmd + '-rf ' : cmd;
+    cmd += workDir + '/' + target;
+    return cmd;
   }
 
   getScp (isDir, localPath, remotePath) {

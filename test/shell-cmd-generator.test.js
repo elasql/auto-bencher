@@ -56,9 +56,14 @@ describe('ShellCmdGenerator', () => {
   });
 
   describe('getRm', () => {
-    it('should return a correct command', () => {
-      const cmd = ShellCmdGenerator.getRm(workDir, jdkPackageName);
+    it('should return a correct command without -r', () => {
+      const cmd = ShellCmdGenerator.getRm(false, workDir, jdkPackageName);
       const expected = `rm ${workDir}/${jdkPackageName}`;
+      assert.equal(cmd, expected);
+    });
+    it('should return a correct command with -r', () => {
+      const cmd = ShellCmdGenerator.getRm(true, workDir, jdkPackageName);
+      const expected = `rm -rf ${workDir}/${jdkPackageName}`;
       assert.equal(cmd, expected);
     });
   });

@@ -121,7 +121,7 @@ async function unpackJdk (params, ip) {
 async function removeJdk (params, ip) {
   const { systemUserName, systemRemoteWorkDir, jdkPackageName } = params;
   const cmdGen = new ShellCmdGenerator(systemUserName, ip);
-  const remoteCmd = ShellCmdGenerator.getRm(systemRemoteWorkDir, jdkPackageName);
+  const remoteCmd = ShellCmdGenerator.getRm(false, systemRemoteWorkDir, jdkPackageName);
 
   logger.info('removing ' + jdkPackageName + ' on ' + ip);
 

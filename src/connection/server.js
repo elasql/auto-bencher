@@ -1,6 +1,27 @@
 const command = require('../command');
+const logger = require('../logger');
+const ShellCmdGenerator = require('../shell-cmd-generator');
 
 class Server{
+    constructor(params, conns, dbName, vmArgs) {
+        this.params = params,
+        this.conn = conn
+        this.dbName = `${dbName}-${conn.id}`;
+        this.procName = `server ${conn.id}`;
+
+        const { systemUserName } = params;
+        this.scg = new ShellCmdGenerator(systemUserName, conns.ip);
+    }
+
+    sendBenchDir() {
+        logger.debug(`sending benchmarker to {}...`, this.procName);
+
+        scg = new ShellCmdGenerator(this.)
+    }
+}
+
+// TODO:Sequencer
+class Sequencer extends Server{
 
 }
 

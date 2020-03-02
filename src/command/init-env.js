@@ -5,11 +5,7 @@ const fs = require('fs');
 const logger = require('../logger');
 const ShellCmdGenerator = require('../shell-cmd-generator');
 
-/* Reference:
- https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
-*/
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const { exec } = require('../child-process');
 
 const defaultDirs = ['databases', 'results'];
 
@@ -42,10 +38,10 @@ async function delpoyJdkToAllMachines (params) {
     }
 
   although it is concurrent code as well,
-  it doesn't wait all the jobs until they finish.
+  it doesn't wait all the jobs.
 
   In other words, if you run the bad code,
-  "the environment has been initialized" will be printed and jobs is still running.
+  "the environment has been initialized" will be printed before the jobs finish.
 
   */
 

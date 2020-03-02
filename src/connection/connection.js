@@ -12,14 +12,6 @@ class Connection {
     this.initPort = initPort;
   }
 
-  static getInfo (id, ip, port) {
-    return {
-      id,
-      ip,
-      port
-    };
-  }
-
   getConnList (ips, totalConn, maxConnPerNode) {
     const nodeNum = ips.length;
     const connPerNode = Math.ceil(totalConn / nodeNum);
@@ -31,18 +23,29 @@ class Connection {
     const conns = [];
 
     // slice will return a new array(shallow copy)
-    [...Array(connPerNode).keys()].map(currentConnPerNode => {
+    // connPerNodeArr looks like [1, 2, 3, ... connPerNode]
+    const connPerNodeArr = [...Array(connPerNode + 1).keys()].slice(1);
+
+    connPerNodeArr.map(currentConnPerNode => {
       ips.map(ip => {
         if (id >= totalConn) {
           return;
         }
         const port = this.initPort + currentConnPerNode - 1;
-        conns.push(Connection.getInfo(id, ip, port));
+        conns.push(this._getInfo(id, ip, port));
         id += 1;
       });
     });
 
     return conns;
+  }
+
+  _getInfo (id, ip, port) {
+    return {
+      id,
+      ip,
+      port
+    };
   }
 }
 
@@ -71,7 +74,7 @@ function generate_connection_list(ip_list, conn_count, max_conn_per_ip, prop){
     while(true){
         for(i in ip_list){
             list.push(new ConnectionInfo(id, ip_list[i], INIT_PORT + conn_per_node - 1, prop));
-    
+
             id += 1;
             if (id >= conn_count) {
                 flag = true;
@@ -80,7 +83,7 @@ function generate_connection_list(ip_list, conn_count, max_conn_per_ip, prop){
         }
         if(flag)
             break;
-            
+
         conn_per_node += 1;
         if(conn_per_node > max_conn_per_ip) {
             throw new Error("The number of machines is not enough.");
@@ -88,6 +91,5 @@ function generate_connection_list(ip_list, conn_count, max_conn_per_ip, prop){
     }
     return list;
 }
-
 
 */

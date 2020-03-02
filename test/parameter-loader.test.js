@@ -27,11 +27,13 @@ describe('ParameterLoader', () => {
     });
 
     describe('pass combination parameters', () => {
+      const ErrMsg = 'Combination in normal-load.toml is forbidden';
+
       it('should throw an error', () => {
         assert.throws(
           () => { parameterLoader.loadNormalLoad(comb); },
           Error,
-          'Combination in normal-load.toml is forbidden');
+          ErrMsg);
       });
     });
   });

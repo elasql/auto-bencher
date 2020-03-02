@@ -22,7 +22,7 @@
     "mocha": "^7.0.1"
   },
   "scripts": {
-    "eslint": "./node_modules/.bin/eslint src/**.js --fix",
+    "eslint": "./node_modules/.bin/eslint src/**/**.js test/**/**.js --fix",
     "test": "./node_modules/.bin/mocha test/**/**.js"
   },
   "repository": {

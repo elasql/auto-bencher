@@ -12,7 +12,9 @@ describe('Config', () => {
     jdkPackagePath,
     involvedMachines,
     systemUserName,
-    systemRemoteWorkDir
+    systemRemoteWorkDir,
+    dbDir,
+    jarPath
   } = config.getParams();
 
   describe('params.jdkPackagePath', () => {
@@ -54,6 +56,18 @@ describe('Config', () => {
   describe('params.systemRemoteWorkDir', () => {
     it('should return a string', () => {
       assert.isString(systemRemoteWorkDir);
+    });
+  });
+
+  describe('params.dbDir', () => {
+    it('should return a string', () => {
+      assert.isString(dbDir);
+    });
+  });
+
+  describe('params.jarPath', () => {
+    it('should return a string', () => {
+      assert.isString(jarPath);
     });
   });
 });

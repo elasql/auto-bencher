@@ -3,8 +3,6 @@ const logger = require('../logger');
 const ShellCmdGenerator = require('../shell-cmd-generator');
 const { exec } = require('../child-process');
 
-const DATABASES = 'databases';
-
 class Server{
     constructor(systemUserName, systemRemoteWorkDir, conns, dbName, vmArgs, isSequencer) {
         this.params = params,

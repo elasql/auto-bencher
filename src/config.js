@@ -6,6 +6,8 @@ const machines = 'machines';
 const userName = 'user_name';
 const packagePath = 'package_path';
 const remoteWorkDir = 'remote_work_dir';
+const databases = 'databases';
+const serverJar = 'benchmarker/server.jar';
 
 class Config {
   constructor (tomlObject) {
@@ -19,13 +21,29 @@ class Config {
       jdkDir: this._getJdkDir(),
       involvedMachines: this._getInvolvedMachines(),
       systemUserName: this._getSystemUserName(),
-      systemRemoteWorkDir: this._getSystemRemoteWorkDir()
+      systemRemoteWorkDir: this._getSystemRemoteWorkDir(),
+      dbDir: this._getDbDir(),
+      jarPath: this._getJarPath()
     };
   }
 
   /*
+    return a string of database directory
+  */
+  _getDbDir () {
+    return this._getSystemRemoteWorkDir() + '/' + this.databases;
+  }
+
+  /*
+    return a string of benchmark/server.js
+  */
+  _getJarPath () {
+    return this._getSystemRemoteWorkDir() + '/' + serverJar;
+  }
+
+  /*
     return a string of jdk package path
-    */
+  */
   _getJdkPackagePath () {
     if (!Object.prototype.hasOwnProperty.call(this.config, jdk)) {
       throw new Error(`config has no property ${jdk}`);

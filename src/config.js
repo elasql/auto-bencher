@@ -31,7 +31,7 @@ class Config {
     return a string of database directory
   */
   _getDbDir () {
-    return this._getSystemRemoteWorkDir() + '/' + this.databases;
+    return this._getSystemRemoteWorkDir() + '/' + databases;
   }
 
   /*

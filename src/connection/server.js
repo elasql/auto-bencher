@@ -44,8 +44,11 @@ class Server {
     try {
       await exec(ssh);
     } catch (err) {
-      // catch the error if there is no previous database
-      logger.info(err);
+      if (err.code === 1) {
+        logger.info(`no previous database is found on ${this.conn.ip}`);
+      } else {
+        throw Error(err.stderr);
+      }
     }
   }
 
@@ -56,8 +59,11 @@ class Server {
     try {
       await exec(ssh);
     } catch (err) {
-      // catch the error if there is no previous backup database
-      logger.info(err);
+      if (err.code === 1) {
+        logger.info(`no backup database is found on ${this.conn.ip}`);
+      } else {
+        throw Error(err.stderr);
+      }
     }
   }
 
@@ -114,7 +120,7 @@ class Server {
       if (code === 1) {
         return false;
       } else {
-        throw Error('There are something wrong in checkForReady');
+        throw Error('There are something wrong while checkForReady');
       }
     }
   }

@@ -8,6 +8,7 @@ const packagePath = 'package_path';
 const remoteWorkDir = 'remote_work_dir';
 const databases = 'databases';
 const serverJar = 'benchmarker/server.jar';
+const javaBin = 'bin/java';
 
 class Config {
   constructor (tomlObject) {
@@ -23,7 +24,8 @@ class Config {
       systemUserName: this._getSystemUserName(),
       systemRemoteWorkDir: this._getSystemRemoteWorkDir(),
       dbDir: this._getDbDir(),
-      jarPath: this._getJarPath()
+      jarPath: this._getJarPath(),
+      javaBin: this._getJavaBin()
     };
   }
 
@@ -39,6 +41,13 @@ class Config {
   */
   _getJarPath () {
     return this._getSystemRemoteWorkDir() + '/' + serverJar;
+  }
+
+  /*
+    return a string of java/bin path
+  */
+  _getJavaBin () {
+    return this._getSystemRemoteWorkDir() + '/' + this._getJdkDir() + '/' + javaBin;
   }
 
   /*

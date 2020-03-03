@@ -14,7 +14,8 @@ describe('Config', () => {
     systemUserName,
     systemRemoteWorkDir,
     dbDir,
-    jarPath
+    jarPath,
+    javaBin,
   } = config.getParams();
 
   describe('params.dbDir', () => {
@@ -28,6 +29,13 @@ describe('Config', () => {
     it('should be expected result', () => {
       const expected = 'auto_test/benchmarker/server.jar';
       assert.equal(jarPath, expected);
+    });
+  });
+
+  describe('params.javaBin', () => {
+    it('should be expected result', () => {
+      const expected = 'auto_test/jdk1.8.0_211/bin/java';
+      assert.equal(javaBin, expected);
     });
   });
 
@@ -56,6 +64,17 @@ describe('Config', () => {
     it('should return an array with 6 elements', () => {
       assert.isArray(involvedMachines);
       assert.lengthOf(involvedMachines, 6);
+    });
+    it('should be expected result', () => {
+      const expected = [
+        '192.168.1.24',
+        '192.168.1.25',
+        '192.168.1.26',
+        '192.168.1.27',
+        '192.168.1.30',
+        '192.168.1.31'
+      ];
+      assert.deepEqual(involvedMachines, expected);
     });
   });
 

@@ -7,8 +7,6 @@ path should contain directory name and file name
 path = dir / fileName
 
 */
-const BIN_JAVA = '/bin/java';
-
 class ShellCmdGenerator {
   constructor (userName, ip) {
     this.userName = userName;
@@ -28,7 +26,7 @@ class ShellCmdGenerator {
   }
 
   static getJavaVersion (workDir, jdkDir) {
-    return workDir + '/' + jdkDir + BIN_JAVA + ' -version';
+    return workDir + '/' + jdkDir + '/bin/java' + ' -version';
   }
 
   static getTar (workDir, target) {
@@ -48,9 +46,12 @@ class ShellCmdGenerator {
     return cmd + src + ' ' + dest;
   }
 
-  static getRunJar (workDir, jdkDir, vmArgs, jarPath, progArgs, logPath) {
-    const binJava = workDir + '/' + jdkDir + BIN_JAVA;
-    return `${binJava} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
+  static getRunJar (javaBin, vmArgs, jarPath, progArgs, logPath) {
+    return `${javaBin} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
+  }
+
+  static getGrep (keyword, logPath) {
+    return `grep '${keyword}' ${logPath}`;
   }
 
   getScp (isDir, localPath, remotePath) {

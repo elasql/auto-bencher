@@ -10,24 +10,7 @@ describe('ShellCmdGenerator', () => {
   const workDir = 'workDir';
   const jdkDir = 'jdkDir';
   const jdkPackageName = 'jdkPackageName';
-  const binJava = '/bin/java';
-
-  describe('getScp', () => {
-    const localPath = 'localPath';
-    const remotePath = 'remotePath';
-
-    it('should return a correct command without -r', () => {
-      const cmd = cmdGen.getScp(false, localPath, remotePath);
-      const expected = `scp ${localPath} ${userName}@${ip}:${remotePath}`;
-      assert.equal(cmd, expected);
-    });
-
-    it('should return a correct command with -r', () => {
-      const cmd = cmdGen.getScp(true, localPath, remotePath);
-      const expected = `scp -r ${localPath} ${userName}@${ip}:${remotePath}`;
-      assert.equal(cmd, expected);
-    });
-  });
+  const javaBin = 'workDir/jdkDir/bin/java';
 
   describe('getMkdir', () => {
     const dir = 'dir';
@@ -42,7 +25,7 @@ describe('ShellCmdGenerator', () => {
   describe('getJavaVersion', () => {
     it('should return a correct command', () => {
       const cmd = ShellCmdGenerator.getJavaVersion(workDir, jdkDir);
-      const expected = `${workDir}/${jdkDir}${binJava} -version`;
+      const expected = `${workDir}/${jdkDir}/bin/java -version`;
       assert.equal(cmd, expected);
     });
   });
@@ -68,28 +51,6 @@ describe('ShellCmdGenerator', () => {
     });
   });
 
-  describe('getSsh', () => {
-    it('should return a correct command', () => {
-      const cmd = cmdGen.getSsh('ls -al');
-      const expected = `ssh ${userName}@${ip} ls -al`;
-      assert.equal(cmd, expected);
-    });
-  });
-
-  describe('getRunJar', () => {
-    const vmArgs = '-vmarg1 -vmarg2';
-    const jarPath = 'jarPath';
-    const progArgs = '-progArg1 -progArg2';
-    const logPath = 'logPath';
-
-    it('should return a correct command', () => {
-      const cmd = ShellCmdGenerator.getRunJar(
-        workDir, jdkDir, vmArgs, jarPath, progArgs, logPath);
-      const expected = `${workDir}/${jdkDir}${binJava} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
-      assert.equal(cmd, expected);
-    });
-  });
-
   describe('getCp', () => {
     const src = 'src';
     const dest = 'dest';
@@ -103,6 +64,55 @@ describe('ShellCmdGenerator', () => {
     it('should return a correct command with -r', () => {
       const cmd = ShellCmdGenerator.getCp(true, src, dest);
       const expected = `cp -r ${src} ${dest}`;
+      assert.equal(cmd, expected);
+    });
+  });
+
+  describe('getRunJar', () => {
+    const vmArgs = '-vmarg1 -vmarg2';
+    const jarPath = 'jarPath';
+    const progArgs = '-progArg1 -progArg2';
+    const logPath = 'logPath';
+
+    it('should return a correct command', () => {
+      const cmd = ShellCmdGenerator.getRunJar(
+        javaBin, vmArgs, jarPath, progArgs, logPath);
+      const expected = `${javaBin} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
+      assert.equal(cmd, expected);
+    });
+  });
+
+  describe('getGrep', () => {
+    it('should return a correct command', () => {
+      const keyword = 'keyword';
+      const logPath = 'logPath';
+      const cmd = ShellCmdGenerator.getGrep(keyword, logPath);
+      const expected = `grep '${keyword}' ${logPath}`;
+      assert.equal(cmd, expected);
+    });
+  });
+
+  describe('getScp', () => {
+    const localPath = 'localPath';
+    const remotePath = 'remotePath';
+
+    it('should return a correct command without -r', () => {
+      const cmd = cmdGen.getScp(false, localPath, remotePath);
+      const expected = `scp ${localPath} ${userName}@${ip}:${remotePath}`;
+      assert.equal(cmd, expected);
+    });
+
+    it('should return a correct command with -r', () => {
+      const cmd = cmdGen.getScp(true, localPath, remotePath);
+      const expected = `scp -r ${localPath} ${userName}@${ip}:${remotePath}`;
+      assert.equal(cmd, expected);
+    });
+  });
+
+  describe('getSsh', () => {
+    it('should return a correct command', () => {
+      const cmd = cmdGen.getSsh('ls -al');
+      const expected = `ssh ${userName}@${ip} ls -al`;
       assert.equal(cmd, expected);
     });
   });

@@ -15,7 +15,7 @@ describe('Config', () => {
     systemRemoteWorkDir,
     dbDir,
     jarPath,
-    javaBin,
+    javaBin
   } = config.getParams();
 
   describe('params.dbDir', () => {

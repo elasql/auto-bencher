@@ -74,24 +74,26 @@ async function createWorkingDir (params, ip) {
   logger.info('creating a working directory on ' + ip);
 
   for (const dir of defaultDirs) {
-    const remoteCmd = ShellCmdGenerator.getMkdir(
+    const mkdir = ShellCmdGenerator.getMkdir(
       systemRemoteWorkDir,
       dir
     );
-    await exec(cmdGen.getSsh(remoteCmd));
+    const ssh = cmdGen.getSsh(mkdir);
+    await exec(ssh);
   }
 }
 
 async function checkJavaRuntime (params, ip) {
   const { systemUserName, systemRemoteWorkDir, jdkDir } = params;
   const cmdGen = new ShellCmdGenerator(systemUserName, ip);
-  const remoteCmd = ShellCmdGenerator.getJavaVersion(systemRemoteWorkDir, jdkDir);
+  const getJavaVersionCmd = ShellCmdGenerator.getJavaVersion(systemRemoteWorkDir, jdkDir);
+  const ssh = cmdGen.getSsh(getJavaVersionCmd);
 
   logger.info('checking java runtime on ' + ip);
 
   // avoid program crash if there is no JavaRunTime
   try {
-    await exec(cmdGen.getSsh(remoteCmd));
+    await exec(ssh);
   } catch (e) {
     // it is ok to do nothing with this error
     return false;
@@ -102,30 +104,33 @@ async function checkJavaRuntime (params, ip) {
 async function sendJdk (params, ip) {
   const { systemUserName, systemRemoteWorkDir, jdkPackagePath } = params;
   const cmdGen = new ShellCmdGenerator(systemUserName, ip);
+  const scp = cmdGen.getScp(false, jdkPackagePath, systemRemoteWorkDir);
 
   logger.info('sending JDK to ' + ip);
 
-  await exec(cmdGen.getScp(false, jdkPackagePath, systemRemoteWorkDir));
+  await exec(scp);
 }
 
 async function unpackJdk (params, ip) {
   const { systemUserName, systemRemoteWorkDir, jdkPackageName } = params;
   const cmdGen = new ShellCmdGenerator(systemUserName, ip);
-  const remoteCmd = ShellCmdGenerator.getTar(systemRemoteWorkDir, jdkPackageName);
+  const tar = ShellCmdGenerator.getTar(systemRemoteWorkDir, jdkPackageName);
+  const ssh = cmdGen.getSsh(tar);
 
   logger.info('unpacking ' + jdkPackageName + ' on ' + ip);
 
-  await exec(cmdGen.getSsh(remoteCmd));
+  await exec(ssh);
 }
 
 async function removeJdk (params, ip) {
   const { systemUserName, systemRemoteWorkDir, jdkPackageName } = params;
   const cmdGen = new ShellCmdGenerator(systemUserName, ip);
-  const remoteCmd = ShellCmdGenerator.getRm(false, systemRemoteWorkDir, jdkPackageName);
+  const rm = ShellCmdGenerator.getRm(false, systemRemoteWorkDir, jdkPackageName);
+  const ssh = cmdGen.getSsh(rm);
 
   logger.info('removing ' + jdkPackageName + ' on ' + ip);
 
-  await exec(cmdGen.getSsh(remoteCmd));
+  await exec(ssh);
 }
 
 module.exports = {

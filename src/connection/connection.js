@@ -50,5 +50,6 @@ class Connection {
 }
 
 module.exports = {
+  Action: Action,
   Connection: Connection
 };

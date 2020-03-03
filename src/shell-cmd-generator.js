@@ -36,7 +36,8 @@ class ShellCmdGenerator {
   static getRm (isDir, workDir, target) {
     let cmd = 'rm ';
     cmd = isDir ? cmd + '-rf ' : cmd;
-    cmd += workDir + '/' + target;
+    cmd += workDir;
+    cmd = target ? cmd + '/' + target : cmd;
     return cmd;
   }
 

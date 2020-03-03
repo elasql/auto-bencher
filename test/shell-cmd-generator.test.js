@@ -49,6 +49,11 @@ describe('ShellCmdGenerator', () => {
       const expected = `rm -rf ${workDir}/${jdkPackageName}`;
       assert.equal(cmd, expected);
     });
+    it('should return a correct command with only passing directory parameter', () => {
+      const cmd = ShellCmdGenerator.getRm(true, workDir);
+      const expected = `rm -rf ${workDir}`;
+      assert.equal(cmd, expected);
+    });
   });
 
   describe('getCp', () => {

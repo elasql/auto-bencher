@@ -8,14 +8,13 @@ class Server {
       dbDir,
       systemUserName,
       systemRemoteWorkDir,
-      jarPath,
+      serverJarPath,
       javaBin
     } = params;
 
     this.dbDir = dbDir;
-    this.systemUserName = systemUserName;
     this.systemRemoteWorkDir = systemRemoteWorkDir;
-    this.jarPath = jarPath;
+    this.jarPath = serverJarPath;
     this.javaBin = javaBin;
 
     this.conn = conn;
@@ -25,11 +24,11 @@ class Server {
     this.procName = `server ${conn.id}`;
     this.isSequencer = isSequencer;
 
-    this.cmdGen = new ShellCmdGenerator(this.systemUserName, this.conn.ip);
+    this.cmdGen = new ShellCmdGenerator(systemUserName, this.conn.ip);
 
-    // [dbName] [connection.id] ([isSequencer])
-    this.progArgs = this.isSequencer ? `${this.dbName} ${this.conn.id} 1` : `${this.dbName} ${this.conn.id}`;
-    this.logPath = this.isSequencer ? `${this.systemRemoteWorkDir}/server-seq.log` : `${this.systemRemoteWorkDir}/server-${this.conn.id}.log`;
+    // [this.dbName] [connection.id] ([isSequencer])
+    this.progArgs = this.isSequencer ? `${this.dbName} ${conn.id} 1` : `${this.dbName} ${conn.id}`;
+    this.logPath = this.isSequencer ? `${systemRemoteWorkDir}/server-seq.log` : `${systemRemoteWorkDir}/server-${conn.id}.log`;
   }
 
   async sendBenchDir () {

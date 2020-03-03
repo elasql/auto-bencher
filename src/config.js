@@ -8,7 +8,9 @@ const packagePath = 'package_path';
 const remoteWorkDir = 'remote_work_dir';
 const databases = 'databases';
 const serverJar = 'benchmarker/server.jar';
+const clientJar = 'benchmarker/client.jar';
 const javaBin = 'bin/java';
+const results = 'results';
 
 class Config {
   constructor (tomlObject) {
@@ -17,15 +19,17 @@ class Config {
 
   getParams () {
     return {
+      dbDir: this._getDbDir(),
+      serverJarPath: this._getServerJarPath(),
+      clientJarPath: this._getClientJarPath(),
+      javaBin: this._getJavaBin(),
       jdkPackagePath: this._getJdkPackagePath(),
       jdkPackageName: this._getJdkPackageName(),
       jdkDir: this._getJdkDir(),
       involvedMachines: this._getInvolvedMachines(),
       systemUserName: this._getSystemUserName(),
       systemRemoteWorkDir: this._getSystemRemoteWorkDir(),
-      dbDir: this._getDbDir(),
-      jarPath: this._getJarPath(),
-      javaBin: this._getJavaBin()
+      resultPath: this._getResultPath()
     };
   }
 
@@ -37,10 +41,17 @@ class Config {
   }
 
   /*
-    return a string of benchmark/server.js
+    return a string of server jar path
   */
-  _getJarPath () {
+  _getServerJarPath () {
     return this._getSystemRemoteWorkDir() + '/' + serverJar;
+  }
+
+  /*
+    return a string of client jar path
+  */
+  _getClientJarPath () {
+    return this._getSystemRemoteWorkDir() + '/' + clientJar;
   }
 
   /*
@@ -126,6 +137,13 @@ class Config {
     }
 
     return this.config[system][remoteWorkDir];
+  }
+
+  /*
+    return a string of result path
+  */
+  _getResultPath () {
+    return this._getSystemRemoteWorkDir() + '/' + results;
   }
 }
 

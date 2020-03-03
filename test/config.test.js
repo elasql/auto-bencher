@@ -14,8 +14,10 @@ describe('Config', () => {
     systemUserName,
     systemRemoteWorkDir,
     dbDir,
-    jarPath,
-    javaBin
+    serverJarPath,
+    clientJarPath,
+    javaBin,
+    resultPath
   } = config.getParams();
 
   describe('params.dbDir', () => {
@@ -25,10 +27,17 @@ describe('Config', () => {
     });
   });
 
-  describe('params.jarPath', () => {
+  describe('params.serverJarPath', () => {
     it('should be expected result', () => {
       const expected = 'auto_test/benchmarker/server.jar';
-      assert.equal(jarPath, expected);
+      assert.equal(serverJarPath, expected);
+    });
+  });
+
+  describe('params.clientJarPath', () => {
+    it('should be expected result', () => {
+      const expected = 'auto_test/benchmarker/client.jar';
+      assert.equal(clientJarPath, expected);
     });
   });
 
@@ -89,6 +98,13 @@ describe('Config', () => {
     it('should return a string', () => {
       const expected = 'auto_test';
       assert.equal(systemRemoteWorkDir, expected);
+    });
+  });
+
+  describe('params.resultPath', () => {
+    it('should return a string', () => {
+      const expected = 'auto_test/results';
+      assert.equal(resultPath, expected);
     });
   });
 });

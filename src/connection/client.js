@@ -1,9 +1,34 @@
-const command = require('../command');
-const con_com = require('./con-com');
-module.exports = {
-  // Parameter: Parameter,
-  Client: Client
-};
+const logger = require('../logger');
+const ShellCmdGenerator = require('../shell-cmd-generator');
+const { exec } = require('../child-process');
+
+class Client {
+  constructor(params, conn, vmArgs){
+    const {
+      systemRemoteWorkDir,
+      clientJarPath,
+      javaBin,
+      resultPath
+    } = params;
+
+    this.jarPath = clientJarPath;
+    this.javaBin = javaBin;
+    this.resultPath = resultPath;
+
+    this.conn = conn;
+    this.vmArgs = vmArgs;
+
+    this.logPath = systemRemoteWorkDir + `/client-${conn.id}.log`;
+  }
+
+  async sendBenchDir () {
+    const cmd = this.cmdGen.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
+    await exec(cmd);
+  }
+}
+
+
+module.exports = Client;
 function Client (config, connection_info, vm_args) {
   this.config = config;
   this.connection_info = connection_info;

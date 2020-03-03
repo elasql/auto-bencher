@@ -1,187 +1,152 @@
-const command = require('../command');
 const logger = require('../logger');
 const ShellCmdGenerator = require('../shell-cmd-generator');
 const { exec } = require('../child-process');
 
-class Server{
-    constructor(systemUserName, systemRemoteWorkDir, conns, dbName, vmArgs, isSequencer) {
-        this.params = params,
-        this.conn = conn
-        this.dbName = `${dbName}-${conn.id}`;
-        this.dbNameBackup = this.dbName + '-backup';
-        this.procName = `server ${conn.id}`;
-        this.isSequencer = isSequencer;
+class Server {
+  constructor (params, conn, dbName, vmArgs, isSequencer) {
+    const {
+      dbDir,
+      systemUserName,
+      systemRemoteWorkDir,
+      jarPath,
+      javaBin
+    } = params;
 
-        // TODO: remove it
-        // const {
-        //     systemUserName,
-        //     systemRemoteWorkDir,
-        // } = params;
+    this.dbDir = dbDir;
+    this.systemUserName = systemUserName;
+    this.systemRemoteWorkDir = systemRemoteWorkDir;
+    this.jarPath = jarPath;
+    this.javaBin = javaBin;
 
-        // move the below code to config
-        this.cmdGen = new ShellCmdGenerator(systemUserName, conns.ip);
-        this.dbDir = systemRemoteWorkDir + '/' + DATABASES;
-        this.jarPath = systemRemoteWorkDir + '/benchmarker/server.jar';
-        const progArgs = this.isSequencer ? `${this.dbName} ${this.conn.id} 1` : `${this.dbName} ${this.conn.id}`;
+    this.conn = conn;
+    this.dbName = `${dbName}-${conn.id}`;
+    this.dbNameBackup = this.dbName + '-backup';
+    this.vmArgs = vmArgs;
+    this.procName = `server ${conn.id}`;
+    this.isSequencer = isSequencer;
+
+    this.cmdGen = new ShellCmdGenerator(this.systemUserName, this.conn.ip);
+
+    // [dbName] [connection.id] ([isSequencer])
+    this.progArgs = this.isSequencer ? `${this.dbName} ${this.conn.id} 1` : `${this.dbName} ${this.conn.id}`;
+    this.logPath = this.isSequencer ? `${this.systemRemoteWorkDir}/server-seq.log` : `${this.systemRemoteWorkDir}/server-${this.conn.id}.log`;
+  }
+
+  async sendBenchDir () {
+    logger.info(`sending benchmarker to ${this.procName}...`);
+    const cmd = this.cmdGen.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
+    await exec(cmd);
+  }
+
+  async deleteDbDir () {
+    logger.info(`deleting database directory on ${this.procName}`);
+    const rm = ShellCmdGenerator.getRm(true, this.dbDir, this.dbName);
+    const ssh = this.cmdGen.getSsh(rm);
+    try {
+      await exec(ssh);
+    } catch (err) {
+      // catch the error if there is no previous database
+      logger.info(err);
+    }
+  }
+
+  async deleteBackupDbDir () {
+    logger.info(`deleting backup directory on ${this.procName}`);
+    const rm = ShellCmdGenerator.getRm(true, this.dbDir, this.dbNameBackup);
+    const ssh = this.cmdGen.getSsh(rm);
+    try {
+      await exec(ssh);
+    } catch (err) {
+      // catch the error if there is no previous backup database
+      logger.info(err);
+    }
+  }
+
+  async backupDb () {
+    // sequencer does not have database
+    if (this.isSequencer) {
+      return;
     }
 
-    async sendBenchDir() {
-        logger.info(`sending benchmarker to ${this.procName}...`);
-        const { systemRemoteWorkDir } = this.params;
-        const cmd = this.cmdGen.getScp(true, 'benchmarker', systemRemoteWorkDir);
-        await exec(cmd);
+    logger.info(`backing up the db of ${this.procName}`);
+    const cp = ShellCmdGenerator.getCp(true, this.dbDir, this.dbNameBackup);
+    const ssh = this.cmdGen.getSsh(cp);
+    await exec(ssh);
+  }
+
+  async resetDbDir () {
+    // the only thing that sequencer has to do is to delete its own db directory
+    if (this.isSequencer) {
+      this.deleteDbDir();
     }
 
-    async deleteDbDir() {
-        const cmd = ShellCmdGenerator.getRm(true, this.dbDir, this.dbName);
-        try {
-            await exec(this.cmdGen.getSsh(cmd));
-        } catch(err){
-            // catch the error if there is no previous database
-            logger.info(err);
-        }
+    logger.info(`resetting the db of ${this.procName}`);
+    const cp = ShellCmdGenerator.getCp(true, this.dbDir, this.dbNameBackup);
+    const ssh = this.cmdGen.getSsh(cp);
+    await exec(ssh);
+  }
+
+  async start () {
+    const runJar = ShellCmdGenerator.getRunJar(
+      this.javaBin,
+      this.vmArgs,
+      this.jarPath,
+      this.progArgs,
+      this.logPath
+    );
+    const ssh = this.cmdGen.getSsh(runJar);
+    await exec(ssh);
+  }
+
+  async grepLog (keyword) {
+    const grep = ShellCmdGenerator.getGrep(keyword, this.logPath);
+    const ssh = this.cmdGen.getSsh(grep);
+    // Don't try catch here, we need to pass this error to the caller
+    const result = await exec(ssh);
+    return result;
+  }
+
+  async checkForReady () {
+    try {
+      await this.grepLog('ElaSQL server ready');
+      return true;
+    } catch (err) {
+      const { code } = err;
+      if (code === 1) {
+        return false;
+      } else {
+        throw Error('There are something wrong in checkForReady');
+      }
+    }
+  }
+
+  async checkForError () {
+    // These three grepError should be in order
+    let errMsg = await this.grepError('Exception');
+    if (errMsg !== '') {
+      throw Error(errMsg);
     }
 
-    async deleteBackupDbDir() {
-        const cmd = ShellCmdGenerator.getRm(true, this.dbDir, this.dbNameBackup);
-        try {
-            await exec(this.cmdGen.getSsh(cmd));
-        } catch(err){
-            // catch the error if there is no previous backup database
-            logger.info(err);
-        }
+    errMsg = await this.grepError('error');
+    if (errMsg !== '') {
+      throw Error(errMsg);
     }
 
-    async backupDb() {
-        // sequencer does not have database
-        if (this.isSequencer) {
-            return;
-        }
-
-        logger.info(`backing up the db of ${this.procName}`);
-        const cmd = ShellCmdGenerator.getCp(true, this.dbDir, this.dbNameBackup);
-        await exec(this.cmdGen.getSsh(cmd));
+    errMsg = await this.grepError('SEVERE');
+    if (errMsg !== '') {
+      throw Error(errMsg);
     }
+  }
 
-    async resetDbDir() {
-        // the only thing that sequencer has to do is to delete its own db directory
-        if (this.isSequencer) {
-            this.deleteDbDir()
-        }
-
-        logger.info(`resetting the db of ${this.procName}`);
-        const cmd = ShellCmdGenerator.getCp(true, this.dbDir, this.dbNameBackup);
-        await exec(this.cmdGen.getSsh(cmd));
+  async grepError (msg) {
+    try {
+      const { stdout } = await this.grepLog('Exception');
+      return `server ${this.conn.id} error: ${stdout}`;
+    } catch (err) {
+      // It is ok to return a empty string in this catch block
+      return '';
     }
-
-    start(){
-        // [dbName] [connection.id] ([isSequencer])
-        
-        const cmd = ShellCmdGenerator.getRunJar(
-            this.systemRemoteWorkDir, this.j)
-    }
+  }
 }
-
 
 module.exports = Server;
-
-function Server(config, connection_info, db_name, vm_args, is_sequencer){
-    if(is_sequencer){
-        proc_name = 'sequencer';
-        db_name =  db_name + '-seq';
-        log_path = config.system.remote_work_dir + "/server-seq.log"
-    } else{
-        proc_name = 'server ' + connection_info.id;
-        db_name =  db_name+ '-' + connection_info.id;
-        log_path = config.system.remote_work_dir + "/server-" + connection_info.id + ".log";
-    }
-        
-    this.config = config;
-    this.connection_info = connection_info;
-    this.proc_name = proc_name;
-    this.db_name = db_name;
-    this.vm_args = vm_args;
-    this.is_sequencer = is_sequencer;
-
-    this.db_path = config.system.remote_work_dir + '/databases/' + db_name;
-    this.backup_db_path = config.system.remote_work_dir + '/databases/' + db_name + '-backup';
-    this.jar_path = config.system.remote_work_dir + '/benchmarker/server.jar';
-    this.log_path = log_path;
-    this.id = connection_info.id;
-    this.ip = connection_info.ip;
-    this.remote_java_bin = config.system.remote_work_dir + "/" + config.jdk.dir_name + "/bin/java";
-
-    this.send_bench_dir = async function(){
-        await console.log("Sending benchmarker to " + this.proc_name + "...");
-        await command.asyncScpTo(true, this.config.system.user_name, this.connection_info.ip, "benchmarker", this.config.system.remote_work_dir);
-    }
-    this.delete_db_dir = async function(){
-        cmd  = "rm -rf " + this.db_path;
-        bool = await command.asyncSSh(this.config.system.user_name, this.connection_info.ip, cmd);
-        if(!bool)
-            await console.log("No previous database is found on " + this.connection_info.ip);
-    }
-    this.delete_backup_db_dir = async function(){
-        await console.log("Deleting backup dir on " + this.proc_name + "...");
-        cmd = "rm -rf " + this.backup_db_path;
-        bool = await command.asyncSSh(this.config.system.user_name, this.connection_info.ip, cmd);
-        if(!bool)
-            await console.log("No backup database is found on " + this.connection_info.ip);
-    }
-    this.backup_db = async function(){
-        if(await this.is_sequencer){
-            return;
-        }
-        await console.log("Backing the db of " + this.proc_name + "...");
-
-        let cmd = "cp -r " + this.db_path + ' ' + this.backup_db_path;
-        await command.asyncSSh(this.config.system.user_name, this.connection_info.ip, cmd);
-    }
-    this.reset_db_dir = async function(){
-        if(await this.is_sequencer){
-            return await this.delete_db_dir();
-        }
-        await console.log("Resetting the db of " + this.proc_name + "...");
-
-        await this.delete_db_dir();
-        // copy the backup for replacement
-        cmd = "cp -r " + this.backup_db_path + ' ' + this.db_path;
-        await command.asyncSSh(this.config.system.user_name, this.connection_info.ip, cmd);
-    }
-    this.start = async function(){
-        await console.log("Starting " + this.proc_name + "...");
-        // [db name] [server id] ([is sequencer])
-        if(await this.is_sequencer)
-            prog_args = this.db_name + ' ' + this.connection_info.id + ' ' + '1';
-        else
-            prog_args = this.db_name + ' ' + this.connection_info.id;
-
-        cmd = `'${this.remote_java_bin} ${this.vm_args} -jar ${this.jar_path} ${prog_args} > ${this.log_path} 2>&1 &'`;
-        out = await command.asyncSSh(this.config.system.user_name, this.connection_info.ip, cmd);
-        // await console.log(out);
-    }
-    this.check_for_ready = async function(){
-        await this.check_for_error();
-
-        return await this.grep_log("ElaSQL server ready");
-
-    }
-    this.check_for_error = async function(){
-        if (output = await this.grep_log("Exception"))
-            throw new Error('Server ' + this.id + ' error: ' + output);
-
-        if(output = await this.grep_log("error"))
-            throw new Error('Server ' + this.id + ' error: ' + output);
-
-        if(output = await this.grep_log("SEVERE"))
-            throw new Error('Server ' + this.id + ' error: ' + output);
-    }
-    this.grep_log = async function(keyword){
-        cmd = 'grep \\\'' + keyword + '\\\' ' + this.log_path;
-        // console.log(cmd);
-        bool = await command.asyncSSh(this.config.system.user_name, this.connection_info.ip, cmd);
-        return bool;
-    }
-
-
-}

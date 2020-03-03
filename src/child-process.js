@@ -12,14 +12,18 @@ async function exec (cmd) {
   if you catch the error in this function
   it will cause disaster
 
-  result will be {stdout:'...', stderr:''} if childProcessExec is resolved\
+  result will be {
+    stdout:'...',
+    stderr:''
+  } if childProcessExec is resolved
+
   else it will be {
     killed: false,
     code: 1,
     signal: null,
     cmd: 'your cmd',
     stdout: '',
-    stderr: ''
+    stderr: '...'
   }
 */
   const result = await childProcessExec(cmd);

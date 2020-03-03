@@ -1,6 +1,7 @@
 const logger = require('../logger');
 const ShellCmdGenerator = require('../shell-cmd-generator');
 const { exec } = require('../child-process');
+const { ConnectionLog } = require('./connection');
 
 class Server {
   constructor (params, conn, dbName, vmArgs, isSequencer) {
@@ -24,11 +25,12 @@ class Server {
     this.procName = `server ${conn.id}`;
     this.isSequencer = isSequencer;
 
-    this.cmdGen = new ShellCmdGenerator(systemUserName, this.conn.ip);
+    this.cmdGen = new ShellCmdGenerator(systemUserName, conn.ip);
 
     // [this.dbName] [connection.id] ([isSequencer])
     this.progArgs = this.isSequencer ? `${this.dbName} ${conn.id} 1` : `${this.dbName} ${conn.id}`;
     this.logPath = this.isSequencer ? `${systemRemoteWorkDir}/server-seq.log` : `${systemRemoteWorkDir}/server-${conn.id}.log`;
+    this.connLog = new ConnectionLog(this.cmdGen, this.logPath, conn.id, true);
   }
 
   async sendBenchDir () {
@@ -103,54 +105,26 @@ class Server {
     await exec(ssh);
   }
 
-  async grepLog (keyword) {
-    const grep = ShellCmdGenerator.getGrep(keyword, this.logPath);
-    const ssh = this.cmdGen.getSsh(grep);
-    // Don't try catch here, we need to pass this error to the caller
-    const result = await exec(ssh);
-    return result;
-  }
-
   async checkForReady () {
     try {
-      await this.grepLog('ElaSQL server ready');
+      await this.connLog.grepLog('ElaSQL server ready');
       return true;
     } catch (err) {
       const { code } = err;
       if (code === 1) {
         return false;
       } else {
-        throw Error('There are something wrong while checkForReady');
+        throw Error('there are something wrong while checking for ready');
       }
     }
   }
 
   async checkForError () {
     // These three grepError should be in order
-    let errMsg = await this.grepError('Exception');
-    if (errMsg !== '') {
-      throw Error(errMsg);
-    }
-
-    errMsg = await this.grepError('error');
-    if (errMsg !== '') {
-      throw Error(errMsg);
-    }
-
-    errMsg = await this.grepError('SEVERE');
-    if (errMsg !== '') {
-      throw Error(errMsg);
-    }
-  }
-
-  async grepError (msg) {
-    try {
-      const { stdout } = await this.grepLog('Exception');
-      return `server ${this.conn.id} error: ${stdout}`;
-    } catch (err) {
-      // It is ok to return a empty string in this catch block
-      return '';
-    }
+    // Error occurs only if we grep these keywords on the remote
+    await this.connLog.grepError('Exception');
+    await this.connLog.grepError('error');
+    await this.connLog.grepError('SEVERE');
   }
 }
 

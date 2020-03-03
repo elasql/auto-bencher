@@ -1,10 +1,12 @@
 const logger = require('../logger');
 const ShellCmdGenerator = require('../shell-cmd-generator');
 const { exec } = require('../child-process');
+const { Action } = require('./connection');
 
 class Client {
   constructor(params, conn, vmArgs){
     const {
+      systemUserName,
       systemRemoteWorkDir,
       clientJarPath,
       javaBin,
@@ -19,14 +21,73 @@ class Client {
     this.vmArgs = vmArgs;
 
     this.logPath = systemRemoteWorkDir + `/client-${conn.id}.log`;
+    this.cmdGen = new ShellCmdGenerator(systemUserName, conn.ip);
+    this.connLog = new ConnectionLog(this.cmdGen, this.logPath, conn.id, true);
   }
 
   async sendBenchDir () {
-    const cmd = this.cmdGen.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
-    await exec(cmd);
+    const scp = this.cmdGen.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
+    await exec(scp);
+  }
+
+  async cleanPreviousResults () {
+    const rm = ShellCmdGenerator.getRm(true, this.resultPath);
+    const ssh = this.cmdGen.getSsh(rm);
+    try {
+      await exec(ssh);
+    } catch(err){
+      if(err.code === 1){
+        logger.info(`no previous results are found on ${this.conn.ip}`);
+      }else{
+        throw Error(err.stderr);
+      }
+    }
+  }
+
+  async start(action) {
+    logging.info(`starting client ${this.conn.id}`);
+    // [clientId] [action]
+    const progArgs = `${conn.id} ${action}`;
+    const runJar = ShellCmdGenerator.getJavaVersion(
+      this.javaBin,
+      this.vmArgs,
+      this.jarPath,
+      progArgs,
+      this.logPath
+    );
+    const ssh = this.cmdGen.getSsh(runJar);
+    logger.info(`client ${this.conn.id} is running`);
+    await exec(ssh);
+  }
+
+  async checkForFinished(action) {
+    const keyWord = this.getExpectedMsgFromAction(action);
+    await this.connLog.grepError('Exception');
+    await this.connLog.grepError('error');
+    await this.connLog.grepError('SEVERE');
+
+    try {
+      await this.connLog.grepLog(keyword);
+      return true;
+    } catch(err){
+      if(err.code === 1){
+        return false;
+      }
+      throw Error('there are something wrong while checking for finished')
+    }
+  }
+
+  getExpectedMsgFromAction(action){
+    switch(action){
+      case Action.benchmarking:
+        return 'benchmark process finished';
+      case Action.loading:
+        return 'loading procedure finished';
+      default:
+        throw Error('no action');
+    }
   }
 }
-
 
 module.exports = Client;
 function Client (config, connection_info, vm_args) {

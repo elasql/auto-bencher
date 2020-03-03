@@ -1,11 +1,9 @@
-
 const Action = {
   loading: 1,
   benchmarking: 2
 };
 
 const INIT_PORT = 30000;
-
 class Connection {
   // use default port number if user doesn't provide it
   constructor (initPort = INIT_PORT) {
@@ -49,7 +47,42 @@ class Connection {
   }
 }
 
+const ShellCmdGenerator = require('../shell-cmd-generator');
+const { exec } = require('../child-process');
+
+// We need this class because both server and client will use these methods
+// Don't write the similar code in two files, it is hard to maintain
+class ConnectionLog {
+  constructor (cmdGen, logPath, id, isServer) {
+    this.cmdGen = cmdGen;
+    this.logPath = logPath;
+    this.id = id;
+    this.prefix = isServer ? 'server' : 'client';
+  }
+
+  async grepLog (keyword) {
+    const grep = ShellCmdGenerator.getGrep(keyword, this.logPath);
+    const ssh = this.cmdGen.getSsh(grep);
+    // Don't try catch here, we need to pass this error to the caller
+    const result = await exec(ssh);
+    return result;
+  }
+
+  async grepError (keyword) {
+    let result;
+    try {
+      result = await this.grepLog(keyword);
+    } catch (err) {
+      // It is ok to return a empty string in this catch block
+      return '';
+    }
+    const { stdout } = result;
+    throw Error(`${this.prefix} ${this.id} error: ${stdout}`);
+  }
+}
+
 module.exports = {
   Action: Action,
-  Connection: Connection
+  Connection: Connection,
+  ConnectionLog: ConnectionLog
 };

@@ -55,6 +55,10 @@ class ShellCmdGenerator {
     return `grep '${keyword}' ${logPath}`;
   }
 
+  static getGrepCsv (resultPath, id) {
+    return `ls ${resultPath} | grep '${id}[.]csv'`;
+  }
+
   getScp (isDir, localPath, remotePath) {
     let cmd = 'scp ';
     cmd = isDir ? cmd + '-r ' : cmd;

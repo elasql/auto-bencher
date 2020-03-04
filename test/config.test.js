@@ -88,21 +88,21 @@ describe('Config', () => {
   });
 
   describe('params.systemUserName', () => {
-    it('should return a string', () => {
+    it('should be expected result', () => {
       const expected = 'db-team';
       assert.equal(systemUserName, expected);
     });
   });
 
   describe('params.systemRemoteWorkDir', () => {
-    it('should return a string', () => {
+    it('should be expected result', () => {
       const expected = 'auto_test';
       assert.equal(systemRemoteWorkDir, expected);
     });
   });
 
   describe('params.resultPath', () => {
-    it('should return a string', () => {
+    it('should be expected result', () => {
       const expected = 'auto_test/results';
       assert.equal(resultPath, expected);
     });

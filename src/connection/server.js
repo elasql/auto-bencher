@@ -114,7 +114,7 @@ class Server {
       if (code === 1) {
         return false;
       } else {
-        throw Error('there are something wrong while checking for ready');
+        throw Error(err.stderr);
       }
     }
   }

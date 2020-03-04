@@ -73,7 +73,7 @@ class Client {
       if(err.code === 1){
         return false;
       }
-      throw Error('there are something wrong while checking for finished')
+      throw Error(err.stderr);
     }
   }
 

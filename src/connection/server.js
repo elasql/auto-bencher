@@ -25,24 +25,24 @@ class Server {
     this.procName = `server ${conn.id}`;
     this.isSequencer = isSequencer;
 
-    this.cmdGen = new ShellCmd(systemUserName, conn.ip);
+    this.shellCmd = new ShellCmd(systemUserName, conn.ip);
 
     // [this.dbName] [connection.id] ([isSequencer])
     this.progArgs = this.isSequencer ? `${this.dbName} ${conn.id} 1` : `${this.dbName} ${conn.id}`;
     this.logPath = this.isSequencer ? `${systemRemoteWorkDir}/server-seq.log` : `${systemRemoteWorkDir}/server-${conn.id}.log`;
-    this.connLog = new ConnectionLog(this.cmdGen, this.logPath, conn.id, true);
+    this.connLog = new ConnectionLog(this.shellCmd, this.logPath, conn.id, true);
   }
 
   async sendBenchDir () {
     logger.info(`sending benchmarker to ${this.procName}...`);
-    const cmd = this.cmdGen.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
+    const cmd = this.shellCmd.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
     await exec(cmd);
   }
 
   async deleteDbDir () {
     logger.info(`deleting database directory on ${this.procName}`);
     const rm = ShellCmd.getRm(true, this.dbDir, this.dbName);
-    const ssh = this.cmdGen.getSsh(rm);
+    const ssh = this.shellCmd.getSsh(rm);
     try {
       await exec(ssh);
     } catch (err) {
@@ -57,7 +57,7 @@ class Server {
   async deleteBackupDbDir () {
     logger.info(`deleting backup directory on ${this.procName}`);
     const rm = ShellCmd.getRm(true, this.dbDir, this.dbNameBackup);
-    const ssh = this.cmdGen.getSsh(rm);
+    const ssh = this.shellCmd.getSsh(rm);
     try {
       await exec(ssh);
     } catch (err) {
@@ -77,7 +77,7 @@ class Server {
 
     logger.info(`backing up the db of ${this.procName}`);
     const cp = ShellCmd.getCp(true, this.dbDir, this.dbNameBackup);
-    const ssh = this.cmdGen.getSsh(cp);
+    const ssh = this.shellCmd.getSsh(cp);
     await exec(ssh);
   }
 
@@ -89,7 +89,7 @@ class Server {
 
     logger.info(`resetting the db of ${this.procName}`);
     const cp = ShellCmd.getCp(true, this.dbDir, this.dbNameBackup);
-    const ssh = this.cmdGen.getSsh(cp);
+    const ssh = this.shellCmd.getSsh(cp);
     await exec(ssh);
   }
 
@@ -101,7 +101,7 @@ class Server {
       this.progArgs,
       this.logPath
     );
-    const ssh = this.cmdGen.getSsh(runJar);
+    const ssh = this.shellCmd.getSsh(runJar);
     await exec(ssh);
   }
 

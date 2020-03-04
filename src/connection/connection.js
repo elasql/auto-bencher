@@ -53,8 +53,8 @@ const { exec } = require('../child-process');
 // We need this class because both server and client will use these methods
 // Don't write the similar code in two files, it is hard to maintain
 class ConnectionLog {
-  constructor (cmdGen, logPath, id, isServer) {
-    this.cmdGen = cmdGen;
+  constructor (shellCmd, logPath, id, isServer) {
+    this.shellCmd = shellCmd;
     this.logPath = logPath;
     this.id = id;
     this.prefix = isServer ? 'server' : 'client';
@@ -62,7 +62,7 @@ class ConnectionLog {
 
   async grepLog (keyword) {
     const grep = ShellCmd.getGrep(keyword, this.logPath);
-    const ssh = this.cmdGen.getSsh(grep);
+    const ssh = this.shellCmd.getSsh(grep);
     // Don't try catch here, we need to pass this error to the caller
     const result = await exec(ssh);
     return result;

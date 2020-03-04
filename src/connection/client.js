@@ -21,18 +21,18 @@ class Client {
     this.vmArgs = vmArgs;
 
     this.logPath = systemRemoteWorkDir + `/client-${conn.id}.log`;
-    this.cmdGen = new ShellCmd(systemUserName, conn.ip);
-    this.connLog = new ConnectionLog(this.cmdGen, this.logPath, conn.id, true);
+    this.shellCmd = new ShellCmd(systemUserName, conn.ip);
+    this.connLog = new ConnectionLog(this.shellCmd, this.logPath, conn.id, true);
   }
 
   async sendBenchDir () {
-    const scp = this.cmdGen.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
+    const scp = this.shellCmd.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
     await exec(scp);
   }
 
   async cleanPreviousResults () {
     const rm = ShellCmd.getRm(true, this.resultPath);
-    const ssh = this.cmdGen.getSsh(rm);
+    const ssh = this.shellCmd.getSsh(rm);
     try {
       await exec(ssh);
     } catch(err){
@@ -57,7 +57,7 @@ class Client {
       progArgs,
       this.logPath
     );
-    const ssh = this.cmdGen.getSsh(runJar);
+    const ssh = this.shellCmd.getSsh(runJar);
     logger.info(`client ${this.conn.id} is running`);
     await exec(ssh);
   }
@@ -95,7 +95,7 @@ class Client {
 
   async pullCsv(dest) {
     const grepCsv = ShellCmd.getGrepCsv(this.resultPath, this.conn.id);
-    const ssh = this.cmdGen.getSsh(grepCsv);
+    const ssh = this.shellCmd.getSsh(grepCsv);
     
     try {
       const { stdout } = await exec(ssh);

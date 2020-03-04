@@ -1,20 +1,20 @@
 const assert = require('chai').assert;
 
 const { loadToml } = require('../src/utils');
-const ParameterLoader = require('../src/parameter-loader');
+const { NormalLoad } = require('../src/parameter-loader');
 
-describe('ParameterLoader', () => {
+describe('NormalLoad', () => {
   const combPath = './test/test-toml/parameter-loader-comb.test.toml';
   const notCombPath = './test/test-toml/parameter-loader.test.toml';
 
   const comb = loadToml(combPath);
   const notComb = loadToml(notCombPath);
 
-  const parameterLoader = new ParameterLoader();
+  const normalLoad = new NormalLoad();
 
-  describe('loadNormalLoad', () => {
+  describe('load', () => {
     describe('pass not combination parameters', () => {
-      const params = parameterLoader.loadNormalLoad(notComb);
+      const params = normalLoad.load(notComb);
 
       it('should return an array with only 1 elements', () => {
         assert.isArray(params);
@@ -31,7 +31,7 @@ describe('ParameterLoader', () => {
 
       it('should throw an error', () => {
         assert.throws(
-          () => { parameterLoader.loadNormalLoad(comb); },
+          () => { normalLoad.load(comb); },
           Error,
           ErrMsg);
       });

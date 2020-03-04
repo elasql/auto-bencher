@@ -34,20 +34,20 @@ class Server {
   }
 
   async sendBenchDir () {
-    logger.info(`sending benchmarker to ${this.procName}...`);
+    logger.debug(`sending benchmarker to ${this.procName}...`);
     const cmd = this.shellCmd.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
     await exec(cmd);
   }
 
   async deleteDbDir () {
-    logger.info(`deleting database directory on ${this.procName}`);
+    logger.debug(`deleting database directory on ${this.procName}`);
     const rm = ShellCmd.getRm(true, this.dbDir, this.dbName);
     const ssh = this.shellCmd.getSsh(rm);
     try {
       await exec(ssh);
     } catch (err) {
       if (err.code === 1) {
-        logger.info(`no previous database is found on ${this.conn.ip}`);
+        logger.debug(`no previous database is found on ${this.conn.ip}`);
       } else {
         throw Error(err.stderr);
       }
@@ -55,14 +55,14 @@ class Server {
   }
 
   async deleteBackupDbDir () {
-    logger.info(`deleting backup directory on ${this.procName}`);
+    logger.debug(`deleting backup directory on ${this.procName}`);
     const rm = ShellCmd.getRm(true, this.dbDir, this.dbNameBackup);
     const ssh = this.shellCmd.getSsh(rm);
     try {
       await exec(ssh);
     } catch (err) {
       if (err.code === 1) {
-        logger.info(`no backup database is found on ${this.conn.ip}`);
+        logger.debug(`no backup database is found on ${this.conn.ip}`);
       } else {
         throw Error(err.stderr);
       }
@@ -75,7 +75,7 @@ class Server {
       return;
     }
 
-    logger.info(`backing up the db of ${this.procName}`);
+    logger.debug(`backing up the db of ${this.procName}`);
     const cp = ShellCmd.getCp(true, this.dbDir, this.dbNameBackup);
     const ssh = this.shellCmd.getSsh(cp);
     await exec(ssh);
@@ -87,7 +87,7 @@ class Server {
       this.deleteDbDir();
     }
 
-    logger.info(`resetting the db of ${this.procName}`);
+    logger.debug(`resetting the db of ${this.procName}`);
     const cp = ShellCmd.getCp(true, this.dbDir, this.dbNameBackup);
     const ssh = this.shellCmd.getSsh(cp);
     await exec(ssh);

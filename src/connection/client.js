@@ -37,7 +37,7 @@ class Client {
       await exec(ssh);
     } catch (err) {
       if (err.code === 1) {
-        logger.info(`no previous results are found on ${this.conn.ip}`);
+        logger.debug(`no previous results are found on ${this.conn.ip}`);
       } else {
         throw Error(err.stderr);
       }
@@ -45,7 +45,7 @@ class Client {
   }
 
   async start (action) {
-    logger.info(`starting client ${this.conn.id}`);
+    logger.debug(`starting client ${this.conn.id}`);
     // [clientId] [action]
     const progArgs = `${this.conn.id} ${action}`;
     const runJar = ShellCmd.getJavaVersion(
@@ -56,7 +56,7 @@ class Client {
       this.logPath
     );
     const ssh = this.shellCmd.getSsh(runJar);
-    logger.info(`client ${this.conn.id} is running`);
+    logger.debug(`client ${this.conn.id} is running`);
     await exec(ssh);
   }
 

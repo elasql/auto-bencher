@@ -1,6 +1,22 @@
-const parameter = require('../parameters');
-const sub_com = require('./sub-com');
-const con_com = require('../connections/con-com');
+const logger = require('../logger');
+const { loadToml } = require('../utils');
+const { NormalLoad } = require('../parameter-loader');
+
+const { run } = require('./runner');
+
+function execute (configParams, argv) {
+  const dbName = argv[3];
+  const paramPath = argv[4];
+
+  logger.info('preparing for loading testben into ' + dbName.green);
+  logger.info(`using parameter file '${paramPath}'`);
+
+  const toml = loadToml(paramPath);
+  const normalLoad = new NormalLoad();
+  const params = normalLoad.load(toml);
+
+  run
+}
 
 module.exports = {
   execute: function (config, argv) {

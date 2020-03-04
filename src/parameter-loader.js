@@ -1,8 +1,8 @@
-class ParameterLoader {
+class NormalLoad {
   /*
   return 2D array
   */
-  loadNormalLoad (tomlObject) {
+  load (tomlObject) {
     const tables = this._parseTables(tomlObject);
     const params = this._findAllCombination(tables, 0, 0, [], []);
 
@@ -97,4 +97,6 @@ array = [
   }
 }
 
-module.exports = ParameterLoader;
+module.exports = {
+  NormalLoad: NormalLoad
+};

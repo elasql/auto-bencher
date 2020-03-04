@@ -9,15 +9,15 @@ const { exec } = require('../child-process');
 
 const defaultDirs = ['databases', 'results'];
 
-async function execute (params, argv) {
+async function execute (configParams, argv) {
   logger.info('start initializing the environment');
 
-  await checkLocalJdk(params);
-  await delpoyJdkToAllMachines(params);
+  await checkLocalJdk(configParams);
+  await delpoyJdkToAllMachines(configParams);
 }
 
-async function checkLocalJdk (params) {
-  const { jdkPackagePath } = params;
+async function checkLocalJdk (configParams) {
+  const { jdkPackagePath } = configParams;
 
   logger.info('checking local jdk: ' + jdkPackagePath);
 
@@ -27,14 +27,14 @@ async function checkLocalJdk (params) {
   }
 }
 
-async function delpoyJdkToAllMachines (params) {
-  const { involvedMachines } = params;
+async function delpoyJdkToAllMachines (configParams) {
+  const { involvedMachines } = configParams;
 
   /*
   Bad Code
 
     for (const ip of involvedMachines) {
-      deployJdkToMachine(params, ip);
+      deployJdkToMachine(configParams, ip);
     }
 
   although it is concurrent code as well,
@@ -48,27 +48,27 @@ async function delpoyJdkToAllMachines (params) {
   // Good code
   await Promise.all(
     involvedMachines.map(
-      ip => deployJdkToMachine(params, ip)
+      ip => deployJdkToMachine(configParams, ip)
     )
   );
 }
 
-async function deployJdkToMachine (params, ip) {
+async function deployJdkToMachine (configParams, ip) {
   logger.info('checking node ' + ip + '...');
 
-  await createWorkingDir(params, ip);
-  if (!await checkJavaRuntime(params, ip)) {
-    await sendJdk(params, ip);
-    await unpackJdk(params, ip);
-    await removeJdk(params, ip);
+  await createWorkingDir(configParams, ip);
+  if (!await checkJavaRuntime(configParams, ip)) {
+    await sendJdk(configParams, ip);
+    await unpackJdk(configParams, ip);
+    await removeJdk(configParams, ip);
   }
 
   const check = 'node ' + ip + ' checked';
   logger.info(check.green);
 }
 
-async function createWorkingDir (params, ip) {
-  const { systemUserName, systemRemoteWorkDir } = params;
+async function createWorkingDir (configParams, ip) {
+  const { systemUserName, systemRemoteWorkDir } = configParams;
   const shellCmd = new ShellCmd(systemUserName, ip);
 
   logger.info('creating a working directory on ' + ip);
@@ -83,8 +83,8 @@ async function createWorkingDir (params, ip) {
   }
 }
 
-async function checkJavaRuntime (params, ip) {
-  const { systemUserName, systemRemoteWorkDir, jdkDir } = params;
+async function checkJavaRuntime (configParams, ip) {
+  const { systemUserName, systemRemoteWorkDir, jdkDir } = configParams;
   const shellCmd = new ShellCmd(systemUserName, ip);
   const getJavaVersionCmd = ShellCmd.getJavaVersion(systemRemoteWorkDir, jdkDir);
   const ssh = shellCmd.getSsh(getJavaVersionCmd);
@@ -101,8 +101,8 @@ async function checkJavaRuntime (params, ip) {
   return true;
 }
 
-async function sendJdk (params, ip) {
-  const { systemUserName, systemRemoteWorkDir, jdkPackagePath } = params;
+async function sendJdk (configParams, ip) {
+  const { systemUserName, systemRemoteWorkDir, jdkPackagePath } = configParams;
   const shellCmd = new ShellCmd(systemUserName, ip);
   const scp = shellCmd.getScp(false, jdkPackagePath, systemRemoteWorkDir);
 
@@ -111,8 +111,8 @@ async function sendJdk (params, ip) {
   await exec(scp);
 }
 
-async function unpackJdk (params, ip) {
-  const { systemUserName, systemRemoteWorkDir, jdkPackageName } = params;
+async function unpackJdk (configParams, ip) {
+  const { systemUserName, systemRemoteWorkDir, jdkPackageName } = configParams;
   const shellCmd = new ShellCmd(systemUserName, ip);
   const tar = ShellCmd.getTar(systemRemoteWorkDir, jdkPackageName);
   const ssh = shellCmd.getSsh(tar);
@@ -122,8 +122,8 @@ async function unpackJdk (params, ip) {
   await exec(ssh);
 }
 
-async function removeJdk (params, ip) {
-  const { systemUserName, systemRemoteWorkDir, jdkPackageName } = params;
+async function removeJdk (configParams, ip) {
+  const { systemUserName, systemRemoteWorkDir, jdkPackageName } = configParams;
   const shellCmd = new ShellCmd(systemUserName, ip);
   const rm = ShellCmd.getRm(false, systemRemoteWorkDir, jdkPackageName);
   const ssh = shellCmd.getSsh(rm);

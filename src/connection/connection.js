@@ -47,7 +47,7 @@ class Connection {
   }
 }
 
-const ShellCmdGenerator = require('../shell-cmd-generator');
+const ShellCmd = require('../shell-cmd');
 const { exec } = require('../child-process');
 
 // We need this class because both server and client will use these methods
@@ -61,7 +61,7 @@ class ConnectionLog {
   }
 
   async grepLog (keyword) {
-    const grep = ShellCmdGenerator.getGrep(keyword, this.logPath);
+    const grep = ShellCmd.getGrep(keyword, this.logPath);
     const ssh = this.cmdGen.getSsh(grep);
     // Don't try catch here, we need to pass this error to the caller
     const result = await exec(ssh);

@@ -1,17 +1,17 @@
 const logger = require('../logger');
-const ShellCmdGenerator = require('../shell-cmd-generator');
+const ShellCmd = require('../shell-cmd');
 const { exec } = require('../child-process');
 const { Action } = require('./connection');
 
 class Client {
-  constructor(params, conn, vmArgs){
+  constructor(configParams, conn, vmArgs){
     const {
       systemUserName,
       systemRemoteWorkDir,
       clientJarPath,
       javaBin,
       resultPath
-    } = params;
+    } = configParams;
 
     this.jarPath = clientJarPath;
     this.javaBin = javaBin;
@@ -21,7 +21,7 @@ class Client {
     this.vmArgs = vmArgs;
 
     this.logPath = systemRemoteWorkDir + `/client-${conn.id}.log`;
-    this.cmdGen = new ShellCmdGenerator(systemUserName, conn.ip);
+    this.cmdGen = new ShellCmd(systemUserName, conn.ip);
     this.connLog = new ConnectionLog(this.cmdGen, this.logPath, conn.id, true);
   }
 
@@ -31,7 +31,7 @@ class Client {
   }
 
   async cleanPreviousResults () {
-    const rm = ShellCmdGenerator.getRm(true, this.resultPath);
+    const rm = ShellCmd.getRm(true, this.resultPath);
     const ssh = this.cmdGen.getSsh(rm);
     try {
       await exec(ssh);
@@ -42,13 +42,15 @@ class Client {
         throw Error(err.stderr);
       }
     }
+
+    async pull_csv()
   }
 
   async start(action) {
     logging.info(`starting client ${this.conn.id}`);
     // [clientId] [action]
     const progArgs = `${conn.id} ${action}`;
-    const runJar = ShellCmdGenerator.getJavaVersion(
+    const runJar = ShellCmd.getJavaVersion(
       this.javaBin,
       this.vmArgs,
       this.jarPath,
@@ -61,12 +63,9 @@ class Client {
   }
 
   async checkForFinished(action) {
-    const keyWord = this.getExpectedMsgFromAction(action);
-    await this.connLog.grepError('Exception');
-    await this.connLog.grepError('error');
-    await this.connLog.grepError('SEVERE');
-
+    const keyword = this._getExpectedMsgFromAction(action);
     try {
+      await this.checkForError();
       await this.connLog.grepLog(keyword);
       return true;
     } catch(err){
@@ -77,7 +76,13 @@ class Client {
     }
   }
 
-  getExpectedMsgFromAction(action){
+  async checkForError() {
+    await this.connLog.grepError('Exception');
+    await this.connLog.grepError('error');
+    await this.connLog.grepError('SEVERE');
+  }
+
+  _getExpectedMsgFromAction(action){
     switch(action){
       case Action.benchmarking:
         return 'benchmark process finished';
@@ -86,6 +91,25 @@ class Client {
       default:
         throw Error('no action');
     }
+  }
+
+  async pullCsv(dest) {
+    const grepCsv = ShellCmd.getGrepCsv(this.resultPath, this.conn.id);
+    const ssh = this.cmdGen.getSsh(grepCsv);
+    
+    try {
+      const { stdout } = await exec(ssh);
+      return stdout;
+    } catch(err) {
+      if(err.code === 1){
+        throw(`cannot find the csv file on ${this.conn.ip}`);
+      }
+      throw(err.stderr);
+    }
+  }
+
+  async getTotalThroughput() {
+
   }
 }
 

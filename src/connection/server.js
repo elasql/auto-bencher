@@ -1,17 +1,17 @@
 const logger = require('../logger');
-const ShellCmdGenerator = require('../shell-cmd-generator');
+const ShellCmd = require('../shell-cmd');
 const { exec } = require('../child-process');
 const { ConnectionLog } = require('./connection');
 
 class Server {
-  constructor (params, conn, dbName, vmArgs, isSequencer) {
+  constructor (configParams, conn, dbName, vmArgs, isSequencer) {
     const {
       dbDir,
       systemUserName,
       systemRemoteWorkDir,
       serverJarPath,
       javaBin
-    } = params;
+    } = configParams;
 
     this.dbDir = dbDir;
     this.systemRemoteWorkDir = systemRemoteWorkDir;
@@ -25,7 +25,7 @@ class Server {
     this.procName = `server ${conn.id}`;
     this.isSequencer = isSequencer;
 
-    this.cmdGen = new ShellCmdGenerator(systemUserName, conn.ip);
+    this.cmdGen = new ShellCmd(systemUserName, conn.ip);
 
     // [this.dbName] [connection.id] ([isSequencer])
     this.progArgs = this.isSequencer ? `${this.dbName} ${conn.id} 1` : `${this.dbName} ${conn.id}`;
@@ -41,7 +41,7 @@ class Server {
 
   async deleteDbDir () {
     logger.info(`deleting database directory on ${this.procName}`);
-    const rm = ShellCmdGenerator.getRm(true, this.dbDir, this.dbName);
+    const rm = ShellCmd.getRm(true, this.dbDir, this.dbName);
     const ssh = this.cmdGen.getSsh(rm);
     try {
       await exec(ssh);
@@ -56,7 +56,7 @@ class Server {
 
   async deleteBackupDbDir () {
     logger.info(`deleting backup directory on ${this.procName}`);
-    const rm = ShellCmdGenerator.getRm(true, this.dbDir, this.dbNameBackup);
+    const rm = ShellCmd.getRm(true, this.dbDir, this.dbNameBackup);
     const ssh = this.cmdGen.getSsh(rm);
     try {
       await exec(ssh);
@@ -76,7 +76,7 @@ class Server {
     }
 
     logger.info(`backing up the db of ${this.procName}`);
-    const cp = ShellCmdGenerator.getCp(true, this.dbDir, this.dbNameBackup);
+    const cp = ShellCmd.getCp(true, this.dbDir, this.dbNameBackup);
     const ssh = this.cmdGen.getSsh(cp);
     await exec(ssh);
   }
@@ -88,13 +88,13 @@ class Server {
     }
 
     logger.info(`resetting the db of ${this.procName}`);
-    const cp = ShellCmdGenerator.getCp(true, this.dbDir, this.dbNameBackup);
+    const cp = ShellCmd.getCp(true, this.dbDir, this.dbNameBackup);
     const ssh = this.cmdGen.getSsh(cp);
     await exec(ssh);
   }
 
   async start () {
-    const runJar = ShellCmdGenerator.getRunJar(
+    const runJar = ShellCmd.getRunJar(
       this.javaBin,
       this.vmArgs,
       this.jarPath,

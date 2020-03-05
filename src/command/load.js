@@ -1,6 +1,6 @@
 const logger = require('../logger');
 const { loadToml } = require('../utils');
-const { NormalLoad } = require('../parameter-loader');
+const { NormalLoad } = require('../benchmark-parameter');
 
 const { run } = require('./runner');
 
@@ -15,7 +15,7 @@ function execute (configParams, argv) {
   const normalLoad = new NormalLoad();
   const params = normalLoad.load(toml);
 
-  run
+  run;
 }
 
 module.exports = {

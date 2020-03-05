@@ -162,10 +162,10 @@ class NormalLoad {
 
   static getValue (param, table, property) {
     if (!Object.prototype.hasOwnProperty.call(param, table)) {
-      throw Error(`table: ${table} doesn't exist`);
+      throw Error(`table ${table} doesn't exist`);
     }
     if (!Object.prototype.hasOwnProperty.call(param[table], property)) {
-      throw Error(`property: ${property} doesn't exist in table ${table}`);
+      throw Error(`property ${property} doesn't exist in table ${table}`);
     }
 
     return param[table][property];

@@ -119,4 +119,18 @@ describe('NormalLoad', () => {
       assert.throws(() => { NormalLoad.getBoolValue(params[0], autoBencher, jarDir); }, Error, ErrMsg);
     });
   });
+
+  describe('getValue', () => {
+    const a = 'a';
+    const b = 'b';
+    it('should throw an error if passing invalid table name', () => {
+      const ErrMsg = `table ${a} doesn't exist`;
+      assert.throws(() => { NormalLoad.getValue(params[0], a, b); }, Error, ErrMsg);
+    });
+
+    it('should throw an error if passing invalid property name', () => {
+      const ErrMsg = `property ${b} doesn't exist in table ${a}`;
+      assert.throws(() => { NormalLoad.getValue(params[0], autoBencher, b); }, Error, ErrMsg);
+    });
+  });
 });

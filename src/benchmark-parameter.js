@@ -29,10 +29,10 @@ class ParameterOperator {
 */
 
 /*
-  DON'T EXPORT ParamterLoader
-  load parameter from the toml file
-*/
-class ParameterLoader {
+  DON'T EXPORT THIS CLASS
+  This class will load the paremeter object from the toml file
+  */
+class ParamLoader {
   /*
   _parseTables will return an array like the below example
 
@@ -42,11 +42,11 @@ class ParameterLoader {
   ]
 
     */
-  _parseTables (tomlObject) {
+  static parseTables (tomlObject) {
     const tables = [];
 
     for (const table in tomlObject) {
-      const pairs = this._parsePairs(tomlObject[table]);
+      const pairs = ParamLoader.parsePairs(tomlObject[table]);
       tables.push({
         table,
         pairs
@@ -56,7 +56,7 @@ class ParameterLoader {
     return tables;
   }
 
-  _parsePairs (table) {
+  static parsePairs (table) {
     const pairs = [];
 
     for (const key in table) {
@@ -70,7 +70,7 @@ class ParameterLoader {
   }
 
   // TODO: refurbish this function, because it is too fat
-  _findAllCombination (tables, tableIdx, pairIdx, current, results) {
+  static findAllCombination (tables, tableIdx, pairIdx, current, results) {
     if (tableIdx < tables.length) {
       const { table, pairs } = tables[tableIdx];
 
@@ -82,12 +82,12 @@ class ParameterLoader {
         }
 
         values.split(' ').map(value => {
-          const newObj = this._addParam(current, table, key, value);
+          const newObj = ParamLoader.addParam(current, table, key, value);
 
-          this._findAllCombination(tables, tableIdx, pairIdx + 1, newObj, results);
+          ParamLoader.findAllCombination(tables, tableIdx, pairIdx + 1, newObj, results);
         });
       } else {
-        this._findAllCombination(tables, tableIdx + 1, 0, current, results);
+        ParamLoader.findAllCombination(tables, tableIdx + 1, 0, current, results);
       }
     } else {
       results.push(current);
@@ -98,7 +98,7 @@ class ParameterLoader {
   /*
     return a new object
   */
-  _addParam (currentObj, table, key, value) {
+  static addParam (currentObj, table, key, value) {
     const obj = { ...currentObj };
 
     if (!Object.prototype.hasOwnProperty.call(obj, table)) {
@@ -109,37 +109,66 @@ class ParameterLoader {
   }
 }
 
-class NormalLoad extends ParameterLoader {
+class NormalLoad {
   /*
-  return an array
-
-  [
-    {
-      table1: {
-        t1.k1: a,
-        t1.k2: b,
-      },
-      table2: {
-        t2.k1: value1,
-        key2: value2,
-      }
-    },
-    {
-      file1: {
-        k
-      }
-    }
-  ]
+    return an array
   */
-  load (tomlObject) {
-    const tables = this._parseTables(tomlObject);
-    const params = this._findAllCombination(tables, 0, 0, [], []);
+  static load (tomlObject) {
+    const tables = ParamLoader.parseTables(tomlObject);
+    const params = ParamLoader.findAllCombination(tables, 0, 0, [], []);
 
     if (params.length > 1) {
-      throw new Error('Combination (mutiple values in one property) in normal-load.toml is forbidden');
+      throw new Error('combination (mutiple values in one property) in normal-load.toml is forbidden');
     }
 
     return params;
+  }
+
+  static getStrValue (param, table, property) {
+    let value = NormalLoad.getValue(param, table, property);
+
+    if (typeof value !== 'string') {
+      value = JSON.stringify(value);
+      if (typeof value !== 'string') {
+        throw Error(`cannot get ${table}.${property} in string type`);
+      }
+    };
+
+    return value;
+  }
+
+  static getNumValue (param, table, property) {
+    let value = NormalLoad.getValue(param, table, property);
+
+    if (typeof value !== 'number') {
+      value *= 1;
+      if (isNaN(value)) {
+        throw Error(`cannot get ${table}.${property} in number type`);
+      }
+    }
+
+    return value;
+  }
+
+  static getBoolValue (param, table, property) {
+    const value = NormalLoad.getValue(param, table, property);
+    const lowerValue = value.toLowerCase();
+    if (lowerValue !== 'false' && lowerValue !== 'true') {
+      throw Error(`cannot get ${table}.${property} in boolean type`);
+    }
+
+    return value === 'true';
+  }
+
+  static getValue (param, table, property) {
+    if (!Object.prototype.hasOwnProperty.call(param, table)) {
+      throw Error(`table: ${table} doesn't exist`);
+    }
+    if (!Object.prototype.hasOwnProperty.call(param[table], property)) {
+      throw Error(`property: ${property} doesn't exist in table ${table}`);
+    }
+
+    return param[table][property];
   }
 }
 

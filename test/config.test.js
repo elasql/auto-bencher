@@ -17,59 +17,60 @@ describe('Config', () => {
     serverJarPath,
     clientJarPath,
     javaBin,
-    resultPath
+    resultPath,
+    sequencer
   } = config.getParams();
 
-  describe('params.dbDir', () => {
+  describe('configParam.dbDir', () => {
     it('should be expected result', () => {
       const expected = 'auto_test/databases';
       assert.equal(dbDir, expected);
     });
   });
 
-  describe('params.serverJarPath', () => {
+  describe('configParam.serverJarPath', () => {
     it('should be expected result', () => {
       const expected = 'auto_test/benchmarker/server.jar';
       assert.equal(serverJarPath, expected);
     });
   });
 
-  describe('params.clientJarPath', () => {
+  describe('configParam.clientJarPath', () => {
     it('should be expected result', () => {
       const expected = 'auto_test/benchmarker/client.jar';
       assert.equal(clientJarPath, expected);
     });
   });
 
-  describe('params.javaBin', () => {
+  describe('configParam.javaBin', () => {
     it('should be expected result', () => {
       const expected = 'auto_test/jdk1.8.0_211/bin/java';
       assert.equal(javaBin, expected);
     });
   });
 
-  describe('params.jdkPackagePath', () => {
+  describe('configParam.jdkPackagePath', () => {
     it('should be expected result', () => {
       const expected = 'package/jdk-8u211-linux-x64.tar.gz';
       assert.equal(jdkPackagePath, expected);
     });
   });
 
-  describe('params.jdkPackageName', () => {
+  describe('configParam.jdkPackageName', () => {
     it('should be expected result', () => {
       const expected = 'jdk-8u211-linux-x64.tar.gz';
       assert.equal(jdkPackageName, expected);
     });
   });
 
-  describe('params.jdkDir', () => {
+  describe('configParam.jdkDir', () => {
     it('should return a string', () => {
       const expected = 'jdk1.8.0_211';
       assert.equal(jdkDir, expected);
     });
   });
 
-  describe('params.involvedMachines', () => {
+  describe('configParam.involvedMachines', () => {
     it('should return an array with 6 elements', () => {
       assert.isArray(involvedMachines);
       assert.lengthOf(involvedMachines, 6);
@@ -87,24 +88,31 @@ describe('Config', () => {
     });
   });
 
-  describe('params.systemUserName', () => {
+  describe('configParam.systemUserName', () => {
     it('should be expected result', () => {
       const expected = 'db-team';
       assert.equal(systemUserName, expected);
     });
   });
 
-  describe('params.systemRemoteWorkDir', () => {
+  describe('configParam.systemRemoteWorkDir', () => {
     it('should be expected result', () => {
       const expected = 'auto_test';
       assert.equal(systemRemoteWorkDir, expected);
     });
   });
 
-  describe('params.resultPath', () => {
+  describe('configParam.resultPath', () => {
     it('should be expected result', () => {
       const expected = 'auto_test/results';
       assert.equal(resultPath, expected);
+    });
+  });
+
+  describe('configParam.sequencer', () => {
+    it('should be expected result', () => {
+      const expected = '192.168.1.24';
+      assert.equal(sequencer, expected);
     });
   });
 });

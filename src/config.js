@@ -11,6 +11,7 @@ const serverJar = 'benchmarker/server.jar';
 const clientJar = 'benchmarker/client.jar';
 const javaBin = 'bin/java';
 const results = 'results';
+const sequencer = 'sequencer';
 
 class Config {
   constructor (tomlObject) {
@@ -29,7 +30,8 @@ class Config {
       involvedMachines: this._getInvolvedMachines(),
       systemUserName: this._getSystemUserName(),
       systemRemoteWorkDir: this._getSystemRemoteWorkDir(),
-      resultPath: this._getResultPath()
+      resultPath: this._getResultPath(),
+      sequencer: this._getSequencer()
     };
   }
 
@@ -118,7 +120,7 @@ class Config {
     }
 
     if (!Object.prototype.hasOwnProperty.call(this.config[system], userName)) {
-      throw new Error(`config has no property ${userName}`);
+      throw new Error(`config.${system} has no property ${userName}`);
     }
 
     return this.config[system][userName];
@@ -133,7 +135,7 @@ class Config {
     }
 
     if (!Object.prototype.hasOwnProperty.call(this.config[system], remoteWorkDir)) {
-      throw new Error(`config has no property ${remoteWorkDir}`);
+      throw new Error(`config.${system} has no property ${remoteWorkDir}`);
     }
 
     return this.config[system][remoteWorkDir];
@@ -144,6 +146,16 @@ class Config {
   */
   _getResultPath () {
     return this._getSystemRemoteWorkDir() + '/' + results;
+  }
+
+  _getSequencer () {
+    if (!Object.prototype.hasOwnProperty.call(this.config, machines)) {
+      throw new Error(`config has no property ${machines}`);
+    }
+    if (!Object.prototype.hasOwnProperty.call(this.config[machines], sequencer)) {
+      throw new Error(`config.${machines} has no property ${sequencer}`);
+    }
+    return this.config[machines][sequencer][0];
   }
 }
 

@@ -1,3 +1,10 @@
+class ParameterParser {
+  constructor (param) {
+    this.param = param;
+  }
+
+}
+
 class NormalLoad {
   /*
   return 2D array
@@ -98,5 +105,6 @@ array = [
 }
 
 module.exports = {
-  NormalLoad: NormalLoad
+  ParameterParser,
+  NormalLoad
 };

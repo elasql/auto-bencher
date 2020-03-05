@@ -1,11 +1,11 @@
 const assert = require('chai').assert;
 
 const { loadToml } = require('../src/utils');
-const { NormalLoad } = require('../src/parameter-loader');
+const { NormalLoad } = require('../src/benchmark-parameter');
 
 describe('NormalLoad', () => {
-  const combPath = './test/test-toml/parameter-loader-comb.test.toml';
-  const notCombPath = './test/test-toml/parameter-loader.test.toml';
+  const combPath = './test/test-toml/benchmark-parameter-comb.test.toml';
+  const notCombPath = './test/test-toml/benchmark-parameter.test.toml';
 
   const comb = loadToml(combPath);
   const notComb = loadToml(notCombPath);

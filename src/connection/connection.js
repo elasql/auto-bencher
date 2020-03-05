@@ -30,7 +30,7 @@ class Connection {
           return;
         }
         const port = this.initPort + currentConnPerNode - 1;
-        conns.push(this._getInfo(id, ip, port));
+        conns.push(this.getInfo(id, ip, port));
         id += 1;
       });
     });
@@ -38,7 +38,7 @@ class Connection {
     return conns;
   }
 
-  _getInfo (id, ip, port) {
+  getInfo (id, ip, port) {
     return {
       id,
       ip,

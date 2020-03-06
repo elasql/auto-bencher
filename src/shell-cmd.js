@@ -7,8 +7,6 @@ path should contain directory name and file name
 path = dir / fileName
 
 */
-
-// TODO: try catch error
 class ShellCmd {
   constructor (userName, ip) {
     this.userName = userName;

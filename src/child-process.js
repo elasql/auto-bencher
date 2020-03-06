@@ -8,16 +8,17 @@ async function exec (cmd) {
 /*
   PLEASE DO NOT TRY CATCH childProcessExec !!!!!
 
-  a lot of functions depend on the return value and error of childProcessExec
-  if you catch the error in this function
-  it will cause disaster
+  a lot of functions depend on the returned values and errors of childProcessExec
+  if you catch the errors in this function
+  it will cause a disaster
 
-  result will be {
+  if childProcessExec is resolved
+  return {
     stdout:'...',
     stderr:''
-  } if childProcessExec is resolved
+  }
 
-  else it will be {
+  else return {
     killed: false,
     code: 1,
     signal: null,
@@ -26,6 +27,8 @@ async function exec (cmd) {
     stderr: '...'
   }
 */
+  // result is not a redundant variable
+  // https://eslint.org/docs/rules/no-return-await
   const result = await childProcessExec(cmd);
   return result;
 };

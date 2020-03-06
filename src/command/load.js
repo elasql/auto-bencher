@@ -13,7 +13,7 @@ function execute (configParams, argv) {
 
   const toml = loadToml(paramPath);
   const normalLoad = new NormalLoad();
-  const params = normalLoad.load(toml);
+  const benchParam = normalLoad.load(toml);
 
   run;
 }

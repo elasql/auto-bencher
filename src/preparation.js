@@ -1,3 +1,47 @@
+const fs = require('fs');
+const logger = require('./logger');
+const bp = require('./benchmark-parameter');
+const ShellCmd = require('./shell-cmd');
+const { exec } = require('./child-process');
+
+const BENCH_DIR = 'benchmarker';
+const prop_dir = 'props';
+
+async function prepareBenchDir (configParam, benchParam, systemConn) {
+  logger.info('preparing the benchmarker directory...');
+
+  // ensure the existance of the benchmarker directory
+  if (!fs.existsSync(BENCH_DIR)) {
+    fs.mkdirSync(BENCH_DIR);
+  }
+
+  // copy the jar files to the benchmark directory
+  await copyJars();
+}
+
+async function copyJars () {
+  await Promise.all(getJars().map(jarPath => {
+    lsAndCopy(jarPath);
+  })
+  );
+}
+
+async function lsAndCopy (jarPath) {
+  const ls = ShellCmd.getLs(jarPath);
+  await exec(ls);
+
+  const cp = ShellCmd.getCp(false, jarPath, BENCH_DIR);
+  await exec(cp);
+}
+
+function getJars () {
+  const jarDir = bp.getStrValue(benchParam, 'auto_bencher', 'jar_dir');
+  const fileNames = ['server.jar', 'client.jar'];
+
+  return fileNames.map(fileName => `jars/${jarDir}/${fileName}`);
+}
+
+/*
 const BENCH_DIR = 'benchmarker';
 const PROP_DIR = 'props';
 const fs = require('fs');
@@ -84,3 +128,4 @@ function set_elasql_properties (map, server_count) {
     server_count
   );
 }
+*/

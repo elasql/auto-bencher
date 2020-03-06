@@ -7,6 +7,8 @@ path should contain directory name and file name
 path = dir / fileName
 
 */
+
+// TODO: try catch error
 class ShellCmd {
   constructor (userName, ip) {
     this.userName = userName;
@@ -61,6 +63,10 @@ class ShellCmd {
 
   static getGrepTotal (resultPath, id) {
     return `grep 'TOTAL' ${resultPath}/*-${id}.txt`;
+  }
+
+  static getLs (path) {
+    return `ls ${path}`;
   }
 
   getScp (isDir, localPath, remotePath) {

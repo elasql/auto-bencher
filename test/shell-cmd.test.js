@@ -117,6 +117,15 @@ describe('ShellCmd', () => {
     });
   });
 
+  describe('getLs', () => {
+    it('should return a correct command', () => {
+      const dir = 'dir';
+      const cmd = ShellCmd.getLs(dir);
+      const expected = `ls ${dir}`;
+      assert.equal(cmd, expected);
+    });
+  });
+
   describe('getScp', () => {
     const localPath = 'localPath';
     const remotePath = 'remotePath';

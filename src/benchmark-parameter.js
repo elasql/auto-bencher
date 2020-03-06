@@ -1,17 +1,4 @@
 /*
-   operate parameter
-*/
-class ParameterOperator {
-  constructor (param) {
-    this.param = param;
-  }
-
-  addParam (fileName, property, value) {
-    const found = false;
-  }
-}
-
-/*
   toml file consists of multiple tables!
   a table consists of mutiple key-value pairs
   each key-value pair may have several values
@@ -29,76 +16,69 @@ class ParameterOperator {
 */
 
 /*
-  DON'T EXPORT THIS CLASS
-  This class will load the paremeter object from the toml file
-  */
-class ParamLoader {
-  /*
   _parseTables will return an array like the below example
 
   array = [
     [table1, [["t1.k1", "a b"], ["t1.k2", "c"]]],
     [table2, [["t2.k1", "d"], ["t2.k2", "e"]]],
   ]
-
     */
-  static parseTables (tomlObject) {
-    const tables = [];
+function parseTables (tomlObject) {
+  const tables = [];
 
-    for (const table in tomlObject) {
-      const pairs = ParamLoader.parsePairs(tomlObject[table]);
-      tables.push({
-        table,
-        pairs
-      });
-    }
-
-    return tables;
+  for (const table in tomlObject) {
+    const pairs = parsePairs(tomlObject[table]);
+    tables.push({
+      table,
+      pairs
+    });
   }
 
-  static parsePairs (table) {
-    const pairs = [];
+  return tables;
+}
 
-    for (const key in table) {
-      pairs.push({
-        key,
-        values: table[key]
-      });
-    }
+function parsePairs (table) {
+  const pairs = [];
 
-    return pairs;
+  for (const key in table) {
+    pairs.push({
+      key,
+      values: table[key]
+    });
   }
 
-  // TODO: refurbish this function, because it is too fat
-  static findAllCombination (tables, tableIdx, pairIdx, current, results) {
-    if (tableIdx < tables.length) {
-      const { table, pairs } = tables[tableIdx];
+  return pairs;
+}
 
-      if (pairIdx < pairs.length) {
-        const { key, values } = pairs[pairIdx];
+// TODO: refurbish this function, because it is too fat
+function findAllCombination (tables, tableIdx, pairIdx, current, results) {
+  if (tableIdx < tables.length) {
+    const { table, pairs } = tables[tableIdx];
 
-        if (typeof (values) !== 'string') {
-          throw Error('value should be string type, use white space to seperate values');
-        }
+    if (pairIdx < pairs.length) {
+      const { key, values } = pairs[pairIdx];
 
-        values.split(' ').map(value => {
-          const newObj = ParamLoader.addParam(current, table, key, value);
-
-          ParamLoader.findAllCombination(tables, tableIdx, pairIdx + 1, newObj, results);
-        });
-      } else {
-        ParamLoader.findAllCombination(tables, tableIdx + 1, 0, current, results);
+      if (typeof (values) !== 'string') {
+        throw Error('value should be string type, use white space to seperate values');
       }
+
+      values.split(' ').map(value => {
+        const newObj = addParam(current, table, key, value);
+
+        findAllCombination(tables, tableIdx, pairIdx + 1, newObj, results);
+      });
     } else {
-      results.push(current);
+      findAllCombination(tables, tableIdx + 1, 0, current, results);
     }
-    return results;
+  } else {
+    results.push(current);
   }
+  return results;
 
   /*
     return a new object
   */
-  static addParam (currentObj, table, key, value) {
+  function addParam (currentObj, table, key, value) {
     const obj = { ...currentObj };
 
     if (!Object.prototype.hasOwnProperty.call(obj, table)) {
@@ -110,8 +90,8 @@ class ParamLoader {
 }
 
 function normalLoad (tomlObject) {
-  const tables = ParamLoader.parseTables(tomlObject);
-  const params = ParamLoader.findAllCombination(tables, 0, 0, [], []);
+  const tables = parseTables(tomlObject);
+  const params = findAllCombination(tables, 0, 0, [], []);
 
   if (params.length > 1) {
     throw new Error('combination (mutiple values in one property) in normal-load.toml is forbidden');
@@ -169,8 +149,9 @@ function getValue (param, table, property) {
 }
 
 module.exports = {
-  ParameterOperator,
   normalLoad,
+  parseTables,
+  findAllCombination,
   getBoolValue,
   getNumValue,
   getStrValue,

@@ -11,6 +11,9 @@ class Connection {
   }
 
   getConnList (ips, totalConn, maxConnPerNode) {
+    if (!Number.isInteger(totalConn)) {
+      throw Error(`totalConn is not a Integer, you pass ${totalConn} to getConnList`);
+    }
     const nodeNum = ips.length;
     const connPerNode = Math.ceil(totalConn / nodeNum);
     if (connPerNode > maxConnPerNode) {

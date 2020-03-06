@@ -18,7 +18,9 @@ describe('Config', () => {
     clientJarPath,
     javaBin,
     resultPath,
-    sequencer
+    sequencer,
+    clients,
+    servers
   } = config.getParams();
 
   describe('configParam.dbDir', () => {
@@ -110,9 +112,39 @@ describe('Config', () => {
   });
 
   describe('configParam.sequencer', () => {
+    it('should not return an array', () => {
+      assert.isNotArray(sequencer);
+    });
     it('should be expected result', () => {
       const expected = '192.168.1.24';
-      assert.equal(sequencer, expected);
+      assert.deepEqual(sequencer, expected);
+    });
+  });
+
+  describe('configParam.clients', () => {
+    it('should return an array', () => {
+      assert.isArray(clients);
+    });
+    it('should be expected result', () => {
+      const expected = [
+        '192.168.1.30',
+        '192.168.1.31'
+      ];
+      assert.deepEqual(clients, expected);
+    });
+  });
+
+  describe('configParam.servers', () => {
+    it('should return an array', () => {
+      assert.isArray(servers);
+    });
+    it('should be expected result', () => {
+      const expected = [
+        '192.168.1.25',
+        '192.168.1.26',
+        '192.168.1.27'
+      ];
+      assert.deepEqual(servers, expected);
     });
   });
 });

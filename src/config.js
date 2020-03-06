@@ -12,6 +12,8 @@ const clientJar = 'benchmarker/client.jar';
 const javaBin = 'bin/java';
 const results = 'results';
 const sequencer = 'sequencer';
+const clients = 'clients';
+const servers = 'servers';
 
 class Config {
   constructor (tomlObject) {
@@ -31,7 +33,9 @@ class Config {
       systemUserName: this._getSystemUserName(),
       systemRemoteWorkDir: this._getSystemRemoteWorkDir(),
       resultPath: this._getResultPath(),
-      sequencer: this._getSequencer()
+      sequencer: this._getSequencer(),
+      clients: this._getClients(),
+      servers: this._getServers()
     };
   }
 
@@ -104,11 +108,15 @@ class Config {
         return ab array of IP of involved machines
     */
   _getInvolvedMachines () {
+    return Object.values(this._getMachines()).flat();
+  }
+
+  _getMachines () {
     if (!Object.prototype.hasOwnProperty.call(this.config, machines)) {
       throw new Error(`config has no property ${machines}`);
     }
 
-    return Object.values(this.config[machines]).flat();
+    return this.config[machines];
   }
 
   /*
@@ -149,13 +157,27 @@ class Config {
   }
 
   _getSequencer () {
-    if (!Object.prototype.hasOwnProperty.call(this.config, machines)) {
-      throw new Error(`config has no property ${machines}`);
-    }
-    if (!Object.prototype.hasOwnProperty.call(this.config[machines], sequencer)) {
+    const mchns = this._getMachines();
+    if (!Object.prototype.hasOwnProperty.call(mchns, sequencer)) {
       throw new Error(`config.${machines} has no property ${sequencer}`);
     }
-    return this.config[machines][sequencer][0];
+    return mchns[sequencer][0];
+  }
+
+  _getClients () {
+    const mchns = this._getMachines();
+    if (!Object.prototype.hasOwnProperty.call(mchns, clients)) {
+      throw new Error(`config.${machines} has no property ${clients}`);
+    }
+    return mchns[clients];
+  }
+
+  _getServers () {
+    const mchns = this._getMachines();
+    if (!Object.prototype.hasOwnProperty.call(mchns, servers)) {
+      throw new Error(`config.${machines} has no property ${servers}`);
+    }
+    return mchns[servers];
   }
 }
 

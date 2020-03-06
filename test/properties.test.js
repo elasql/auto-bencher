@@ -5,9 +5,8 @@ const prop = require('../src/properties');
 const propertiesPath = './test/test-properties/test.properties';
 
 describe('PropertiesFile', () => {
-  const pf = new prop.PropertiesFile(1, propertiesPath);
-
   describe('constructor', () => {
+    const pf = new prop.PropertiesFile(1, propertiesPath);
     it('should initialize with corret values and types', () => {
       assert.isNumber(pf.id);
       assert.isString(pf.fileName);
@@ -15,7 +14,25 @@ describe('PropertiesFile', () => {
 
       assert.equal(pf.id, 1);
       assert.equal(pf.fileName, 'test');
+    });
+  });
 
+  describe('set', () => {
+    const pf = new prop.PropertiesFile(1, propertiesPath);
+    const key = 'org.vanilladb.core.util.Profiler.DEPTH';
+    it('should correctly set the value', () => {
+      // before
+      assert.equal(pf.properties[key], '4');
+
+      pf.set(key, '6');
+
+      // after
+      assert.equal(pf.properties[key], '6');
+    });
+
+    it('should throw an error if passing a non-string value', () => {
+      const value = 6;
+      assert.throws(() => { pf.set(key, value); }, Error, `value ${value} is not in string type`);
     });
   });
 });

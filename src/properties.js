@@ -4,13 +4,20 @@ const javaProperties = require('java-properties');
 class PropertiesFile {
   constructor (id, propertiesPath) {
     this.id = id;
-    this.properties = javaProperties.of(propertiesPath);
+    this.properties = { ...javaProperties.of(propertiesPath).objs };
     this.fileName = path.basename(propertiesPath, '.properties');
   }
 
-  // set (property, value) {
+  set (property, value) {
+    if (!Object.prototype.hasOwnProperty.call(this.properties, property)) {
+      throw Error(`cannot find the property: ${property} in ${this.fileName}.properties`);
+    }
+    if (typeof value !== 'string') {
+      throw Error(`value ${value} is not in string type`);
+    }
+    this.properties[property] = value;
+  }
 
-  // }
 }
 
 module.exports = {

@@ -1,16 +1,16 @@
 const assert = require('chai').assert;
 
 const { loadToml } = require('../src/utils');
-const { NormalLoad } = require('../src/benchmark-parameter');
+const { normalLoad, getBoolValue, getStrValue, getNumValue, getValue } = require('../src/benchmark-parameter');
 
 const combPath = './test/test-toml/benchmark-parameter-comb.test.toml';
 const notCombPath = './test/test-toml/benchmark-parameter.test.toml';
 
 const comb = loadToml(combPath);
 const notComb = loadToml(notCombPath);
-const params = NormalLoad.load(notComb);
+const params = normalLoad(notComb);
 
-describe('NormalLoad', () => {
+describe('normalLoad', () => {
   describe('load', () => {
     describe('pass not combination parameters', () => {
       it('should return an array with only 1 elements', () => {
@@ -65,7 +65,7 @@ describe('NormalLoad', () => {
 
       it('should throw an error', () => {
         assert.throws(
-          () => { NormalLoad.load(comb); },
+          () => { normalLoad(comb); },
           Error,
           ErrMsg);
       });
@@ -80,7 +80,7 @@ describe('NormalLoad', () => {
 
   describe('getStrValue', () => {
     it('should return a string value', () => {
-      const value = NormalLoad.getStrValue(params[0], autoBencher, serverCount);
+      const value = getStrValue(params[0], autoBencher, serverCount);
       assert.isString(value);
     });
 
@@ -92,31 +92,31 @@ describe('NormalLoad', () => {
         auto_bencher: badFunc
       };
       const ErrMsg = `cannot get ${autoBencher}.${serverCount} in string type`;
-      assert.throws(() => { NormalLoad.getStrValue(badObject, autoBencher, serverCount); }, Error, ErrMsg);
+      assert.throws(() => { getStrValue(badObject, autoBencher, serverCount); }, Error, ErrMsg);
     });
   });
 
   describe('getNumValue', () => {
     it('should return a number value', () => {
-      const value = NormalLoad.getNumValue(params[0], autoBencher, serverCount);
+      const value = getNumValue(params[0], autoBencher, serverCount);
       assert.isNumber(value);
     });
 
     it('should throw an error', () => {
       const ErrMsg = `cannot get ${autoBencher}.${jarDir} in number type`;
-      assert.throws(() => { NormalLoad.getNumValue(params[0], autoBencher, jarDir); }, Error, ErrMsg);
+      assert.throws(() => { getNumValue(params[0], autoBencher, jarDir); }, Error, ErrMsg);
     });
   });
 
   describe('getBoolValue', () => {
     it('should return a bool value', () => {
-      const value = NormalLoad.getBoolValue(params[0], vanilladb, useDirect);
+      const value = getBoolValue(params[0], vanilladb, useDirect);
       assert.isBoolean(value);
     });
 
     it('should throw an error', () => {
       const ErrMsg = `cannot get ${autoBencher}.${jarDir} in boolean type`;
-      assert.throws(() => { NormalLoad.getBoolValue(params[0], autoBencher, jarDir); }, Error, ErrMsg);
+      assert.throws(() => { getBoolValue(params[0], autoBencher, jarDir); }, Error, ErrMsg);
     });
   });
 
@@ -125,12 +125,12 @@ describe('NormalLoad', () => {
     const b = 'b';
     it('should throw an error if passing invalid table name', () => {
       const ErrMsg = `table ${a} doesn't exist`;
-      assert.throws(() => { NormalLoad.getValue(params[0], a, b); }, Error, ErrMsg);
+      assert.throws(() => { getValue(params[0], a, b); }, Error, ErrMsg);
     });
 
     it('should throw an error if passing invalid property name', () => {
       const ErrMsg = `property ${b} doesn't exist in table ${a}`;
-      assert.throws(() => { NormalLoad.getValue(params[0], autoBencher, b); }, Error, ErrMsg);
+      assert.throws(() => { getValue(params[0], autoBencher, b); }, Error, ErrMsg);
     });
   });
 });

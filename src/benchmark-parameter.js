@@ -109,70 +109,70 @@ class ParamLoader {
   }
 }
 
-class NormalLoad {
-  /*
-    return an array
-  */
-  static load (tomlObject) {
-    const tables = ParamLoader.parseTables(tomlObject);
-    const params = ParamLoader.findAllCombination(tables, 0, 0, [], []);
+function normalLoad (tomlObject) {
+  const tables = ParamLoader.parseTables(tomlObject);
+  const params = ParamLoader.findAllCombination(tables, 0, 0, [], []);
 
-    if (params.length > 1) {
-      throw new Error('combination (mutiple values in one property) in normal-load.toml is forbidden');
-    }
-
-    return params;
+  if (params.length > 1) {
+    throw new Error('combination (mutiple values in one property) in normal-load.toml is forbidden');
   }
 
-  static getStrValue (param, table, property) {
-    let value = NormalLoad.getValue(param, table, property);
+  return params;
+}
 
+function getStrValue (param, table, property) {
+  let value = getValue(param, table, property);
+
+  if (typeof value !== 'string') {
+    value = JSON.stringify(value);
     if (typeof value !== 'string') {
-      value = JSON.stringify(value);
-      if (typeof value !== 'string') {
-        throw Error(`cannot get ${table}.${property} in string type`);
-      }
-    };
+      throw Error(`cannot get ${table}.${property} in string type`);
+    }
+  };
 
-    return value;
+  return value;
+}
+
+function getNumValue (param, table, property) {
+  let value = getValue(param, table, property);
+
+  if (typeof value !== 'number') {
+    value *= 1;
+    if (isNaN(value)) {
+      throw Error(`cannot get ${table}.${property} in number type`);
+    }
   }
 
-  static getNumValue (param, table, property) {
-    let value = NormalLoad.getValue(param, table, property);
+  return value;
+}
 
-    if (typeof value !== 'number') {
-      value *= 1;
-      if (isNaN(value)) {
-        throw Error(`cannot get ${table}.${property} in number type`);
-      }
-    }
+function getBoolValue (param, table, property) {
+  const value = getValue(param, table, property);
+  const lowerValue = value.toLowerCase();
 
-    return value;
+  if (lowerValue !== 'false' && lowerValue !== 'true') {
+    throw Error(`cannot get ${table}.${property} in boolean type`);
   }
 
-  static getBoolValue (param, table, property) {
-    const value = NormalLoad.getValue(param, table, property);
-    const lowerValue = value.toLowerCase();
-    if (lowerValue !== 'false' && lowerValue !== 'true') {
-      throw Error(`cannot get ${table}.${property} in boolean type`);
-    }
+  return value === 'true';
+}
 
-    return value === 'true';
+function getValue (param, table, property) {
+  if (!Object.prototype.hasOwnProperty.call(param, table)) {
+    throw Error(`table ${table} doesn't exist`);
+  }
+  if (!Object.prototype.hasOwnProperty.call(param[table], property)) {
+    throw Error(`property ${property} doesn't exist in table ${table}`);
   }
 
-  static getValue (param, table, property) {
-    if (!Object.prototype.hasOwnProperty.call(param, table)) {
-      throw Error(`table ${table} doesn't exist`);
-    }
-    if (!Object.prototype.hasOwnProperty.call(param[table], property)) {
-      throw Error(`property ${property} doesn't exist in table ${table}`);
-    }
-
-    return param[table][property];
-  }
+  return param[table][property];
 }
 
 module.exports = {
   ParameterOperator,
-  NormalLoad
+  normalLoad,
+  getBoolValue,
+  getNumValue,
+  getStrValue,
+  getValue
 };

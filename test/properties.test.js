@@ -35,4 +35,14 @@ describe('PropertiesFile', () => {
       assert.throws(() => { pf.set(key, value); }, Error, `value ${value} is not in string type`);
     });
   });
+
+  describe('getValidFilePath', () => {
+    const outputDir = 'outpurDir';
+    const pf = new prop.PropertiesFile(1, propertiesPath);
+    const filePath = pf.getValidFilePath(outputDir);
+    it('should return a valid file path', () => {
+      const expected = outputDir + ''
+      assert.equal(filePath, outputDir + '');
+    });
+  });
 });

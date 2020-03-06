@@ -18,6 +18,14 @@ class PropertiesFile {
     this.properties[property] = value;
   }
 
+  outputToFile(outputDir) {
+    
+  }
+
+  getValidFilePath(outputDir) {
+    let filePath = path.join(outputDir, this.fileName);
+    return filePath + '.properties';
+  }
 }
 
 module.exports = {

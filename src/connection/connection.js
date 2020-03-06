@@ -33,7 +33,7 @@ class Connection {
           return;
         }
         const port = this.initPort + currentConnPerNode - 1;
-        conns.push(Connection.getInfo(id, ip, port));
+        conns.push(Connection.getConn(id, ip, port));
         id += 1;
       });
     });
@@ -41,7 +41,7 @@ class Connection {
     return conns;
   }
 
-  static getInfo (id, ip, port) {
+  static getConn (id, ip, port) {
     return {
       id,
       ip,

@@ -67,10 +67,10 @@ describe('Connection', () => {
     });
   });
 
-  describe('getInfo', () => {
+  describe('getConn', () => {
     const ip = '192.168.87.87';
     const port = '4444';
-    const info = Connection.getInfo(1, ip, port);
+    const info = Connection.getConn(1, ip, port);
     it('should be expected result', () => {
       const expected = {
         id: 1,

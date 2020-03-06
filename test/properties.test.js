@@ -41,8 +41,8 @@ describe('PropertiesFile', () => {
     const pf = new prop.PropertiesFile(1, propertiesPath);
     const filePath = pf.getValidFilePath(outputDir);
     it('should return a valid file path', () => {
-      const expected = outputDir + ''
-      assert.equal(filePath, outputDir + '');
+      const expected = outputDir + '/test.properties';
+      assert.equal(filePath, expected);
     });
   });
 });

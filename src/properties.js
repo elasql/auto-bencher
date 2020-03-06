@@ -18,13 +18,16 @@ class PropertiesFile {
     this.properties[property] = value;
   }
 
-  outputToFile(outputDir) {
+  outputToFile (outputDir) {
+    const filePath = this.getValidFilePath(outputDir);
     
   }
 
-  getValidFilePath(outputDir) {
-    let filePath = path.join(outputDir, this.fileName);
-    return filePath + '.properties';
+  getValidFilePath (outputDir) {
+    // don't use path.join here
+    // because we develope this module in Windows platform
+    // The Window path and the Posix Path are different
+    return outputDir + '/' + this.fileName + '.properties';
   }
 }
 

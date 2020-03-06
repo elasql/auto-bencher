@@ -16,11 +16,11 @@ async function prepareBenchDir (configParam, benchParam, systemConn) {
   }
 
   // copy the jar files to the benchmark directory
-  await copyJars();
+  await copyJars(benchParam);
 }
 
-async function copyJars () {
-  await Promise.all(getJars().map(jarPath => {
+async function copyJars (benchParam) {
+  await Promise.all(getJars(benchParam).map(jarPath => {
     lsAndCopy(jarPath);
   })
   );
@@ -34,7 +34,7 @@ async function lsAndCopy (jarPath) {
   await exec(cp);
 }
 
-function getJars () {
+function getJars (benchParam) {
   const jarDir = bp.getStrValue(benchParam, 'auto_bencher', 'jar_dir');
   const fileNames = ['server.jar', 'client.jar'];
 

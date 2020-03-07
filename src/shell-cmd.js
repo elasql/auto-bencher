@@ -55,12 +55,12 @@ class ShellCmd {
     return `grep '${keyword}' ${logPath}`;
   }
 
-  static getGrepCsv (resultPath, id) {
-    return `ls ${resultPath} | grep '${id}[.]csv'`;
+  static getGrepCsv (resultDir, id) {
+    return `ls ${resultDir} | grep '${id}[.]csv'`;
   }
 
-  static getGrepTotal (resultPath, id) {
-    return `grep 'TOTAL' ${resultPath}/*-${id}.txt`;
+  static getGrepTotal (resultDir, id) {
+    return `grep 'TOTAL' ${resultDir}/*-${id}.txt`;
   }
 
   static getLs (path) {

@@ -8,3 +8,4 @@ max_client_per_machine = "2"
 [test]
 "org.vanilladb.core.storage.buffer.BufferMgr.BUFFER_POOL_SIZE" = "1024000" # 4GB
 "org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT" = "true"
+

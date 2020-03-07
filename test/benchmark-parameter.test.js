@@ -22,7 +22,7 @@ describe('normalLoad', () => {
         assert.deepEqual(notComb, loadToml(notCombPath));
       });
 
-      it('should be expected result', () => {
+      it('should be an expected result', () => {
         const expected = [
           {
             auto_bencher: {

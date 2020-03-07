@@ -1,8 +1,8 @@
 const { NormalLoad } = require('../benchmark-parameter');
 const { Connection, Action } = require('../connection/connection');
 
-function run (configParam, param, dbName, action, reportDir = '') {
-  const { seqInfo, serverConns, clientConns } = generateConnectionList(configParam, param, action);
+function run (configParam, benchParam, dbName, action, reportDir = '') {
+  const systemConn = generateConnectionList(configParam, benchParam, action);
 }
 
 // TODO: should test this function !!!
@@ -12,7 +12,7 @@ function generateConnectionList (configParam, benchParam, action) {
     serverClientRatio,
     maxServerPerMachine,
     maxClientPerMachine
-  } = getParam(benchParam);
+  } = getParams(benchParam);
 
   const initPort = 30000;
   const connection = new Connection(initPort);
@@ -31,13 +31,13 @@ function generateConnectionList (configParam, benchParam, action) {
   };
 }
 
-function getParam (param) {
+function getParams (benchParam) {
   const autoBencher = 'auto_bencher';
   return {
-    serverCount: NormalLoad.getNumValue(param, autoBencher, 'server_count'),
-    serverClientRatio: NormalLoad.getNumValue(param, autoBencher, 'server_client_ratio'),
-    maxServerPerMachine: NormalLoad.getNumValue(param, autoBencher, 'max_server_per_machine'),
-    maxClientPerMachine: NormalLoad.getNumValue(param, autoBencher, 'max_client_per_machine')
+    serverCount: NormalLoad.getNumValue(benchParam, autoBencher, 'server_count'),
+    serverClientRatio: NormalLoad.getNumValue(benchParam, autoBencher, 'server_client_ratio'),
+    maxServerPerMachine: NormalLoad.getNumValue(benchParam, autoBencher, 'max_server_per_machine'),
+    maxClientPerMachine: NormalLoad.getNumValue(benchParam, autoBencher, 'max_client_per_machine')
   };
 }
 

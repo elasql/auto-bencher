@@ -87,76 +87,77 @@ org.vanilladb.core.util.Profiler.MAX_LINES=1000
       assert.equal(text, expected);
     });
   });
+});
 
-  describe('PropertiesFileMap', () => {
-    const id = 'org.vanilladb.core.config.file';
-    const fileName = 'test.properties';
-    const pfm = new prop.PropertiesFileMap(propertiesDir);
+describe('PropertiesFileMap', () => {
+  const id = 'org.vanilladb.core.config.file';
+  const fileName = 'test.properties';
+  const pfm = new prop.PropertiesFileMap(propertiesDir);
 
-    describe('constructor', () => {
-      it('should initialize with corret values and types', () => {
-        assert.equal(pfm.propertiesDir, propertiesDir);
-        assert.isObject(pfm.fileNameToPropertiesFileObject);
-      });
+  describe('constructor', () => {
+    it('should initialize with corret values and types', () => {
+      assert.equal(pfm.propertiesDir, propertiesDir);
+      assert.isObject(pfm.fileNameToPropertiesFileObject);
+    });
+  });
+
+  describe('genFileNameToPropertiesFileObjectMap', () => {
+    const map = pfm.genFileNameToPropertiesFileObjectMap();
+    it('should return an object', () => {
+      assert.isObject(map);
     });
 
-    describe('genFileNameToPropertiesFileObjectMap', () => {
-      const map = pfm.genFileNameToPropertiesFileObjectMap();
-      it('should return an object', () => {
-        assert.isObject(map);
-      });
+    it('should retrun an expected result', () => {
+      const filePath = path.posix.join(propertiesDir, fileName);
+      const fileNameWithoutExtension = path.posix.basename(fileName, '.properties');
+      assert.hasAllKeys(map, fileNameWithoutExtension);
+      assert.deepEqual(map[fileNameWithoutExtension], new prop.PropertiesFile(id, filePath));
+    });
+  });
 
-      it('should retrun an expected result', () => {
-        const filePath = path.posix.join(propertiesDir, fileName);
-        assert.hasAllKeys(map, fileName);
-        assert.deepEqual(map[fileName], new prop.PropertiesFile(id, filePath));
-      });
+  describe('loadSettingsToObject', () => {
+    const settings = pfm.loadSettingsToObject();
+    it('should return an array', () => {
+      assert.isArray(settings);
     });
 
-    describe('loadSettingsToObject', () => {
-      const settings = pfm.loadSettingsToObject();
-      it('should return an array', () => {
-        assert.isArray(settings);
-      });
-
-      it('should be an expected result', () => {
-        const expected = [
-          {
-            id: 'org.vanilladb.core.config.file',
-            filename: 'test.properties'
-          }
-        ];
-        assert.deepEqual(settings, expected);
-      });
+    it('should be an expected result', () => {
+      const expected = [
+        {
+          id: 'org.vanilladb.core.config.file',
+          filename: 'test.properties'
+        }
+      ];
+      assert.deepEqual(settings, expected);
     });
+  });
 
-    describe('set', () => {
-      it('should throw an Error', () => {
-        const fakeName = 'noThisFile';
-        const errMsg = `cannot find properties file: ${fakeName}`;
-        assert.throws(() => { pfm.set(fakeName, 'property', 'value'); }, Error, errMsg);
-      });
+  describe('set', () => {
+    it('should throw an Error', () => {
+      const fakeName = 'noThisFile';
+      const errMsg = `cannot find properties file: ${fakeName}`;
+      assert.throws(() => { pfm.set(fakeName, 'property', 'value'); }, Error, errMsg);
     });
+  });
 
-    describe('getVmArgs', () => {
-      const result = pfm.getVmArgs(propertiesDir);
-      it('should return an expected result', () => {
-        const expected = `-D ${id}=${path.posix.join(propertiesPath)}`;
-        assert.equal(result, expected);
-      });
+  describe('getVmArgs', () => {
+    const result = pfm.getVmArgs(propertiesDir);
+    it('should return an expected result', () => {
+      const expected = `-D ${id}=${path.posix.join(propertiesPath)}`;
+      assert.equal(result, expected);
     });
+  });
 
-    describe('overrideProperties', () => {
-      const notCombPath = './test/test-toml/benchmark-parameter.test.toml';
-      const notComb = loadToml(notCombPath);
-      const params = bp.normalLoad(notComb);
-      pfm.overrideProperties(params[0]);
+  describe('overrideProperties', () => {
+    const notCombPath = './test/test-toml/benchmark-parameter.test.toml';
+    const notComb = loadToml(notCombPath);
+    const params = bp.normalLoad(notComb);
+    pfm.overrideProperties(params[0]);
 
-      it('should override correctly', () => {
-        const properties = pfm.fileNameToPropertiesFileObject['test.properties'].properties;
-        assert.equal(properties['org.vanilladb.core.storage.buffer.BufferMgr.BUFFER_POOL_SIZE'], '1024000');
-        assert.equal(properties['org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT'], 'true');
-      });
+    it('should override correctly', () => {
+      const properties = pfm.fileNameToPropertiesFileObject.test.properties;
+      assert.equal(properties['org.vanilladb.core.storage.buffer.BufferMgr.BUFFER_POOL_SIZE'], '1024000');
+      assert.equal(properties['org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT'], 'true');
     });
   });
 });

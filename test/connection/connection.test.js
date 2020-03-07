@@ -71,13 +71,27 @@ describe('Connection', () => {
     const ip = '192.168.87.87';
     const port = '4444';
     const info = Connection.getConn(1, ip, port);
-    it('should be expected result', () => {
+    it('should be an expected result', () => {
       const expected = {
         id: 1,
         ip: ip,
         port: port
       };
       assert.deepEqual(info, expected);
+    });
+  });
+
+  describe('getView', () => {
+    const port = '4444';
+    const connObjs = [
+      { conn: Connection.getConn(0, '192.168.87.87', port) },
+      { conn: Connection.getConn(1, '192.168.87.88', port) }
+    ];
+    const result = Connection.getView(connObjs);
+
+    it('should be an expected result', () => {
+      const expected = '0 192.168.87.87 4444, 1 192.168.87.88 4444';
+      assert.equal(result, expected);
     });
   });
 });

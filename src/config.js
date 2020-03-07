@@ -32,7 +32,7 @@ class Config {
       involvedMachines: this._getInvolvedMachines(),
       systemUserName: this._getSystemUserName(),
       systemRemoteWorkDir: this._getSystemRemoteWorkDir(),
-      resultPath: this._getResultPath(),
+      resultDir: this._getResultDir(),
       sequencer: this._getSequencer(),
       clients: this._getClients(),
       servers: this._getServers()
@@ -150,9 +150,9 @@ class Config {
   }
 
   /*
-    return a string of result path
+    return a string of result directory
   */
-  _getResultPath () {
+  _getResultDir () {
     return this._getSystemRemoteWorkDir() + '/' + results;
   }
 

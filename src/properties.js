@@ -47,7 +47,7 @@ class PropertiesFileMap {
     settings.map(setting => {
       const filePath = path.posix.join(this.propertiesDir, setting.filename);
       const pf = new PropertiesFile(setting.id, filePath);
-      map[setting.filename] = pf;
+      map[pf.fileName] = pf;
     });
     return map;
   }
@@ -92,11 +92,27 @@ class PropertiesFileMap {
       if (!(paramFile === 'auto_bencher')) {
         const properties = benchParam[paramFile];
         Object.keys(properties).map(prop => {
-          // pass filename with .property
-          this.set(paramFile + '.properties', prop, properties[prop]);
+          // pass filename with .properties
+          this.set(paramFile, prop, properties[prop]);
         });
       }
     });
+  }
+
+  // TODO: add test cases
+  setPaths (configParams) {
+    const { dbDir, resultDir } = configParams;
+    this.set(
+      'vanilladb',
+      'org.vanilladb.core.storage.file.FileMgr.DB_FILES_DIR',
+      dbDir
+    );
+
+    this.set(
+      'vanillabench',
+      'org.vanilladb.bench.StatisticMgr.OUTPUT_DIR',
+      resultDir
+    );
   }
 }
 

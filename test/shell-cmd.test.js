@@ -99,20 +99,20 @@ describe('ShellCmd', () => {
 
   describe('getGrepCsv', () => {
     it('should return a correct command', () => {
-      const resultPath = 'resultPath';
+      const resultDir = 'resultDir';
       const id = 'id';
-      const cmd = ShellCmd.getGrepCsv(resultPath, id);
-      const expected = `ls ${resultPath} | grep '${id}[.]csv'`;
+      const cmd = ShellCmd.getGrepCsv(resultDir, id);
+      const expected = `ls ${resultDir} | grep '${id}[.]csv'`;
       assert.equal(cmd, expected);
     });
   });
 
   describe('getGrepTotal', () => {
     it('should return a correct command', () => {
-      const resultPath = 'resultPath';
+      const resultDir = 'resultDir';
       const id = 'id';
-      const cmd = ShellCmd.getGrepTotal(resultPath, id);
-      const expected = `grep 'TOTAL' ${resultPath}/*-${id}.txt`;
+      const cmd = ShellCmd.getGrepTotal(resultDir, id);
+      const expected = `grep 'TOTAL' ${resultDir}/*-${id}.txt`;
       assert.equal(cmd, expected);
     });
   });

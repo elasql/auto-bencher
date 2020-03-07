@@ -10,12 +10,12 @@ class Client {
       systemRemoteWorkDir,
       clientJarPath,
       javaBin,
-      resultPath
+      resultDir
     } = configParams;
 
     this.jarPath = clientJarPath;
     this.javaBin = javaBin;
-    this.resultPath = resultPath;
+    this.resultDir = resultDir;
 
     this.conn = conn;
     this.vmArgs = vmArgs;
@@ -31,7 +31,7 @@ class Client {
   }
 
   async cleanPreviousResults () {
-    const rm = ShellCmd.getRm(true, this.resultPath);
+    const rm = ShellCmd.getRm(true, this.resultDir);
     const ssh = this.shellCmd.getSsh(rm);
     try {
       await exec(ssh);
@@ -92,7 +92,7 @@ class Client {
   }
 
   async pullCsv (dest) {
-    const grepCsv = ShellCmd.getGrepCsv(this.resultPath, this.conn.id);
+    const grepCsv = ShellCmd.getGrepCsv(this.resultDir, this.conn.id);
     const ssh = this.shellCmd.getSsh(grepCsv);
 
     try {
@@ -107,7 +107,7 @@ class Client {
   }
 
   async getTotalThroughput () {
-    const grepTotal = ShellCmd.getGrepTotal(this.resultPath, this.conn.id);
+    const grepTotal = ShellCmd.getGrepTotal(this.resultDir, this.conn.id);
     const ssh = this.shellCmd.getSsh(grepTotal);
     let stdout = '';
     try {

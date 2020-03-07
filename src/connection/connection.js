@@ -48,6 +48,25 @@ class Connection {
       port
     };
   }
+
+  static getView (connObjs) {
+    let view = '';
+
+    connObjs.map(connObj => {
+      if (connObj.conn.id > 0) {
+        view += ', ';
+      }
+      view += Connection.toString(connObj);
+    });
+
+    return view;
+  }
+
+  // pass Server or Client in
+  static toString (connObj) {
+    const conn = { ...connObj.conn };
+    return `${conn.id} ${conn.ip} ${conn.port}`;
+  }
 }
 
 const ShellCmd = require('../shell-cmd');

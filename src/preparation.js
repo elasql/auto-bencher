@@ -3,9 +3,11 @@ const logger = require('./logger');
 const bp = require('./benchmark-parameter');
 const ShellCmd = require('./shell-cmd');
 const { exec } = require('./child-process');
+const { PropertiesFileMap } = require('./properties');
 
 const BENCH_DIR = 'benchmarker';
 const prop_dir = 'props';
+const propertiesDir = 'properties';
 
 async function prepareBenchDir (configParam, benchParam, systemConn) {
   logger.info('preparing the benchmarker directory...');
@@ -17,6 +19,9 @@ async function prepareBenchDir (configParam, benchParam, systemConn) {
 
   // copy the jar files to the benchmark directory
   await copyJars(benchParam);
+
+  // Read the default Properties
+  const map = new PropertiesFileMap(propertiesDir);
 }
 
 async function copyJars (benchParam) {

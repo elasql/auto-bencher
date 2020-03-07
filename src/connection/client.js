@@ -13,11 +13,14 @@ class Client {
       resultDir
     } = configParams;
 
+    this.id = conn.id;
+    this.ip = conn.ip;
+    this.port = conn.port;
+
     this.jarPath = clientJarPath;
     this.javaBin = javaBin;
     this.resultDir = resultDir;
 
-    this.conn = conn;
     this.vmArgs = vmArgs;
 
     this.logPath = systemRemoteWorkDir + `/client-${conn.id}.log`;
@@ -37,7 +40,7 @@ class Client {
       await exec(ssh);
     } catch (err) {
       if (err.code === 1) {
-        logger.debug(`no previous results are found on ${this.conn.ip}`);
+        logger.debug(`no previous results are found on ${this.ip}`);
       } else {
         throw Error(err.stderr);
       }
@@ -45,9 +48,9 @@ class Client {
   }
 
   async start (action) {
-    logger.debug(`starting client ${this.conn.id}`);
+    logger.debug(`starting client ${this.id}`);
     // [clientId] [action]
-    const progArgs = `${this.conn.id} ${action}`;
+    const progArgs = `${this.id} ${action}`;
     const runJar = ShellCmd.getJavaVersion(
       this.javaBin,
       this.vmArgs,
@@ -56,7 +59,7 @@ class Client {
       this.logPath
     );
     const ssh = this.shellCmd.getSsh(runJar);
-    logger.debug(`client ${this.conn.id} is running`);
+    logger.debug(`client ${this.id} is running`);
     await exec(ssh);
   }
 
@@ -92,7 +95,7 @@ class Client {
   }
 
   async pullCsv (dest) {
-    const grepCsv = ShellCmd.getGrepCsv(this.resultDir, this.conn.id);
+    const grepCsv = ShellCmd.getGrepCsv(this.resultDir, this.id);
     const ssh = this.shellCmd.getSsh(grepCsv);
 
     try {
@@ -100,14 +103,14 @@ class Client {
       return stdout;
     } catch (err) {
       if (err.code === 1) {
-        throw Error(`cannot find the csv file on ${this.conn.ip}`);
+        throw Error(`cannot find the csv file on ${this.ip}`);
       }
       throw Error(err.stderr);
     }
   }
 
   async getTotalThroughput () {
-    const grepTotal = ShellCmd.getGrepTotal(this.resultDir, this.conn.id);
+    const grepTotal = ShellCmd.getGrepTotal(this.resultDir, this.id);
     const ssh = this.shellCmd.getSsh(grepTotal);
     let stdout = '';
     try {
@@ -115,7 +118,7 @@ class Client {
       stdout = result.stdout;
     } catch (err) {
       if (err.code === 1) {
-        throw Error(`cannot find the total throughput files on ${this.conn.ip}`);
+        throw Error(`cannot find the total throughput files on ${this.ip}`);
       }
       throw Error(err.stderr);
     }

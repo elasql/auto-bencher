@@ -1,8 +1,16 @@
+const logger = require('../logger');
 const { NormalLoad } = require('../benchmark-parameter');
 const { Connection, Action } = require('../connection/connection');
+const { prepareBenchDir } = require('../preparation');
 
-function run (configParam, benchParam, dbName, action, reportDir = '') {
+async function run (configParam, benchParam, dbName, action, reportDir = '') {
+  // generate connection information (ip, port)
   const systemConn = generateConnectionList(configParam, benchParam, action);
+
+  // prepare the benchmark directory
+  const vmArgs = await prepareBenchDir(configParam, benchParam, systemConn);
+
+  
 }
 
 // TODO: should test this function !!!
@@ -18,14 +26,14 @@ function generateConnectionList (configParam, benchParam, action) {
   const connection = new Connection(initPort);
   const { sequencer, servers, clients } = configParam;
 
-  const seqInfo = Connection.getInfo(serverCount, sequencer, initPort);
+  const seqConn = Connection.getInfo(serverCount, sequencer, initPort);
   const serverConns = connection.getConnList(servers, serverCount, maxServerPerMachine);
 
   const clientCount = action === Action.loading ? 1 : serverCount * serverClientRatio;
   const clientConns = connection.getConnList(clients, clientCount, maxClientPerMachine);
 
   return {
-    seqInfo,
+    seqConn,
     serverConns,
     clientConns
   };

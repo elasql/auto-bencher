@@ -53,7 +53,7 @@ class Connection {
     let view = '';
 
     connObjs.map(connObj => {
-      if (connObj.conn.id > 0) {
+      if (connObj.id > 0) {
         view += ', ';
       }
       view += Connection.toString(connObj);
@@ -64,8 +64,7 @@ class Connection {
 
   // pass Server or Client in
   static toString (connObj) {
-    const conn = { ...connObj.conn };
-    return `${conn.id} ${conn.ip} ${conn.port}`;
+    return `${connObj.id} ${connObj.ip} ${connObj.port}`;
   }
 }
 

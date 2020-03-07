@@ -33,7 +33,7 @@ async function prepareBenchDir (configParam, benchParam, systemConn) {
 
   const { systemRemoteWorkDir } = configParam;
   const remotePropDir = path.posix.join(systemRemoteWorkDir, propDir);
-  pfm.getVmArgs(remotePropDir);
+  return pfm.getVmArgs(remotePropDir);
 }
 
 function applyParameters (pfm, configParam, benchParam, systemConn) {

@@ -84,8 +84,8 @@ describe('Connection', () => {
   describe('getView', () => {
     const port = '4444';
     const connObjs = [
-      { conn: Connection.getConn(0, '192.168.87.87', port) },
-      { conn: Connection.getConn(1, '192.168.87.88', port) }
+      Connection.getConn(0, '192.168.87.87', port),
+      Connection.getConn(1, '192.168.87.88', port)
     ];
     const result = Connection.getView(connObjs);
 

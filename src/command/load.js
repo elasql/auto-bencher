@@ -8,7 +8,7 @@ function execute (configParams, argv) {
   const dbName = argv[3];
   const paramPath = argv[4];
 
-  logger.info('preparing for loading testben into ' + dbName.green);
+  logger.info('preparing for loading testbed into ' + dbName.green);
   logger.info(`using parameter file '${paramPath}'`);
 
   const toml = loadToml(paramPath);

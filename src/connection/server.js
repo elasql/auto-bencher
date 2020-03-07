@@ -13,12 +13,15 @@ class Server {
       javaBin
     } = configParams;
 
+    this.id = conn.id;
+    this.ip = conn.ip;
+    this.port = conn.port;
+
     this.dbDir = dbDir;
     this.systemRemoteWorkDir = systemRemoteWorkDir;
     this.jarPath = serverJarPath;
     this.javaBin = javaBin;
 
-    this.conn = conn;
     this.dbName = `${dbName}-${conn.id}`;
     this.dbNameBackup = this.dbName + '-backup';
     this.vmArgs = vmArgs;
@@ -47,7 +50,7 @@ class Server {
       await exec(ssh);
     } catch (err) {
       if (err.code === 1) {
-        logger.debug(`no previous database is found on ${this.conn.ip}`);
+        logger.debug(`no previous database is found on ${this.ip}`);
       } else {
         throw Error(err.stderr);
       }
@@ -62,7 +65,7 @@ class Server {
       await exec(ssh);
     } catch (err) {
       if (err.code === 1) {
-        logger.debug(`no backup database is found on ${this.conn.ip}`);
+        logger.debug(`no backup database is found on ${this.ip}`);
       } else {
         throw Error(err.stderr);
       }

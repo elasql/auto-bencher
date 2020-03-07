@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const javaProperties = require('java-properties');
 
@@ -20,14 +21,26 @@ class PropertiesFile {
 
   outputToFile (outputDir) {
     const filePath = this.getValidFilePath(outputDir);
-    
+    fs.writeFileSync(filePath, this.convertObjectToPropertiesText());
   }
 
   getValidFilePath (outputDir) {
-    // don't use path.join here
+    // TODO: use path.join
+
     // because we develope this module in Windows platform
-    // The Window path and the Posix Path are different
+    // the Window path and the Posix Path are different
+    // so path.join won't pass the test case.
     return outputDir + '/' + this.fileName + '.properties';
+  }
+
+  convertObjectToPropertiesText () {
+    let text = '';
+
+    Object.keys(this.properties).map(key => {
+      text += key + '=' + this.properties[key] + '\n';
+    });
+
+    return text;
   }
 }
 

@@ -62,6 +62,7 @@ class PropertiesFileMap {
     if (!Object.prototype.hasOwnProperty.call(this.fileNameToPropertiesFileObject, fileName)) {
       throw Error(`cannot find properties file: ${fileName}`);
     }
+
     this.fileNameToPropertiesFileObject[fileName].set(property, value);
   }
 
@@ -84,6 +85,18 @@ class PropertiesFileMap {
 
     // remove the last ' '
     return vmArgs.slice(0, vmArgs.length - 1);
+  }
+
+  overrideProperties (benchParam) {
+    Object.keys(benchParam).map(paramFile => {
+      if (!(paramFile === 'auto_bencher')) {
+        const properties = benchParam[paramFile];
+        Object.keys(properties).map(prop => {
+          // pass filename with .property
+          this.set(paramFile + '.properties', prop, properties[prop]);
+        });
+      }
+    });
   }
 }
 

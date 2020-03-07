@@ -1,7 +1,9 @@
 const assert = require('chai').assert;
 const path = require('path');
 
+const { loadToml } = require('../src/utils');
 const prop = require('../src/properties');
+const bp = require('../src/benchmark-parameter');
 
 const propertiesDir = './test/test-properties';
 const propertiesPath = './test/test-properties/test.properties';
@@ -141,6 +143,19 @@ org.vanilladb.core.util.Profiler.MAX_LINES=1000
       it('should return an expected result', () => {
         const expected = `-D ${id}=${path.posix.join(propertiesPath)}`;
         assert.equal(result, expected);
+      });
+    });
+
+    describe('overrideProperties', () => {
+      const notCombPath = './test/test-toml/benchmark-parameter.test.toml';
+      const notComb = loadToml(notCombPath);
+      const params = bp.normalLoad(notComb);
+      pfm.overrideProperties(params[0]);
+
+      it('should override correctly', () => {
+        const properties = pfm.fileNameToPropertiesFileObject['test.properties'].properties;
+        assert.equal(properties['org.vanilladb.core.storage.buffer.BufferMgr.BUFFER_POOL_SIZE'], '1024000');
+        assert.equal(properties['org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT'], 'true');
       });
     });
   });

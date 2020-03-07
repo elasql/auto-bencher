@@ -2,7 +2,6 @@ const assert = require('chai').assert;
 
 const { loadToml } = require('../src/utils');
 const bp = require('../src/benchmark-parameter');
-const prop = require('../src/properties');
 
 const combPath = './test/test-toml/benchmark-parameter-comb.test.toml';
 const notCombPath = './test/test-toml/benchmark-parameter.test.toml';

@@ -1,12 +1,14 @@
 const assert = require('chai').assert;
+const path = require('path');
 
 const prop = require('../src/properties');
 
+const propertiesDir = './test/test-properties';
 const propertiesPath = './test/test-properties/test.properties';
 
 describe('PropertiesFile', () => {
+  const pf = new prop.PropertiesFile(1, propertiesPath);
   describe('constructor', () => {
-    const pf = new prop.PropertiesFile(1, propertiesPath);
     it('should initialize with corret values and types', () => {
       assert.isNumber(pf.id);
       assert.isString(pf.fileName);
@@ -18,7 +20,6 @@ describe('PropertiesFile', () => {
   });
 
   describe('set', () => {
-    const pf = new prop.PropertiesFile(1, propertiesPath);
     const key = 'org.vanilladb.core.util.Profiler.DEPTH';
     it('should correctly set the value', () => {
       // before
@@ -36,22 +37,12 @@ describe('PropertiesFile', () => {
     });
   });
 
-  describe('getValidFilePath', () => {
-    const outputDir = 'outpurDir';
-    const pf = new prop.PropertiesFile(1, propertiesPath);
-    const filePath = pf.getValidFilePath(outputDir);
-    it('should return a valid file path', () => {
-      const expected = outputDir + '/test.properties';
-      assert.equal(filePath, expected);
-    });
-  });
-
   describe('convertObjectToPropertiesText', () => {
-    const pf = new prop.PropertiesFile(1, propertiesPath);
     const text = pf.convertObjectToPropertiesText();
     it('should return a string', () => {
       assert.isString(text);
     });
+
     it('should return an expected value', () => {
       const expected = `org.vanilladb.core.storage.file.Page.BLOCK_SIZE=4096
 org.vanilladb.core.storage.file.FileMgr.DB_FILES_DIR=
@@ -92,6 +83,65 @@ org.vanilladb.core.util.Profiler.MAX_METHODS=1000
 org.vanilladb.core.util.Profiler.MAX_LINES=1000
 `;
       assert.equal(text, expected);
+    });
+  });
+
+  describe('PropertiesFileMap', () => {
+    const id = 'org.vanilladb.core.config.file';
+    const fileName = 'test.properties';
+    const pfm = new prop.PropertiesFileMap(propertiesDir);
+
+    describe('constructor', () => {
+      it('should initialize with corret values and types', () => {
+        assert.equal(pfm.propertiesDir, propertiesDir);
+        assert.isObject(pfm.fileNameToPropertiesFileObject);
+      });
+    });
+
+    describe('genFileNameToPropertiesFileObjectMap', () => {
+      const map = pfm.genFileNameToPropertiesFileObjectMap();
+      it('should return an object', () => {
+        assert.isObject(map);
+      });
+
+      it('should retrun an expected result', () => {
+        const filePath = path.posix.join(propertiesDir, fileName);
+        assert.hasAllKeys(map, fileName);
+        assert.deepEqual(map[fileName], new prop.PropertiesFile(id, filePath));
+      });
+    });
+
+    describe('loadSettingsToObject', () => {
+      const settings = pfm.loadSettingsToObject();
+      it('should return an array', () => {
+        assert.isArray(settings);
+      });
+
+      it('should be an expected result', () => {
+        const expected = [
+          {
+            id: 'org.vanilladb.core.config.file',
+            filename: 'test.properties'
+          }
+        ];
+        assert.deepEqual(settings, expected);
+      });
+    });
+
+    describe('set', () => {
+      it('should throw an Error', () => {
+        const fakeName = 'noThisFile';
+        const errMsg = `cannot find properties file: ${fakeName}`;
+        assert.throws(() => { pfm.set(fakeName, 'property', 'value'); }, Error, errMsg);
+      });
+    });
+
+    describe('getVmArgs', () => {
+      const result = pfm.getVmArgs(propertiesDir);
+      it('should return an expected result', () => {
+        const expected = `-D ${id}=${path.posix.join(propertiesPath)}`;
+        assert.equal(result, expected);
+      });
     });
   });
 });

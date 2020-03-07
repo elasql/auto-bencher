@@ -3,7 +3,7 @@
 */
 const fs = require('fs');
 const logger = require('../logger');
-const ShellCmd = require('../shell-cmd-generator');
+const ShellCmd = require('../shell-cmd');
 
 const { exec } = require('../child-process');
 

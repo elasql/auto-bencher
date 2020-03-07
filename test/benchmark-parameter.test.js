@@ -2,6 +2,7 @@ const assert = require('chai').assert;
 
 const { loadToml } = require('../src/utils');
 const bp = require('../src/benchmark-parameter');
+const prop = require('../src/properties');
 
 const combPath = './test/test-toml/benchmark-parameter-comb.test.toml';
 const notCombPath = './test/test-toml/benchmark-parameter.test.toml';
@@ -32,18 +33,7 @@ describe('normalLoad', () => {
               server_client_ratio: '1.0',
               server_count: '3'
             },
-            elasql: {
-              'org.elasql.remote.groupcomm.client.BatchSpcSender.BATCH_SIZE': '5',
-              'org.elasql.server.Elasql.SERVICE_TYPE': '1'
-            },
-            vanillabench: {
-              'org.vanilladb.bench.BenchmarkerParameters.BENCHMARK_INTERVAL': '60000',
-              'org.vanilladb.bench.BenchmarkerParameters.BENCH_TYPE': '2',
-              'org.vanilladb.bench.BenchmarkerParameters.NUM_RTES': '10',
-              'org.vanilladb.bench.BenchmarkerParameters.WARM_UP_INTERVAL': '30000',
-              'org.vanilladb.bench.tpcc.TpccConstants.NUM_WAREHOUSES': '3'
-            },
-            vanilladb: {
+            test: {
               'org.vanilladb.core.storage.buffer.BufferMgr.BUFFER_POOL_SIZE': '1024000',
               'org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT': 'true'
             }
@@ -56,7 +46,7 @@ describe('normalLoad', () => {
         assert.isString(params[0].auto_bencher.jar_dir);
         assert.isNotNumber(params[0].auto_bencher.max_server_per_machine);
         assert.isNotNumber(params[0].auto_bencher.server_client_ratio);
-        assert.isNotBoolean(params[0].vanilladb['org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT']);
+        assert.isNotBoolean(params[0].test['org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT']);
       });
     });
 
@@ -73,7 +63,7 @@ describe('normalLoad', () => {
   });
 
   const autoBencher = 'auto_bencher';
-  const vanilladb = 'vanilladb';
+  const test = 'test';
   const serverCount = 'server_count';
   const jarDir = 'jar_dir';
   const useDirect = 'org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT';
@@ -110,7 +100,7 @@ describe('normalLoad', () => {
 
   describe('getBoolValue', () => {
     it('should return a bool value', () => {
-      const value = bp.getBoolValue(params[0], vanilladb, useDirect);
+      const value = bp.getBoolValue(params[0], test, useDirect);
       assert.isBoolean(value);
     });
 

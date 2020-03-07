@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const javaProperties = require('java-properties');
 
+const { Connection } = require('./connection/connection');
+
 class PropertiesFile {
   constructor (id, propertiesPath) {
     this.id = id;
@@ -100,8 +102,8 @@ class PropertiesFileMap {
   }
 
   // TODO: add test cases
-  setPaths (configParams) {
-    const { dbDir, resultDir } = configParams;
+  setPaths (configParam) {
+    const { dbDir, resultDir } = configParam;
     this.set(
       'vanilladb',
       'org.vanilladb.core.storage.file.FileMgr.DB_FILES_DIR',
@@ -112,6 +114,35 @@ class PropertiesFileMap {
       'vanillabench',
       'org.vanilladb.bench.StatisticMgr.OUTPUT_DIR',
       resultDir
+    );
+  }
+
+  // TODO: add test cases
+  setConnectionsProperties (sequencer, servers, clients) {
+    this.set(
+      'vanilladbcomm',
+      'org.vanilladb.comm.server.ServerAppl.SERVER_VIEW',
+      Connection.getView(servers)
+    );
+
+    this.set(
+      'vanilladbcomm',
+      'org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW',
+      Connection.getView(clients)
+    );
+
+    this.set(
+      'vanilladbcomm',
+      'org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER',
+      sequencer ? 'true' : 'false'
+    );
+  }
+
+  setElasqlProperties (serverCount) {
+    this.set(
+      'elasql',
+      'org.elasql.storage.metadata.PartitionMetaMgr.NUM_PARTITIONS',
+      String(serverCount)
     );
   }
 }

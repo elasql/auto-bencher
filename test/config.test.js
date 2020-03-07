@@ -21,7 +21,7 @@ describe('Config', () => {
     sequencer,
     clients,
     servers
-  } = config.getParams();
+  } = config.getParam();
 
   describe('configParam.dbDir', () => {
     it('should be an expected result', () => {

@@ -67,6 +67,10 @@ class ShellCmd {
     return `ls ${path}`;
   }
 
+  static getKillBenchmarker () {
+    return 'pkill -f benchmarker';
+  }
+
   getScp (isDir, localPath, remotePath) {
     let cmd = 'scp ';
     cmd = isDir ? cmd + '-r ' : cmd;

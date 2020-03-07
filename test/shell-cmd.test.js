@@ -126,6 +126,14 @@ describe('ShellCmd', () => {
     });
   });
 
+  describe('getKillBenchmarker', () => {
+    it('should return a correct command', () => {
+      const cmd = ShellCmd.getKillBenchmarker();
+      const expected = `pkill -f benchmarker`;
+      assert.equal(cmd, expected);
+    });
+  });
+
   describe('getScp', () => {
     const localPath = 'localPath';
     const remotePath = 'remotePath';

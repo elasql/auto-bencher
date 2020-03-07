@@ -2,6 +2,8 @@ const logger = require('../logger');
 const { NormalLoad } = require('../benchmark-parameter');
 const { Connection, Action } = require('../connection/connection');
 const { prepareBenchDir } = require('../preparation');
+const ShellCmd = require('../shell-cmd');
+const { exec } = require('../child-process');
 
 async function run (configParam, benchParam, dbName, action, reportDir = '') {
   // generate connection information (ip, port)
@@ -10,7 +12,10 @@ async function run (configParam, benchParam, dbName, action, reportDir = '') {
   // prepare the benchmark directory
   const vmArgs = await prepareBenchDir(configParam, benchParam, systemConn);
 
-  
+  logger.info('connecting to the machines...');
+  logger.info('killing the existing benchmarker processes...');
+
+  await killAll(configParam, systemConn);
 }
 
 // TODO: should test this function !!!
@@ -47,6 +52,34 @@ function getParams (benchParam) {
     maxServerPerMachine: NormalLoad.getNumValue(benchParam, autoBencher, 'max_server_per_machine'),
     maxClientPerMachine: NormalLoad.getNumValue(benchParam, autoBencher, 'max_client_per_machine')
   };
+}
+
+// TODO: kill them in concurrency
+async function killAll (configParam, systemConn) {
+  const { seqConn, serverConns, clientConns } = systemConn;
+
+  if (seqConn) {
+    await killBenchmarker(configParam, seqConn);
+  }
+
+  await Promise.all(
+    serverConns.map(serverConn => {
+      killBenchmarker(configParam, serverConn);
+    })
+  );
+
+  await Promise.all(
+    serverConns.map(serverConn => {
+      killBenchmarker(configParam, serverConn);
+    })
+  );
+}
+
+async function killBenchmarker (configParam, connObj) {
+  const kill = ShellCmd.getKillBenchmarker();
+  const ssh = new ShellCmd(configParam.systemUserName, connObj.ip).getSsh(kill);
+
+  await exec(ssh);
 }
 
 module.exports = {

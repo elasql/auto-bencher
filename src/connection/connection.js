@@ -2,6 +2,7 @@ const Action = {
   loading: 1,
   benchmarking: 2
 };
+const CHECKING_INTERVAL = 1;
 
 const INIT_PORT = 30000;
 class Connection {
@@ -49,22 +50,22 @@ class Connection {
     };
   }
 
-  static getView (connObjs) {
+  static getView (connO) {
     let view = '';
 
-    connObjs.map(connObj => {
-      if (connObj.id > 0) {
+    connO.map(conn => {
+      if (conn.id > 0) {
         view += ', ';
       }
-      view += Connection.toString(connObj);
+      view += Connection.toString(conn);
     });
 
     return view;
   }
 
   // pass Server or Client in
-  static toString (connObj) {
-    return `${connObj.id} ${connObj.ip} ${connObj.port}`;
+  static toString (conn) {
+    return `${conn.id} ${conn.ip} ${conn.port}`;
   }
 }
 
@@ -108,5 +109,6 @@ class ConnectionLog {
 module.exports = {
   Action: Action,
   Connection: Connection,
-  ConnectionLog: ConnectionLog
+  ConnectionLog: ConnectionLog,
+  CHECKING_INTERVAL
 };

@@ -83,11 +83,11 @@ describe('Connection', () => {
 
   describe('getView', () => {
     const port = '4444';
-    const connObjs = [
+    const conns = [
       Connection.getConn(0, '192.168.87.87', port),
       Connection.getConn(1, '192.168.87.88', port)
     ];
-    const result = Connection.getView(connObjs);
+    const result = Connection.getView(conns);
 
     it('should be an expected result', () => {
       const expected = '0 192.168.87.87 4444, 1 192.168.87.88 4444';

@@ -1,6 +1,8 @@
 const logger = require('../logger');
 const { NormalLoad } = require('../benchmark-parameter');
 const { Connection, Action } = require('../connection/connection');
+const Server = require('../connection/server');
+const Client = require('../connection/client');
 const { prepareBenchDir } = require('../preparation');
 const ShellCmd = require('../shell-cmd');
 const { exec } = require('../child-process');
@@ -16,9 +18,12 @@ async function run (configParam, benchParam, dbName, action, reportDir = '') {
   logger.info('killing the existing benchmarker processes...');
 
   await killAll(configParam, systemConn);
+
+  await start(configParam, dbName, action, reportDir, vmArgs, systemConn);
 }
 
 // TODO: should test this function !!!
+// This generate a simple object { id, ip, port }
 function generateConnectionList (configParam, benchParam, action) {
   const {
     serverCount,
@@ -69,17 +74,56 @@ async function killAll (configParam, systemConn) {
   );
 
   await Promise.all(
-    serverConns.map(serverConn => {
-      killBenchmarker(configParam, serverConn);
+    clientConns.map(clientConn => {
+      killBenchmarker(configParam, clientConn);
     })
   );
 }
 
-async function killBenchmarker (configParam, connObj) {
+async function killBenchmarker (configParam, conn) {
   const kill = ShellCmd.getKillBenchmarker();
-  const ssh = new ShellCmd(configParam.systemUserName, connObj.ip).getSsh(kill);
+  const ssh = new ShellCmd(configParam.systemUserName, conn.ip).getSsh(kill);
 
   await exec(ssh);
+}
+
+async function start (configParam, dbName, action, reportDir, vmArgs, systemConn) {
+  const { seqConn, serverConns, clientConns } = systemConn;
+
+  const sequencer = newSequencer(seqConn, configParam, dbName, vmArgs);
+  const servers = newServers(serverConns, configParam, dbName, vmArgs);
+  const clients = newClients(clientConns, configParam, vmArgs);
+
+  const allServers = servers.concat(sequencer);
+
+  // init servers and sequencer
+  await Promise.all(allServers.map(server => {
+    server.init();
+  }));
+
+  await Promise.all(clients.map(client => {
+    client.run();
+  }));
+
+  await Promise.all(allServers.map(server => {
+    server.stopSignal = true;
+  }));
+}
+
+function newSequencer (seqConn, configParam, dbName, vmArgs) {
+  return new Server(configParam, seqConn, dbName, vmArgs, true);
+}
+
+function newServers (serverConns, configParam, dbName, vmArgs) {
+  return serverConns.map(serverConn => {
+    return new Server(configParam, serverConn, dbName, vmArgs, false);
+  });
+}
+
+function newClients (clientConns, configParam, vmArgs) {
+  return clientConns.map(clientConn => {
+    return new Client(configParam, clientConn, vmArgs);
+  });
 }
 
 module.exports = {

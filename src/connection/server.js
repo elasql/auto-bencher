@@ -1,7 +1,7 @@
 const logger = require('../logger');
 const ShellCmd = require('../shell-cmd');
 const { exec } = require('../child-process');
-const { ConnectionLog } = require('./connection');
+const { ConnectionLog, Action, CHECKING_INTERVAL } = require('./connection');
 
 class Server {
   constructor (configParams, conn, dbName, vmArgs, isSequencer) {
@@ -34,6 +34,37 @@ class Server {
     this.progArgs = this.isSequencer ? `${this.dbName} ${conn.id} 1` : `${this.dbName} ${conn.id}`;
     this.logPath = this.isSequencer ? `${systemRemoteWorkDir}/server-seq.log` : `${systemRemoteWorkDir}/server-${conn.id}.log`;
     this.connLog = new ConnectionLog(this.shellCmd, this.logPath, conn.id, true);
+
+    this.stopSignal = false;
+  }
+
+  async init (action) {
+    await this.prepare(action);
+
+    await this.start();
+    while (!await this.checkForReady()) {
+      await new Promise(resolve => { setTimeout(resolve, CHECKING_INTERVAL); });
+    }
+
+    logger.info(`server ${this.id} is ready`);
+
+    while (!this.stopSignal) {
+      await this.checkForError();
+      await new Promise(resolve => { setTimeout(resolve, CHECKING_INTERVAL); });
+    }
+  }
+
+  async prepare (action) {
+    logger.info(`preparing servers... ip - ${this.ip}`);
+
+    await this.sendBenchDir();
+
+    if (action === Action.loading) {
+      await this.deleteDbDir();
+      await this.deleteBackupDbDir();
+    } else if (action === Action.benchmarking) {
+      await this.resetDbDir();
+    }
   }
 
   async sendBenchDir () {

@@ -14,6 +14,8 @@ async function execute (configParams, argv) {
 
   await checkLocalJdk(configParams);
   await delpoyJdkToAllMachines(configParams);
+
+  logger.info('the environment has been initialized'.green);
 }
 
 async function checkLocalJdk (configParams) {

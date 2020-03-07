@@ -13,17 +13,21 @@ const params = config.getParams();
 async function main (argv) {
   switch (argv[2]) {
   case 'init_env':
+
     try {
       await initEnv.execute(params, argv);
-      logger.info('the environment has been initialized'.green);
     } catch (err) {
       // this try catch block is used to color the error message only
       logger.error(err.message.red);
     }
     break;
+
   case 'load':
-    await load.execute(config, argv);
-    logger.info('data has been loaded');
+    try {
+      await load.execute(config, argv);
+    } catch (err) {
+      logger.error(err.message.red);
+    }
     break;
 
   default:

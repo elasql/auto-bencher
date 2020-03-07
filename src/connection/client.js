@@ -1,7 +1,7 @@
 const logger = require('../logger');
 const ShellCmd = require('../shell-cmd');
 const { exec } = require('../child-process');
-const { Action, ConnectionLog } = require('./connection');
+const { Action, ConnectionLog, CHECKING_INTERVAL } = require('./connection');
 
 class Client {
   constructor (configParams, conn, vmArgs) {
@@ -26,6 +26,24 @@ class Client {
     this.logPath = systemRemoteWorkDir + `/client-${conn.id}.log`;
     this.shellCmd = new ShellCmd(systemUserName, conn.ip);
     this.connLog = new ConnectionLog(this.shellCmd, this.logPath, conn.id, true);
+  }
+
+  async run (action, reportDir) {
+    await this.cleanPreviousResults();
+    await this.sendBenchDir();
+
+    logger.info(`client - ${this.id} starts`);
+    await this.start(action);
+
+    while (!await this.checkForFinished()) {
+      await new Promise(resolve => { setTimeout(resolve, CHECKING_INTERVAL); });
+    }
+
+    if (action === Action.benchmarking) {
+      await this.pullCsv(reportDir);
+      const throughput = await this.getTotalThroughput();
+      logger.debug(`The total throughput of client ${this.id} is ${throughput}`);
+    }
   }
 
   async sendBenchDir () {
@@ -134,6 +152,4 @@ class Client {
   }
 }
 
-module.exports = {
-  Client: Client
-};
+module.exports = Client;

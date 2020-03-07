@@ -32,7 +32,7 @@ describe('normalLoad', () => {
               server_client_ratio: '1.0',
               server_count: '3'
             },
-            test: {
+            vanilladb: {
               'org.vanilladb.core.storage.buffer.BufferMgr.BUFFER_POOL_SIZE': '1024000',
               'org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT': 'true'
             }
@@ -45,7 +45,7 @@ describe('normalLoad', () => {
         assert.isString(params[0].auto_bencher.jar_dir);
         assert.isNotNumber(params[0].auto_bencher.max_server_per_machine);
         assert.isNotNumber(params[0].auto_bencher.server_client_ratio);
-        assert.isNotBoolean(params[0].test['org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT']);
+        assert.isNotBoolean(params[0].vanilladb['org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT']);
       });
     });
 
@@ -62,7 +62,7 @@ describe('normalLoad', () => {
   });
 
   const autoBencher = 'auto_bencher';
-  const test = 'test';
+  const vanilladb = 'vanilladb';
   const serverCount = 'server_count';
   const jarDir = 'jar_dir';
   const useDirect = 'org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT';
@@ -99,7 +99,7 @@ describe('normalLoad', () => {
 
   describe('getBoolValue', () => {
     it('should return a bool value', () => {
-      const value = bp.getBoolValue(params[0], test, useDirect);
+      const value = bp.getBoolValue(params[0], vanilladb, useDirect);
       assert.isBoolean(value);
     });
 

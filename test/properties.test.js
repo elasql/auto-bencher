@@ -6,7 +6,7 @@ const prop = require('../src/properties');
 const bp = require('../src/benchmark-parameter');
 
 const propertiesDir = './test/test-properties';
-const propertiesPath = './test/test-properties/test.properties';
+const propertiesPath = './test/test-properties/vanilladb.properties';
 
 describe('PropertiesFile', () => {
   const pf = new prop.PropertiesFile(1, propertiesPath);
@@ -17,7 +17,7 @@ describe('PropertiesFile', () => {
       assert.isObject(pf.properties);
 
       assert.equal(pf.id, 1);
-      assert.equal(pf.fileName, 'test');
+      assert.equal(pf.fileName, 'vanilladb');
     });
   });
 
@@ -91,7 +91,7 @@ org.vanilladb.core.util.Profiler.MAX_LINES=1000
 
 describe('PropertiesFileMap', () => {
   const id = 'org.vanilladb.core.config.file';
-  const fileName = 'test.properties';
+  const fileName = 'vanilladb.properties';
   const pfm = new prop.PropertiesFileMap(propertiesDir);
 
   describe('constructor', () => {
@@ -110,7 +110,7 @@ describe('PropertiesFileMap', () => {
     it('should retrun an expected result', () => {
       const filePath = path.posix.join(propertiesDir, fileName);
       const fileNameWithoutExtension = path.posix.basename(fileName, '.properties');
-      assert.hasAllKeys(map, fileNameWithoutExtension);
+      assert.hasAllKeys(map, ['elasql', 'elasqlbench', 'logging', 'vanillabench', 'vanilladb', 'vanilladbcomm']);
       assert.deepEqual(map[fileNameWithoutExtension], new prop.PropertiesFile(id, filePath));
     });
   });
@@ -124,8 +124,28 @@ describe('PropertiesFileMap', () => {
     it('should be an expected result', () => {
       const expected = [
         {
+          id: 'java.util.logging.config.file',
+          filename: 'logging.properties'
+        },
+        {
           id: 'org.vanilladb.core.config.file',
-          filename: 'test.properties'
+          filename: 'vanilladb.properties'
+        },
+        {
+          id: 'org.vanilladb.bench.config.file',
+          filename: 'vanillabench.properties'
+        },
+        {
+          id: 'org.vanilladb.comm.config.file',
+          filename: 'vanilladbcomm.properties'
+        },
+        {
+          id: 'org.elasql.bench.config.file',
+          filename: 'elasqlbench.properties'
+        },
+        {
+          id: 'org.elasql.config.file',
+          filename: 'elasql.properties'
         }
       ];
       assert.deepEqual(settings, expected);
@@ -143,7 +163,7 @@ describe('PropertiesFileMap', () => {
   describe('getVmArgs', () => {
     const result = pfm.getVmArgs(propertiesDir);
     it('should return an expected result', () => {
-      const expected = `-D ${id}=${path.posix.join(propertiesPath)}`;
+      const expected = `-D java.util.logging.config.file=test/test-properties/logging.properties -D org.vanilladb.core.config.file=test/test-properties/vanilladb.properties -D org.vanilladb.bench.config.file=test/test-properties/vanillabench.properties -D org.vanilladb.comm.config.file=test/test-properties/vanilladbcomm.properties -D org.elasql.bench.config.file=test/test-properties/elasqlbench.properties -D org.elasql.config.file=test/test-properties/elasql.properties`;
       assert.equal(result, expected);
     });
   });
@@ -155,7 +175,7 @@ describe('PropertiesFileMap', () => {
     pfm.overrideProperties(params[0]);
 
     it('should override correctly', () => {
-      const properties = pfm.fileNameToPropertiesFileObject.test.properties;
+      const properties = pfm.fileNameToPropertiesFileObject.vanilladb.properties;
       assert.equal(properties['org.vanilladb.core.storage.buffer.BufferMgr.BUFFER_POOL_SIZE'], '1024000');
       assert.equal(properties['org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT'], 'true');
     });

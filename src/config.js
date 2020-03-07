@@ -20,7 +20,7 @@ class Config {
     this.config = tomlObject;
   }
 
-  getParams () {
+  getParam () {
     return {
       dbDir: this._getDbDir(),
       serverJarPath: this._getServerJarPath(),

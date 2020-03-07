@@ -8,14 +8,14 @@ const load = require('./command/load');
 // Load parameters from config
 const configPath = '../config.toml';
 const config = new Config(configPath);
-const params = config.getParams();
+const configParam = config.getParam();
 
 async function main (argv) {
   switch (argv[2]) {
   case 'init_env':
 
     try {
-      await initEnv.execute(params, argv);
+      await initEnv.execute(configParam, argv);
     } catch (err) {
       // this try catch block is used to color the error message only
       logger.error(err.message.red);
@@ -24,7 +24,7 @@ async function main (argv) {
 
   case 'load':
     try {
-      await load.execute(config, argv);
+      await load.execute(configParam, argv);
     } catch (err) {
       logger.error(err.message.red);
     }

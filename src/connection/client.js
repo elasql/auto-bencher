@@ -4,14 +4,14 @@ const { exec } = require('../child-process');
 const { Action, ConnectionLog, CHECKING_INTERVAL } = require('./connection');
 
 class Client {
-  constructor (configParams, conn, vmArgs) {
+  constructor (configParam, conn, vmArgs) {
     const {
       systemUserName,
       systemRemoteWorkDir,
       clientJarPath,
       javaBin,
       resultDir
-    } = configParams;
+    } = configParam;
 
     this.id = conn.id;
     this.ip = conn.ip;

@@ -72,11 +72,11 @@ class Config {
   */
   _getJdkPackagePath () {
     if (!Object.prototype.hasOwnProperty.call(this.config, jdk)) {
-      throw new Error(`config has no property ${jdk}`);
+      throw new Error(`config has no property - ${jdk}`);
     }
 
     if (!Object.prototype.hasOwnProperty.call(this.config[jdk], packagePath)) {
-      throw new Error(`config.${jdk} has no property ${packagePath}`);
+      throw new Error(`config.${jdk} has no property - ${packagePath}`);
     }
 
     return this.config[jdk][packagePath];
@@ -94,11 +94,11 @@ class Config {
     */
   _getJdkDir () {
     if (!Object.prototype.hasOwnProperty.call(this.config, jdk)) {
-      throw new Error(`config has no property ${jdk}`);
+      throw new Error(`config has no property - ${jdk}`);
     }
 
     if (!Object.prototype.hasOwnProperty.call(this.config[jdk], dirName)) {
-      throw new Error(`config.${dirName} has no property ${dirName}`);
+      throw new Error(`config.${dirName} has no property - ${dirName}`);
     }
 
     return this.config[jdk][dirName];
@@ -113,7 +113,7 @@ class Config {
 
   _getMachines () {
     if (!Object.prototype.hasOwnProperty.call(this.config, machines)) {
-      throw new Error(`config has no property ${machines}`);
+      throw new Error(`config has no property - ${machines}`);
     }
 
     return this.config[machines];
@@ -124,11 +124,11 @@ class Config {
     */
   _getSystemUserName () {
     if (!Object.prototype.hasOwnProperty.call(this.config, system)) {
-      throw new Error(`config has no property ${system}`);
+      throw new Error(`config has no property - ${system}`);
     }
 
     if (!Object.prototype.hasOwnProperty.call(this.config[system], userName)) {
-      throw new Error(`config.${system} has no property ${userName}`);
+      throw new Error(`config.${system} has no property - ${userName}`);
     }
 
     return this.config[system][userName];
@@ -139,11 +139,11 @@ class Config {
     */
   _getSystemRemoteWorkDir () {
     if (!Object.prototype.hasOwnProperty.call(this.config, system)) {
-      throw new Error(`config has no property ${system}`);
+      throw new Error(`config has no property - ${system}`);
     }
 
     if (!Object.prototype.hasOwnProperty.call(this.config[system], remoteWorkDir)) {
-      throw new Error(`config.${system} has no property ${remoteWorkDir}`);
+      throw new Error(`config.${system} has no property - ${remoteWorkDir}`);
     }
 
     return this.config[system][remoteWorkDir];
@@ -159,7 +159,7 @@ class Config {
   _getSequencer () {
     const mchns = this._getMachines();
     if (!Object.prototype.hasOwnProperty.call(mchns, sequencer)) {
-      throw new Error(`config.${machines} has no property ${sequencer}`);
+      throw new Error(`config.${machines} has no property - ${sequencer}`);
     }
     return mchns[sequencer][0];
   }
@@ -167,7 +167,7 @@ class Config {
   _getClients () {
     const mchns = this._getMachines();
     if (!Object.prototype.hasOwnProperty.call(mchns, clients)) {
-      throw new Error(`config.${machines} has no property ${clients}`);
+      throw new Error(`config.${machines} has no property - ${clients}`);
     }
     return mchns[clients];
   }
@@ -175,7 +175,7 @@ class Config {
   _getServers () {
     const mchns = this._getMachines();
     if (!Object.prototype.hasOwnProperty.call(mchns, servers)) {
-      throw new Error(`config.${machines} has no property ${servers}`);
+      throw new Error(`config.${machines} has no property - ${servers}`);
     }
     return mchns[servers];
   }

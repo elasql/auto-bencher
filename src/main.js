@@ -4,10 +4,12 @@ const Config = require('./config');
 const logger = require('./logger');
 const initEnv = require('./command/init-env');
 const load = require('./command/load');
+const { loadToml } = require('./utils');
 
 // Load parameters from config
 const configPath = '../config.toml';
-const config = new Config(configPath);
+const configToml = loadToml(configPath);
+const config = new Config(configToml);
 const configParam = config.getParam();
 
 async function main (argv) {

@@ -7,6 +7,7 @@ const load = require('./command/load');
 const { loadToml } = require('./utils');
 
 // Load parameters from config
+// TODO: Let user input config file path
 const configPath = '../config.toml';
 const configToml = loadToml(configPath);
 const config = new Config(configToml);

@@ -36,15 +36,10 @@ async function delpoyJdkToAllMachines (configParam) {
   Bad Code
 
     for (const ip of involvedMachines) {
-      deployJdkToMachine(configParam, ip);
+      await deployJdkToMachine(configParam, ip);
     }
 
-  although it is concurrent code as well,
-  it doesn't wait all the jobs.
-
-  In other words, if you run the bad code,
-  "the environment has been initialized" will be printed before the jobs finish.
-
+    it won't run in concurrency
   */
 
   // Good code

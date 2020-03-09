@@ -5,7 +5,7 @@ const { normalLoad } = require('../benchmark-parameter');
 const { run } = require('./runner');
 const { Action } = require('../connection/connection');
 
-function execute (configParam, argv) {
+async function execute (configParam, argv) {
   const dbName = argv[3];
   const paramPath = argv[4];
 
@@ -15,7 +15,7 @@ function execute (configParam, argv) {
   const toml = loadToml(paramPath);
   const benchParams = normalLoad(toml);
 
-  run(configParam, benchParams[0], dbName, Action.loading, null);
+  await run(configParam, benchParams[0], dbName, Action.loading, null);
 
   logger.info(`loading testbed finished`);
 }

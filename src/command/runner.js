@@ -1,5 +1,5 @@
 const logger = require('../logger');
-const { NormalLoad } = require('../benchmark-parameter');
+const { getNumValue } = require('../benchmark-parameter');
 const { Connection, Action } = require('../connection/connection');
 const Server = require('../connection/server');
 const Client = require('../connection/client');
@@ -52,10 +52,10 @@ function generateConnectionList (configParam, benchParam, action) {
 function getParams (benchParam) {
   const autoBencher = 'auto_bencher';
   return {
-    serverCount: NormalLoad.getNumValue(benchParam, autoBencher, 'server_count'),
-    serverClientRatio: NormalLoad.getNumValue(benchParam, autoBencher, 'server_client_ratio'),
-    maxServerPerMachine: NormalLoad.getNumValue(benchParam, autoBencher, 'max_server_per_machine'),
-    maxClientPerMachine: NormalLoad.getNumValue(benchParam, autoBencher, 'max_client_per_machine')
+    serverCount: getNumValue(benchParam, autoBencher, 'server_count'),
+    serverClientRatio: getNumValue(benchParam, autoBencher, 'server_client_ratio'),
+    maxServerPerMachine: getNumValue(benchParam, autoBencher, 'max_server_per_machine'),
+    maxClientPerMachine: getNumValue(benchParam, autoBencher, 'max_client_per_machine')
   };
 }
 

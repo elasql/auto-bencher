@@ -36,11 +36,11 @@ function generateConnectionList (configParam, benchParam, action) {
   const connection = new Connection(initPort);
   const { sequencer, servers, clients } = configParam;
 
-  const seqConn = Connection.getInfo(serverCount, sequencer, initPort);
-  const serverConns = connection.getConnList(servers, serverCount, maxServerPerMachine);
+  const seqConn = Connection.getConn(serverCount, sequencer, initPort);
+  const serverConns = connection.getConns(servers, serverCount, maxServerPerMachine);
 
   const clientCount = action === Action.loading ? 1 : serverCount * serverClientRatio;
-  const clientConns = connection.getConnList(clients, clientCount, maxClientPerMachine);
+  const clientConns = connection.getConns(clients, clientCount, maxClientPerMachine);
 
   return {
     seqConn,

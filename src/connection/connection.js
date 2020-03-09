@@ -11,7 +11,7 @@ class Connection {
     this.initPort = initPort;
   }
 
-  getConnList (ips, totalConn, maxConnPerNode) {
+  getConns (ips, totalConn, maxConnPerNode) {
     if (!Number.isInteger(totalConn)) {
       throw Error(`totalConn is not a Integer, you pass ${totalConn} to getConnList`);
     }

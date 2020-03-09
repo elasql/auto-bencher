@@ -4,7 +4,7 @@ const { Connection } = require('../../src/connection/connection');
 describe('Connection', () => {
   const connection = new Connection();
 
-  describe('GetConnList', () => {
+  describe('GetConns', () => {
     const ips = [
       '192.168.1.1',
       '192.168.1.2',
@@ -14,7 +14,7 @@ describe('Connection', () => {
     describe('Normal cases', () => {
       const totalConn = 5;
       const maxConnPerNode = 2;
-      const conns = connection.getConnList(ips, totalConn, maxConnPerNode);
+      const conns = connection.getConns(ips, totalConn, maxConnPerNode);
 
       it(`should return an array with ${totalConn} elements`, () => {
         assert.isArray(conns);
@@ -58,11 +58,11 @@ describe('Connection', () => {
       const ErrMsg = 'The number of machines is not enough';
 
       it('should not throw error', () => {
-        assert.doesNotThrow(() => { connection.getConnList(ips, 3, 1); }, Error, ErrMsg);
+        assert.doesNotThrow(() => { connection.getConns(ips, 3, 1); }, Error, ErrMsg);
       });
 
       it('should throw error', () => {
-        assert.throws(() => { connection.getConnList(ips, 4, 1); }, Error, ErrMsg);
+        assert.throws(() => { connection.getConns(ips, 4, 1); }, Error, ErrMsg);
       });
     });
   });

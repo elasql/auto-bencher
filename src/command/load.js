@@ -1,6 +1,6 @@
 const logger = require('../logger');
 const { loadToml } = require('../utils');
-const { NormalLoad } = require('../benchmark-parameter');
+const { normalLoad } = require('../benchmark-parameter');
 
 const { run } = require('./runner');
 const { Action } = require('../connection/connection');
@@ -13,8 +13,7 @@ function execute (configParam, argv) {
   logger.info(`using parameter file '${paramPath}'`);
 
   const toml = loadToml(paramPath);
-  const normalLoad = new NormalLoad();
-  const benchParams = normalLoad.load(toml);
+  const benchParams = normalLoad(toml);
 
   run(configParam, benchParams[0], dbName, Action.loading, null);
 

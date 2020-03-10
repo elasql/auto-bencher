@@ -74,7 +74,7 @@ class PropertiesFileMap {
     }
 
     Object.values(this.fileNameToPropertiesFileObject).map(pf => {
-      pf.outputDir(dirPath);
+      pf.outputToFile(dirPath);
     });
   }
 

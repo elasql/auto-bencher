@@ -6,8 +6,8 @@ const { run } = require('./runner');
 const { Action } = require('../connection/connection');
 
 async function execute (configParam, args) {
-  const dbName = args.dbName;
-  const paramPath = args.paramPath;
+  const dbName = args.dbName[0];
+  const paramPath = args.paramPath[0];
 
   logger.info('preparing for loading testbed into ' + dbName.green);
   logger.info(`using parameter file '${paramPath}'`);

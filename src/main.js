@@ -8,7 +8,7 @@ const args = require('./args');
 
 logger.info(JSON.stringify(args));
 // Load parameters from config
-const configToml = loadToml(args.configPath);
+const configToml = loadToml(args.configPath[0]);
 const configParam = new Config(configToml).getParam();
 
 async function main (args) {

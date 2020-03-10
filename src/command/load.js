@@ -8,7 +8,7 @@ const { Action } = require('../connection/connection');
 async function execute (configParam, args) {
   const dbName = args.dbName[0];
   const paramPath = args.paramPath[0];
-  const propDir = args.propDir[0];
+  const defaultPropDir = args.propDir[0];
 
   logger.info('preparing for loading testbed into ' + dbName.green);
   logger.info(`using parameter file '${paramPath}'`);
@@ -16,7 +16,7 @@ async function execute (configParam, args) {
   const toml = loadToml(paramPath);
   const benchParams = normalLoad(toml);
 
-  await run(configParam, benchParams[0], propDir, dbName, Action.loading, null);
+  await run(configParam, benchParams[0], defaultPropDir, dbName, Action.loading, null);
 
   logger.info(`loading testbed finished`);
 }

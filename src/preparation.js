@@ -9,7 +9,7 @@ const { PropertiesFileMap } = require('./properties');
 const BENCH_DIR = 'benchmarker';
 const PROP_DIR = 'props';
 
-async function prepareBenchDir (configParam, benchParam, systemConn, propDir) {
+async function prepareBenchDir (configParam, benchParam, systemConn, defaultPropDir) {
   logger.info('preparing the benchmarker directory...');
 
   // ensure the existance of the benchmarker directory
@@ -21,7 +21,7 @@ async function prepareBenchDir (configParam, benchParam, systemConn, propDir) {
   await copyJars(benchParam);
 
   // read the default Properties
-  const pfm = new PropertiesFileMap(defaultPropertiesDir);
+  const pfm = new PropertiesFileMap(defaultPropDir);
 
   // apply the parameters
   applyParameters(pfm, configParam, benchParam, systemConn);

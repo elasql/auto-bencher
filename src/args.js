@@ -14,7 +14,7 @@ parser.addArgument(
     help: 'config.toml path',
     required: true,
     defaultValue: '',
-    metavar: 'config.toml path',
+    metavar: 'path',
     dest: 'configPath'
   }
 );
@@ -50,7 +50,7 @@ load.addArgument(
     help: 'parameter file path',
     required: true,
     defaultValue: '',
-    metavar: 'normal-load.toml path',
+    metavar: 'path',
     dest: 'paramPath'
   }
 );
@@ -63,7 +63,7 @@ load.addArgument(
     help: 'database directory name',
     required: true,
     defaultValue: '',
-    metavar: 'database directory name',
+    metavar: 'name',
     dest: 'dbName'
   }
 );

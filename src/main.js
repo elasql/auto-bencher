@@ -6,10 +6,10 @@ const load = require('./command/load');
 const { loadToml } = require('./utils');
 const args = require('./args');
 
+logger.args(JSON.stringify(args));
 // Load parameters from config
 const configToml = loadToml(args.configPath);
-const config = new Config(configToml);
-const configParam = config.getParam();
+const configParam = new Config(configToml).getParam();
 
 async function main (args) {
   switch (args.mode) {

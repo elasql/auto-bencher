@@ -15,8 +15,8 @@ async function run (configParam, benchParam, args, dbName, action, reportDir = '
   const vmArgs = await prepareBenchDir(configParam, benchParam, systemConn, args);
 
   logger.info('connecting to the machines...');
-  logger.info('killing the existing benchmarker processes...');
 
+  logger.info('killing the existing benchmarker processes...');
   await killAll(configParam, systemConn);
 
   await start(configParam, dbName, action, reportDir, vmArgs, systemConn);
@@ -59,32 +59,32 @@ function getParams (benchParam) {
   };
 }
 
-// TODO: kill them in concurrency
 async function killAll (configParam, systemConn) {
   const { seqConn, serverConns, clientConns } = systemConn;
+  let nodeConns = [];
 
   if (seqConn) {
-    await killBenchmarker(configParam, seqConn);
+    nodeConns.push(seqConn);
   }
+  nodeConns = nodeConns.concat(serverConns, clientConns);
 
   await Promise.all(
-    serverConns.map(serverConn => {
-      killBenchmarker(configParam, serverConn);
-    })
-  );
-
-  await Promise.all(
-    clientConns.map(clientConn => {
-      killBenchmarker(configParam, clientConn);
-    })
+    nodeConns.map(nodeConn => killBenchmarker(configParam, nodeConn))
   );
 }
 
 async function killBenchmarker (configParam, conn) {
   const kill = ShellCmd.getKillBenchmarker();
   const ssh = new ShellCmd(configParam.systemUserName, conn.ip).getSsh(kill);
-
-  await exec(ssh);
+  try {
+    await exec(ssh);
+  } catch (err) {
+    if (err.code === 1) {
+      // don't do anything because there may be no running process
+      return;
+    }
+    logger.info(err.message);
+  }
 }
 
 async function start (configParam, dbName, action, reportDir, vmArgs, systemConn) {

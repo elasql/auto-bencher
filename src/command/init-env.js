@@ -45,6 +45,12 @@ async function delpoyJdkToAllMachines (configParam) {
   // Good code
   await Promise.all(
     involvedMachines.map(
+      /*
+        either ip => deployJdkToMachine(configParam, ip)
+        or ip => { return deployJdkToMachine(configParam, ip)} is OK
+
+        ip => { deployJdkToMachine(configParam, ip) } won't await
+      */
       ip => deployJdkToMachine(configParam, ip)
     )
   );

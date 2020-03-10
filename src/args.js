@@ -63,7 +63,7 @@ load.addArgument(
     help: 'database directory name',
     required: true,
     defaultValue: '',
-    metavar: 'name',
+    metavar: 'database directory name',
     dest: 'dbName'
   }
 );

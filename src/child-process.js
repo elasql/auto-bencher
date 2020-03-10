@@ -29,11 +29,7 @@ async function exec (cmd) {
   if you catch the errors in this function
   it will cause a disaster
   */
-  try {
-    return await childProcessExec(cmd);
-  } catch (err) {
-    return err;
-  }
+  await childProcessExec(cmd);
 };
 
 module.exports = {

@@ -43,28 +43,15 @@ const load = subparsers.addParser(
 );
 
 load.addArgument(
-  ['--parameter'],
+  ['-p', '--preparation'],
   {
     type: 'string',
     nargs: 1,
-    help: 'parameter file path',
+    help: 'preparation data directory',
     required: true,
     defaultValue: '',
-    metavar: 'path',
-    dest: 'paramPath'
-  }
-);
-
-load.addArgument(
-  ['--properties'],
-  {
-    type: 'string',
-    nargs: 1,
-    help: 'default-properties directory',
-    required: true,
-    defaultValue: '',
-    metavar: 'path',
-    dest: 'propDir'
+    metavar: 'dir',
+    dest: 'prepDir'
   }
 );
 

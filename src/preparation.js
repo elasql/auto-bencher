@@ -9,7 +9,7 @@ const { PropertiesFileMap } = require('./properties');
 const BENCH_DIR = 'benchmarker';
 const PROP_DIR = 'props';
 
-async function prepareBenchDir (configParam, benchParam, systemConn, preparationDir) {
+async function prepareBenchDir (configParam, benchParam, systemConn, args) {
   logger.info('preparing the benchmarker directory...');
 
   // ensure the existance of the benchmarker directory
@@ -21,7 +21,7 @@ async function prepareBenchDir (configParam, benchParam, systemConn, preparation
   await copyJars(benchParam);
 
   // read the default Properties
-  const defaultPropDir = path.posix.join(preparationDir, 'properties');
+  const defaultPropDir = args.propDir;
   const pfm = new PropertiesFileMap(defaultPropDir);
 
   // apply the parameters
@@ -44,8 +44,8 @@ function applyParameters (pfm, configParam, benchParam, systemConn) {
   pfm.setElasqlProperties(serverConns.length);
 }
 
-async function copyJars (benchParamm, preparationDir) {
-  await Promise.all(getJars(benchParam, preparationDir).map(jarPath => {
+async function copyJars (benchParam, args) {
+  await Promise.all(getJars(benchParam, args).map(jarPath => {
     lsAndCopy(jarPath);
   })
   );
@@ -59,11 +59,11 @@ async function lsAndCopy (jarPath) {
   await exec(cp);
 }
 
-function getJars (benchParam, preparationDir) {
+function getJars (benchParam, args) {
   const jarDir = bp.getStrValue(benchParam, 'auto_bencher', 'jar_dir');
   const fileNames = ['server.jar', 'client.jar'];
 
-  return fileNames.map(fileName => path.posix.join(preparationDir, 'jars', jarDir, fileName));
+  return fileNames.map(fileName => path.posix.join(args.jarsDir, jarDir, fileName));
 }
 
 module.exports = {

@@ -14,7 +14,7 @@ parser.addArgument(
     help: 'config.toml path',
     required: true,
     defaultValue: '',
-    metavar: 'path',
+    metavar: 'config.toml path',
     dest: 'configPath'
   }
 );
@@ -50,7 +50,7 @@ load.addArgument(
     help: 'parameter file path',
     required: true,
     defaultValue: '',
-    metavar: 'path',
+    metavar: 'normal-load.toml path',
     dest: 'paramPath'
   }
 );

@@ -9,7 +9,7 @@ const { exec } = require('../child-process');
 
 const defaultDirs = ['databases', 'results'];
 
-async function execute (configParam, argv) {
+async function execute (configParam) {
   logger.info('start initializing the environment');
 
   await checkLocalJdk(configParam);

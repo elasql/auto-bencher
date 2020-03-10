@@ -5,12 +5,9 @@ const { normalLoad } = require('../benchmark-parameter');
 const { run } = require('./runner');
 const { Action } = require('../connection/connection');
 
-async function execute (configParam, argv) {
-  if (!argv[3] || !argv[4]) {
-    throw Error('please provide config path and parameter path');
-  }
-  const dbName = argv[3];
-  const paramPath = argv[4];
+async function execute (configParam, args) {
+  const dbName = args.dbName;
+  const paramPath = args.paramPath;
 
   logger.info('preparing for loading testbed into ' + dbName.green);
   logger.info(`using parameter file '${paramPath}'`);

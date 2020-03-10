@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "argparse": "^1.0.10",
     "colors": "^1.4.0",
     "deepcopy": "^2.0.0",
     "hashmap": "^2.4.0",

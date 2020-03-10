@@ -14,7 +14,7 @@ async function execute (configParam, args) {
   const toml = loadToml(paramPath);
   const benchParams = normalLoad(toml);
 
-  await run(configParam, benchParams[0], prepartionDir, dbName, Action.loading, null);
+  await run(configParam, benchParams[0], args, dbName, Action.loading, null);
 
   logger.info(`loading testbed finished`);
 }

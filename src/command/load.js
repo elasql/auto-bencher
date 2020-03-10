@@ -6,6 +6,9 @@ const { run } = require('./runner');
 const { Action } = require('../connection/connection');
 
 async function execute (configParam, argv) {
+  if (!argv[3] || !argv[4]) {
+    throw Error('please provide config path and parameter path');
+  }
   const dbName = argv[3];
   const paramPath = argv[4];
 

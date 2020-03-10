@@ -89,8 +89,8 @@ async function createWorkingDir (configParam, ip) {
 async function checkJavaRuntime (configParam, ip) {
   const { systemUserName, systemRemoteWorkDir, jdkDir } = configParam;
   const shellCmd = new ShellCmd(systemUserName, ip);
-  const getJavaVersionCmd = ShellCmd.getJavaVersion(systemRemoteWorkDir, jdkDir);
-  const ssh = shellCmd.getSsh(getJavaVersionCmd);
+  const javaVersion = ShellCmd.getJavaVersion(systemRemoteWorkDir, jdkDir);
+  const ssh = shellCmd.getSsh(javaVersion);
 
   logger.info('checking java runtime on ' + ip);
 

@@ -82,10 +82,10 @@ class PropertiesFileMap {
     let vmArgs = '';
 
     Object.values(this.fileNameToPropertiesFileObject).map(pf => {
-      vmArgs += '-D ' + pf.id + '=' + path.posix.join(propertiesDir, pf.fileName + '.properties ');
+      vmArgs += '-D' + pf.id + '=' + path.posix.join(propertiesDir, pf.fileName + '.properties ');
     });
 
-    // remove the last ' '
+    // remove the last white space
     return vmArgs.slice(0, vmArgs.length - 1);
   }
 

@@ -163,7 +163,7 @@ describe('PropertiesFileMap', () => {
   describe('getVmArgs', () => {
     const result = pfm.getVmArgs(propertiesDir);
     it('should return an expected result', () => {
-      const expected = `-D java.util.logging.config.file=test/test-properties/logging.properties -D org.vanilladb.core.config.file=test/test-properties/vanilladb.properties -D org.vanilladb.bench.config.file=test/test-properties/vanillabench.properties -D org.vanilladb.comm.config.file=test/test-properties/vanilladbcomm.properties -D org.elasql.bench.config.file=test/test-properties/elasqlbench.properties -D org.elasql.config.file=test/test-properties/elasql.properties`;
+      const expected = `-Djava.util.logging.config.file=test/test-properties/logging.properties -Dorg.vanilladb.core.config.file=test/test-properties/vanilladb.properties -Dorg.vanilladb.bench.config.file=test/test-properties/vanillabench.properties -Dorg.vanilladb.comm.config.file=test/test-properties/vanilladbcomm.properties -Dorg.elasql.bench.config.file=test/test-properties/elasqlbench.properties -Dorg.elasql.config.file=test/test-properties/elasql.properties`;
       assert.equal(result, expected);
     });
   });

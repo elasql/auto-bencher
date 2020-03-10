@@ -69,7 +69,7 @@ class Client {
     logger.debug(`starting client ${this.id}`);
     // [clientId] [action]
     const progArgs = `${this.id} ${action}`;
-    const runJar = ShellCmd.getJavaVersion(
+    const runJar = ShellCmd.getRunJar(
       this.javaBin,
       this.vmArgs,
       this.jarPath,

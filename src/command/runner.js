@@ -7,12 +7,12 @@ const { prepareBenchDir } = require('../preparation');
 const ShellCmd = require('../shell-cmd');
 const { exec } = require('../child-process');
 
-async function run (configParam, benchParam, dbName, action, reportDir = '') {
+async function run (configParam, benchParam, propDir, dbName, action, reportDir = '') {
   // generate connection information (ip, port)
   const systemConn = generateConnectionList(configParam, benchParam, action);
 
   // prepare the benchmark directory
-  const vmArgs = await prepareBenchDir(configParam, benchParam, systemConn);
+  const vmArgs = await prepareBenchDir(configParam, benchParam, systemConn, propDir);
 
   logger.info('connecting to the machines...');
   logger.info('killing the existing benchmarker processes...');

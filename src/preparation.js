@@ -8,9 +8,8 @@ const { PropertiesFileMap } = require('./properties');
 
 const BENCH_DIR = 'benchmarker';
 const PROP_DIR = 'props';
-const defaultPropertiesDir = 'default-properties';
 
-async function prepareBenchDir (configParam, benchParam, systemConn) {
+async function prepareBenchDir (configParam, benchParam, systemConn, propDir) {
   logger.info('preparing the benchmarker directory...');
 
   // ensure the existance of the benchmarker directory

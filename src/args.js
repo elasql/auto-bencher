@@ -43,7 +43,7 @@ const load = subparsers.addParser(
 );
 
 load.addArgument(
-  ['-p', '--parameter'],
+  ['--parameter'],
   {
     type: 'string',
     nargs: 1,
@@ -52,6 +52,19 @@ load.addArgument(
     defaultValue: '',
     metavar: 'path',
     dest: 'paramPath'
+  }
+);
+
+load.addArgument(
+  ['--properties'],
+  {
+    type: 'string',
+    nargs: 1,
+    help: 'default-properties directory',
+    required: true,
+    defaultValue: '',
+    metavar: 'path',
+    dest: 'propDir'
   }
 );
 

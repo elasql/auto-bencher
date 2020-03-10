@@ -36,6 +36,7 @@ class Client {
     await this.start(action);
 
     while (!await this.checkForFinished()) {
+      // TODO: should check whether it does sleep
       await new Promise(resolve => { setTimeout(resolve, CHECKING_INTERVAL); });
     }
 
@@ -78,7 +79,12 @@ class Client {
     );
     const ssh = this.shellCmd.getSsh(runJar);
     logger.debug(`client ${this.id} is running`);
-    await exec(ssh);
+
+    try {
+      await exec(ssh);
+    } catch (err) {
+      throw Error(err.message);
+    }
   }
 
   async checkForFinished (action) {

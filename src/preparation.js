@@ -18,7 +18,7 @@ async function prepareBenchDir (configParam, benchParam, systemConn, args) {
   }
 
   // copy the jar files to the benchmark directory
-  await copyJars(benchParam);
+  await copyJars(benchParam, args);
 
   // read the default Properties
   const defaultPropDir = args.propDir[0];

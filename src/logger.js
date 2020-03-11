@@ -1,6 +1,10 @@
 const { createLogger, transports, format } = require('winston');
 const { combine, label, printf } = format;
 
+const winston = require('winston');
+const args = require('./args');
+winston.level = args.debug ? 'debug' : 'info';
+
 const customizedFormat = printf(({ level, message, label }) => {
   return `[${label}] ${level}: ${message}`;
 });

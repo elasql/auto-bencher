@@ -19,6 +19,18 @@ parser.addArgument(
   }
 );
 
+parser.addArgument(
+  ['-D', '--debug'],
+  {
+    action: 'storeTrue',
+    nargs: 0,
+    help: 'display debug messages',
+    defaultValue: false,
+    metavar: 'debug',
+    dest: 'debug'
+  }
+);
+
 const subparsers = parser.addSubparsers({
   title: 'mode',
   dest: 'mode'

@@ -35,7 +35,7 @@ class Client {
     logger.info(`client - ${this.id} starts`);
     await this.start(action);
 
-    while (!await this.checkForFinished()) {
+    while (!await this.checkForFinished(action)) {
       // TODO: should check whether it does sleep
       await new Promise(resolve => { setTimeout(resolve, CHECKING_INTERVAL); });
     }

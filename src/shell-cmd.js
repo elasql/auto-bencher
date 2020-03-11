@@ -79,7 +79,7 @@ class ShellCmd {
 
   getSsh (remoteCmd) {
     const cmd = 'ssh ';
-    return cmd + this._getHost() + ' ' + remoteCmd;
+    return cmd + this._getHost() + ` "` + remoteCmd + `"`;
   }
 }
 

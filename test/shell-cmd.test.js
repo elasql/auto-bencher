@@ -154,7 +154,7 @@ describe('ShellCmd', () => {
   describe('getSsh', () => {
     it('should return a correct command', () => {
       const cmd = shellCmd.getSsh('ls -al');
-      const expected = `ssh ${userName}@${ip} ls -al`;
+      const expected = `ssh ${userName}@${ip} "ls -al"`;
       assert.equal(cmd, expected);
     });
   });

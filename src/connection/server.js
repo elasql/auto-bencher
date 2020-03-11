@@ -145,6 +145,7 @@ class Server {
       return true;
     } catch (err) {
       const { code } = err;
+      logger.debug(JSON.stringify(err));
       if (code === 1) {
         return false;
       } else {

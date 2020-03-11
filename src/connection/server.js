@@ -42,7 +42,13 @@ class Server {
     await this.prepare(action);
 
     await this.start();
-    while (!await this.checkForReady()) {
+    while (true) {
+      try {
+        await this.checkForReady();
+        break;
+      } catch (err) {
+        // It's Ok to do nothing
+      }
       await new Promise(resolve => { setTimeout(resolve, CHECKING_INTERVAL); });
     }
 

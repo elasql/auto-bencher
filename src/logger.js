@@ -1,9 +1,6 @@
 const { createLogger, transports, format } = require('winston');
 const { combine, label, printf } = format;
-
-const winston = require('winston');
 const args = require('./args');
-winston.level = args.debug ? 'debug' : 'info';
 
 const customizedFormat = printf(({ level, message, label }) => {
   return `[${label}] ${level}: ${message}`;
@@ -11,7 +8,7 @@ const customizedFormat = printf(({ level, message, label }) => {
 
 // create logger
 const logger = createLogger({
-  level: 'info',
+  level: args.debug ? 'debug' : 'info',
   format: combine(
     label({
       label: 'Auto bencher'

@@ -96,18 +96,26 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
 
   const allServers = servers.concat(sequencer);
 
-  // init servers and sequencer
-  await Promise.all(allServers.map(server => {
-    server.init();
-  }));
+  try {
+    // init servers and sequencer
+    await Promise.all(allServers.map(server => {
+      server.init();
+    }));
+  } catch (err) {
+    throw Error(`error occurs at server initialization - ${err.message.red}`);
+  }
 
-  await Promise.all(clients.map(client => {
-    client.run();
-  }));
+  try {
+    await Promise.all(clients.map(client => {
+      client.run(action, reportDir);
+    }));
+  } catch (err) {
+    throw Error(`error occurs at client job - ${err.message.red}`);
+  }
 
-  await Promise.all(allServers.map(server => {
+  allServers.map(server => {
     server.stopSignal = true;
-  }));
+  });
 }
 
 function newSequencer (seqConn, configParam, dbName, vmArgs) {

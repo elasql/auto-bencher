@@ -98,9 +98,7 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
 
   try {
     // init servers and sequencer
-    await Promise.all(allServers.map(server => {
-      server.init();
-    }));
+    await Promise.all(allServers.map(server => server.init()));
   } catch (err) {
     throw Error(`error occurs at server initialization - ${err.message.red}`);
   }
@@ -108,9 +106,7 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   logger.info(`successfully initialize all servers`);
 
   try {
-    await Promise.all(clients.map(client => {
-      client.run(action, reportDir);
-    }));
+    await Promise.all(clients.map(client => client.run(action, reportDir)));
   } catch (err) {
     throw Error(`error occurs at client job - ${err.message.red}`);
   }

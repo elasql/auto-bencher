@@ -92,7 +92,7 @@ describe('ShellCmd', () => {
       const keyword = 'keyword';
       const logPath = 'logPath';
       const cmd = ShellCmd.getGrep(keyword, logPath);
-      const expected = `grep "${keyword}" ${logPath}`;
+      const expected = `grep \\"${keyword}\\" ${logPath}`;
       assert.equal(cmd, expected);
     });
   });
@@ -102,7 +102,7 @@ describe('ShellCmd', () => {
       const resultDir = 'resultDir';
       const id = 'id';
       const cmd = ShellCmd.getGrepCsv(resultDir, id);
-      const expected = `ls ${resultDir} | grep "${id}[.]csv"`;
+      const expected = `ls ${resultDir} | grep \\"${id}[.]csv\\"`;
       assert.equal(cmd, expected);
     });
   });
@@ -112,7 +112,7 @@ describe('ShellCmd', () => {
       const resultDir = 'resultDir';
       const id = 'id';
       const cmd = ShellCmd.getGrepTotal(resultDir, id);
-      const expected = `grep 'TOTAL' ${resultDir}/*-${id}.txt`;
+      const expected = `grep \\"TOTAL\\" ${resultDir}/*-${id}.txt`;
       assert.equal(cmd, expected);
     });
   });

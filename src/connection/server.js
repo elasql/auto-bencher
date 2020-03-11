@@ -55,8 +55,7 @@ class Server {
     logger.info(`server ${this.id} is ready`);
 
     while (!this.stopSignal) {
-      await this.checkForError();
-      await new Promise(resolve => { setTimeout(resolve, CHECKING_INTERVAL); });
+      setTimeout(this.checkForError, CHECKING_INTERVAL);
     }
   }
 
@@ -163,6 +162,7 @@ class Server {
   async checkForError () {
     // These three grepError should be in order
     // Error occurs only if we grep these keywords on the remote
+    logger.debug(`check error on server ${this.id}`);
     await this.connLog.grepError('Exception');
     await this.connLog.grepError('error');
     await this.connLog.grepError('SEVERE');

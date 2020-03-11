@@ -86,8 +86,7 @@ class ConnectionLog {
     const grep = ShellCmd.getGrep(keyword, this.logPath);
     const ssh = this.shellCmd.getSsh(grep);
     // Don't try catch here, let the outside function to handle
-    const promisedObj = await exec(ssh);
-    return promisedObj;
+    await exec(ssh);
   }
 
   async grepError (keyword) {

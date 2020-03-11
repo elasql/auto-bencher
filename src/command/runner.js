@@ -105,6 +105,8 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
     throw Error(`error occurs at server initialization - ${err.message.red}`);
   }
 
+  logger.info(`successfully initialize all servers`);
+
   try {
     await Promise.all(clients.map(client => {
       client.run(action, reportDir);

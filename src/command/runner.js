@@ -109,9 +109,9 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
     // let client run and server check error at the same time
     await Promise.all(clients.concat(allServers).map(obj => {
       if (Object.prototype.hasOwnProperty.call(obj, 'stopSignal')) {
-        return obj.run(action, reportDir);
-      } else {
         return obj.checkError();
+      } else {
+        return obj.run(action, reportDir);
       }
     }));
   } catch (err) {

@@ -25,11 +25,12 @@ async function exec (cmd) {
   /*
   PLEASE DO NOT TRY CATCH childProcessExec !!!!!
 
-  a lot of functions depend on the returned values and errors of childProcessExec
-  if you catch the errors in this function
-  it will cause a disaster
+  A lot of functions depend on the returned values and errors of childProcessExec,
+  If you either catch the errors in this function or don't return the resolve result.
+  It will cause a disaster.
   */
-  await childProcessExec(cmd);
+  const resolveResult = await childProcessExec(cmd);
+  return resolveResult;
 };
 
 module.exports = {

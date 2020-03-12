@@ -40,7 +40,6 @@ class Client {
     await this.start(action);
 
     while (!await this.checkForFinished(action)) {
-      // TODO: should check whether it does sleep
       await delay(CHECKING_INTERVAL);
     }
 

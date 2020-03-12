@@ -115,7 +115,7 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
       }
     }));
   } catch (err) {
-    throw Error(`error occurs at client job or server error checking - ${err.message.red}`);
+    throw Error(`${err.message.red}`);
   }
 
   allServers.map(server => {

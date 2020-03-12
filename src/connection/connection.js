@@ -2,7 +2,9 @@ const Action = {
   loading: 1,
   benchmarking: 2
 };
-const CHECKING_INTERVAL = 1;
+
+// ms
+const CHECKING_INTERVAL = 1000;
 
 const INIT_PORT = 30000;
 class Connection {
@@ -105,9 +107,14 @@ class ConnectionLog {
   }
 }
 
+const delay = (interval) => {
+  return new Promise(resolve => setTimeout(resolve, interval));
+};
+
 module.exports = {
   Action: Action,
   Connection: Connection,
   ConnectionLog: ConnectionLog,
-  CHECKING_INTERVAL
+  CHECKING_INTERVAL,
+  delay
 };

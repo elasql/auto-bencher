@@ -1,7 +1,7 @@
 const logger = require('../logger');
 const ShellCmd = require('../shell-cmd');
 const { exec } = require('../child-process');
-const { Action, ConnectionLog, CHECKING_INTERVAL } = require('./connection');
+const { Action, ConnectionLog, CHECKING_INTERVAL, delay } = require('./connection');
 
 class Client {
   constructor (configParam, conn, vmArgs) {
@@ -37,7 +37,7 @@ class Client {
 
     while (!await this.checkForFinished(action)) {
       // TODO: should check whether it does sleep
-      await new Promise(resolve => { setTimeout(resolve, CHECKING_INTERVAL); });
+      await delay(CHECKING_INTERVAL);
     }
 
     if (action === Action.benchmarking) {

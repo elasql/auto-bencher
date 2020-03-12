@@ -1,7 +1,7 @@
 const logger = require('../logger');
 const ShellCmd = require('../shell-cmd');
 const { exec } = require('../child-process');
-const { ConnectionLog, Action, CHECKING_INTERVAL } = require('./connection');
+const { ConnectionLog, Action, CHECKING_INTERVAL, delay } = require('./connection');
 
 class Server {
   constructor (configParam, conn, dbName, vmArgs, isSequencer) {
@@ -49,14 +49,14 @@ class Server {
       } catch (err) {
         // It's Ok to do nothing
       }
-      await new Promise(resolve => { setTimeout(resolve, CHECKING_INTERVAL); });
+      await delay(CHECKING_INTERVAL);
     }
 
     logger.info(`server ${this.id} is ready`);
 
     while (!this.stopSignal) {
       await this.checkForError();
-      await new Promise(resolve => { setTimeout(resolve, CHECKING_INTERVAL); });
+      await delay(CHECKING_INTERVAL);
     }
   }
 

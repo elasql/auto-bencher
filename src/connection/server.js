@@ -53,7 +53,9 @@ class Server {
     }
 
     logger.info(`server ${this.id} is ready`);
+  }
 
+  async checkError () {
     while (!this.stopSignal) {
       await this.checkForError();
       await delay(CHECKING_INTERVAL);

@@ -106,9 +106,16 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   logger.info(`successfully initialize all servers`);
 
   try {
-    await Promise.all(clients.map(client => client.run(action, reportDir)));
+    // let client run and server check error at the same time
+    await Promise.all(clients.concat(allServers).map(obj => {
+      if (Object.prototype.hasOwnProperty.call(obj, 'stopSignal')) {
+        return obj.run(action, reportDir);
+      } else {
+        return obj.checkError();
+      }
+    }));
   } catch (err) {
-    throw Error(`error occurs at client job - ${err.message.red}`);
+    throw Error(`error occurs at client job or server error checking - ${err.message.red}`);
   }
 
   allServers.map(server => {

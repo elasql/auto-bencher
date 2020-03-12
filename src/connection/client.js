@@ -12,6 +12,7 @@ class Client {
       javaBin,
       resultDir
     } = configParam;
+    this.systemRemoteWorkDir = systemRemoteWorkDir;
 
     this.id = conn.id;
     this.ip = conn.ip;
@@ -29,7 +30,10 @@ class Client {
   }
 
   async run (action, reportDir) {
+    logger.info(`cleaning previous results on client - ${this.id}`);
     await this.cleanPreviousResults();
+
+    logger.info(`send benchmark directory to cleint - ${this.id}`);
     await this.sendBenchDir();
 
     logger.info(`client - ${this.id} starts`);

@@ -1,6 +1,6 @@
 const assert = require('chai').assert;
 
-const Cmd = require('../../../src/cmd/cmd-generator');
+const Cmd = require('../../src/cmd/cmd-generator');
 
 describe('Cmd', () => {
   const userName = 'db-team';

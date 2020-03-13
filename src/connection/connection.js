@@ -52,10 +52,10 @@ class Connection {
     };
   }
 
-  static getView (connO) {
+  static getView (conns) {
     let view = '';
 
-    connO.map(conn => {
+    conns.map(conn => {
       if (conn.id > 0) {
         view += ', ';
       }

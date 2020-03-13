@@ -117,12 +117,12 @@ class PropertiesFileMap {
     );
   }
 
-  // TODO: add test cases
+  // TODO: add test cases !!!
   setConnectionsProperties (sequencer, servers, clients) {
     this.set(
       'vanilladbcomm',
       'org.vanilladb.comm.server.ServerAppl.SERVER_VIEW',
-      Connection.getView(servers)
+      Connection.getView(servers.concat([sequencer]))
     );
 
     this.set(

@@ -180,4 +180,17 @@ describe('PropertiesFileMap', () => {
       assert.equal(properties['org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT'], 'true');
     });
   });
+
+  describe('setPaths', () => {
+    const prop = { dbDir: 'dbDir', resultDir: 'resultDir' };
+    pfm.setPaths(prop);
+
+    it('should set path in properties file correctly', () => {
+      const vanilladbProps = pfm.fileNameToPropertiesFileObject.vanilladb.properties;
+      const vanillabenchProps = pfm.fileNameToPropertiesFileObject.vanillabench.properties;
+      assert.equal(vanilladbProps['org.vanilladb.core.storage.file.FileMgr.DB_FILES_DIR'], prop.dbDir);
+      assert.equal(vanillabenchProps['org.vanilladb.bench.StatisticMgr.OUTPUT_DIR'], prop.resultDir);
+    });
+  }
+  );
 });

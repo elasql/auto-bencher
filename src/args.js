@@ -6,6 +6,9 @@ const parser = new ArgumentParser({
   description: 'AutoBencher'
 });
 
+/*
+  main arguments
+*/
 parser.addArgument(
   ['-c', '--config'],
   {
@@ -31,6 +34,9 @@ parser.addArgument(
   }
 );
 
+/*
+  sub-arguments
+*/
 const subparsers = parser.addSubparsers({
   title: 'mode',
   dest: 'mode'
@@ -44,6 +50,29 @@ subparsers.addParser(
     required: true
   }
 );
+
+// these objects will be used by multiple parsers
+const paramArg = ['--parameter'];
+const paramInfo = {
+  type: 'string',
+  nargs: 1,
+  help: 'parameter file path',
+  required: true,
+  defaultValue: '',
+  metavar: 'path',
+  dest: 'paramPath'
+};
+
+const dbArg = ['-d', '--db'];
+const dbInfo = {
+  type: 'string',
+  nargs: 1,
+  help: 'database directory name',
+  required: true,
+  defaultValue: '',
+  metavar: 'name',
+  dest: 'dbName'
+};
 
 // load
 const load = subparsers.addParser(
@@ -68,16 +97,8 @@ load.addArgument(
 );
 
 load.addArgument(
-  ['--parameter'],
-  {
-    type: 'string',
-    nargs: 1,
-    help: 'parameter file path',
-    required: true,
-    defaultValue: '',
-    metavar: 'path',
-    dest: 'paramPath'
-  }
+  paramArg,
+  paramInfo
 );
 
 load.addArgument(
@@ -94,15 +115,38 @@ load.addArgument(
 );
 
 load.addArgument(
-  ['-d', '--db'],
+  dbArg,
+  dbInfo
+);
+
+// benchmark
+const benchmark = subparsers.addParser(
+  'benchmark',
   {
-    type: 'string',
-    nargs: 1,
-    help: 'database directory name',
-    required: true,
-    defaultValue: '',
-    metavar: 'name',
-    dest: 'dbName'
+    addHelp: true,
+    required: true
+  }
+);
+
+benchmark.addArgument(
+  paramArg,
+  paramInfo
+);
+
+benchmark.addArgument(
+  dbArg,
+  dbInfo
+);
+
+benchmark.addArgument(
+  ['-i', '--ignore'],
+  {
+    action: 'storeTrue',
+    nargs: 0,
+    help: 'ignore error',
+    defaultValue: false,
+    metavar: 'ignore',
+    dest: 'ignore'
   }
 );
 

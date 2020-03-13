@@ -191,6 +191,5 @@ describe('PropertiesFileMap', () => {
       assert.equal(vanilladbProps['org.vanilladb.core.storage.file.FileMgr.DB_FILES_DIR'], prop.dbDir);
       assert.equal(vanillabenchProps['org.vanilladb.bench.StatisticMgr.OUTPUT_DIR'], prop.resultDir);
     });
-  }
-  );
+  });
 });

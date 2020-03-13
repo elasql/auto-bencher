@@ -1,3 +1,14 @@
+function normalLoad (tomlObject) {
+  const tables = parseTables(tomlObject);
+  const params = findAllCombination(tables, 0, 0, [], []);
+
+  if (params.length > 1) {
+    throw new Error('combination (mutiple values in one property) in normal-load.toml is forbidden');
+  }
+
+  return params;
+}
+
 /*
   toml file consists of multiple tables!
   a table consists of mutiple key-value pairs
@@ -71,7 +82,7 @@ function findAllCombination (tables, tableIdx, pairIdx, current, results) {
       findAllCombination(tables, tableIdx + 1, 0, current, results);
     }
   } else {
-    results.push(current);
+    results.push(new Parameter(current));
   }
   return results;
 
@@ -89,71 +100,60 @@ function findAllCombination (tables, tableIdx, pairIdx, current, results) {
   }
 }
 
-function normalLoad (tomlObject) {
-  const tables = parseTables(tomlObject);
-  const params = findAllCombination(tables, 0, 0, [], []);
-
-  if (params.length > 1) {
-    throw new Error('combination (mutiple values in one property) in normal-load.toml is forbidden');
+class Parameter {
+  constructor (paramObject) {
+    this.param = paramObject;
   }
 
-  return params;
-}
+  getStrValue (table, prop) {
+    let value = this._getValue(table, prop);
 
-function getStrValue (param, table, property) {
-  let value = getValue(param, table, property);
-
-  if (typeof value !== 'string') {
-    value = JSON.stringify(value);
     if (typeof value !== 'string') {
-      throw Error(`cannot get ${table}.${property} in string type`);
+      value = JSON.stringify(value);
+      if (typeof value !== 'string') {
+        throw Error(`cannot get ${table}.${prop} in string type`);
+      }
+    };
+
+    return value;
+  }
+
+  getNumValue (table, prop) {
+    let value = this._getValue(table, prop);
+
+    if (typeof value !== 'number') {
+      value *= 1;
+      if (isNaN(value)) {
+        throw Error(`cannot get ${table}.${prop} in number type`);
+      }
     }
-  };
 
-  return value;
-}
+    return value;
+  }
 
-function getNumValue (param, table, property) {
-  let value = getValue(param, table, property);
+  getBoolValue (table, prop) {
+    const value = this._getValue(table, prop);
+    const lowerValue = value.toLowerCase();
 
-  if (typeof value !== 'number') {
-    value *= 1;
-    if (isNaN(value)) {
-      throw Error(`cannot get ${table}.${property} in number type`);
+    if (lowerValue !== 'false' && lowerValue !== 'true') {
+      throw Error(`cannot get ${table}.${prop} in boolean type`);
     }
+
+    return value === 'true';
   }
 
-  return value;
-}
+  _getValue (table, prop) {
+    if (!Object.prototype.hasOwnProperty.call(this.param, table)) {
+      throw Error(`table ${table} doesn't exist`);
+    }
+    if (!Object.prototype.hasOwnProperty.call(this.param[table], prop)) {
+      throw Error(`property ${prop} doesn't exist in table ${table}`);
+    }
 
-function getBoolValue (param, table, property) {
-  const value = getValue(param, table, property);
-  const lowerValue = value.toLowerCase();
-
-  if (lowerValue !== 'false' && lowerValue !== 'true') {
-    throw Error(`cannot get ${table}.${property} in boolean type`);
+    return this.param[table][prop];
   }
-
-  return value === 'true';
-}
-
-function getValue (param, table, property) {
-  if (!Object.prototype.hasOwnProperty.call(param, table)) {
-    throw Error(`table ${table} doesn't exist`);
-  }
-  if (!Object.prototype.hasOwnProperty.call(param[table], property)) {
-    throw Error(`property ${property} doesn't exist in table ${table}`);
-  }
-
-  return param[table][property];
 }
 
 module.exports = {
-  normalLoad,
-  parseTables,
-  findAllCombination,
-  getBoolValue,
-  getNumValue,
-  getStrValue,
-  getValue
+  normalLoad
 };

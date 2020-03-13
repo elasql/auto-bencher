@@ -4,6 +4,9 @@
 const util = require('util');
 const childProcessExec = util.promisify(require('child_process').exec);
 
+/*
+  return a promise
+*/
 async function exec (cmd) {
 /*
   if childProcessExec is resolved

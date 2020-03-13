@@ -101,7 +101,6 @@ class PropertiesFileMap {
     });
   }
 
-  // TODO: add test cases
   setPaths (configParam) {
     const { dbDir, resultDir } = configParam;
     this.set(

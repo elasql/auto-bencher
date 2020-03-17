@@ -1,3 +1,5 @@
+const Parameter = require('./parameter');
+
 function normalLoad (tomlObject) {
   const tables = parseTables(tomlObject);
   const params = findAllCombination(tables, 0, 0, [], []);

@@ -84,6 +84,16 @@ const load = subparsers.addParser(
 );
 
 load.addArgument(
+  paramArg,
+  paramInfo
+);
+
+load.addArgument(
+  dbArg,
+  dbInfo
+);
+
+load.addArgument(
   ['-j', '--jars'],
   {
     type: 'string',
@@ -97,11 +107,6 @@ load.addArgument(
 );
 
 load.addArgument(
-  paramArg,
-  paramInfo
-);
-
-load.addArgument(
   ['--properties'],
   {
     type: 'string',
@@ -112,11 +117,6 @@ load.addArgument(
     metavar: 'dir',
     dest: 'propDir'
   }
-);
-
-load.addArgument(
-  dbArg,
-  dbInfo
 );
 
 // benchmark
@@ -150,4 +150,4 @@ benchmark.addArgument(
   }
 );
 
-module.exports = parser.parseArgs();
+module.exports = parser;

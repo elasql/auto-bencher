@@ -3,159 +3,132 @@ const assert = require('chai').assert;
 const Cmd = require('../../src/cmd/cmd-generator');
 
 describe('Cmd', () => {
-  const userName = 'db-team';
-  const ip = '140.114.87.87';
-  const cmd = new Cmd(userName, ip);
-
-  const workDir = 'workDir';
-  const jdkDir = 'jdkDir';
-  const jdkPackageName = 'jdkPackageName';
-  const javaBin = 'workDir/jdkDir/bin/java';
+  const cmd = new Cmd('db-team', '140.114.87.87');
 
   describe('mkdir', () => {
-    const dir = 'dir';
-
     it('should return a correct command', () => {
-      const mkdir = Cmd.mkdir(workDir, dir);
-      const expected = `mkdir -p ${workDir}/${dir}`;
-      assert.equal(mkdir, expected);
+      const actual = Cmd.mkdir('workDir', 'dir');
+      const expected = 'mkdir -p workDir/dir';
+      assert.equal(actual, expected);
     });
   });
 
   describe('javaVersion', () => {
     it('should return a correct command', () => {
-      const javaVersion = Cmd.javaVersion(workDir, jdkDir);
-      const expected = `${workDir}/${jdkDir}/bin/java -version`;
-      assert.equal(javaVersion, expected);
+      const actual = Cmd.javaVersion('workDir', 'jdkDir');
+      const expected = 'workDir/jdkDir/bin/java -version';
+      assert.equal(actual, expected);
     });
   });
 
   describe('tar', () => {
     it('should return a correct command', () => {
-      const tar = Cmd.tar(workDir, jdkPackageName);
-      const expected = `tar -C ${workDir} -zxf ${workDir}/${jdkPackageName}`;
-      assert.equal(tar, expected);
+      const actual = Cmd.tar('workDir', 'jdkPackageName');
+      const expected = 'tar -C workDir -zxf workDir/jdkPackageName';
+      assert.equal(actual, expected);
     });
   });
 
   describe('rm', () => {
     it('should return a correct command without -r', () => {
-      const rm = Cmd.rm(false, workDir, jdkPackageName);
-      const expected = `rm ${workDir}/${jdkPackageName}`;
-      assert.equal(rm, expected);
+      const actual = Cmd.rm(false, 'workDir', 'jdkPackageName');
+      const expected = 'rm workDir/jdkPackageName';
+      assert.equal(actual, expected);
     });
     it('should return a correct command with -r', () => {
-      const rm = Cmd.rm(true, workDir, jdkPackageName);
-      const expected = `rm -rf ${workDir}/${jdkPackageName}`;
-      assert.equal(rm, expected);
+      const actual = Cmd.rm(true, 'workDir', 'jdkPackageName');
+      const expected = 'rm -rf workDir/jdkPackageName';
+      assert.equal(actual, expected);
     });
     it('should return a correct command with only passing directory parameter', () => {
-      const rm = Cmd.rm(true, workDir);
-      const expected = `rm -rf ${workDir}`;
-      assert.equal(rm, expected);
+      const actual = Cmd.rm(true, 'workDir');
+      const expected = 'rm -rf workDir';
+      assert.equal(actual, expected);
     });
   });
 
   describe('cp', () => {
-    const src = 'src';
-    const dest = 'dest';
-
     it('should return a correct command without -r', () => {
-      const cp = Cmd.cp(false, src, dest);
-      const expected = `cp ${src} ${dest}`;
-      assert.equal(cp, expected);
+      const actual = Cmd.cp(false, 'src', 'dest');
+      const expected = 'cp src dest';
+      assert.equal(actual, expected);
     });
 
     it('should return a correct command with -r', () => {
-      const cp = Cmd.cp(true, src, dest);
-      const expected = `cp -r ${src} ${dest}`;
-      assert.equal(cp, expected);
+      const actual = Cmd.cp(true, 'src', 'dest');
+      const expected = 'cp -r src dest';
+      assert.equal(actual, expected);
     });
   });
 
   describe('runJar', () => {
-    const vmArgs = '-vmarg1 -vmarg2';
-    const jarPath = 'jarPath';
-    const progArgs = '-progArg1 -progArg2';
-    const logPath = 'logPath';
-
     it('should return a correct command', () => {
-      const run = Cmd.runJar(
-        javaBin, vmArgs, jarPath, progArgs, logPath);
-      const expected = `${javaBin} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
-      assert.equal(run, expected);
+      const actual = Cmd.runJar(
+        'workDir/jdkDir/bin/java', '-vmarg1 -vmarg2', 'jarPath', '-progArg1 -progArg2', 'logPath');
+      const expected = 'workDir/jdkDir/bin/java -vmarg1 -vmarg2 -jar jarPath -progArg1 -progArg2 > logPath 2>&1 &';
+      assert.equal(actual, expected);
     });
   });
 
   describe('grep', () => {
     it('should return a correct command', () => {
-      const keyword = 'keyword';
-      const logPath = 'logPath';
-      const grep = Cmd.grep(keyword, logPath);
-      const expected = `grep \\"${keyword}\\" ${logPath}`;
-      assert.equal(grep, expected);
+      const actual = Cmd.grep('keyword', 'logPath');
+      const expected = 'grep \\"keyword\\" logPath';
+      assert.equal(actual, expected);
     });
   });
 
   describe('grepCsv', () => {
     it('should return a correct command', () => {
-      const resultDir = 'resultDir';
-      const id = 'id';
-      const grep = Cmd.grepCsv(resultDir, id);
-      const expected = `ls ${resultDir} | grep \\"${id}[.]csv\\"`;
-      assert.equal(grep, expected);
+      const actual = Cmd.grepCsv('resultDir', 'id');
+      const expected = 'ls resultDir | grep \\"id[.]csv\\"';
+      assert.equal(actual, expected);
     });
   });
 
   describe('grepTotal', () => {
     it('should return a correct command', () => {
-      const resultDir = 'resultDir';
-      const id = 'id';
-      const grep = Cmd.grepTotal(resultDir, id);
-      const expected = `grep \\"TOTAL\\" ${resultDir}/*-${id}.txt`;
+      const grep = Cmd.grepTotal('resultDir', 'id');
+      const expected = 'grep \\"TOTAL\\" resultDir/*-id.txt';
       assert.equal(grep, expected);
     });
   });
 
   describe('ls', () => {
     it('should return a correct command', () => {
-      const dir = 'dir';
-      const ls = Cmd.ls(dir);
-      const expected = `ls ${dir}`;
-      assert.equal(ls, expected);
+      const actual = Cmd.ls('dir');
+      const expected = 'ls dir';
+      assert.equal(actual, expected);
     });
   });
 
   describe('killBenchmarker', () => {
     it('should return a correct command', () => {
-      const kill = Cmd.killBenchmarker();
-      const expected = `pkill -f benchmarker`;
-      assert.equal(kill, expected);
+      const actual = Cmd.killBenchmarker();
+      const expected = 'pkill -f benchmarker';
+      assert.equal(actual, expected);
     });
   });
 
   describe('scp', () => {
-    const localPath = 'localPath';
-    const remotePath = 'remotePath';
-
     it('should return a correct command without -r', () => {
-      const scp = cmd.scp(false, localPath, remotePath);
-      const expected = `scp ${localPath} ${userName}@${ip}:${remotePath}`;
-      assert.equal(scp, expected);
+      const actual = cmd.scp(false, 'localPath', 'remotePath');
+      const expected = 'scp localPath db-team@140.114.87.87:remotePath';
+      assert.equal(actual, expected);
     });
 
     it('should return a correct command with -r', () => {
-      const scp = cmd.scp(true, localPath, remotePath);
-      const expected = `scp -r ${localPath} ${userName}@${ip}:${remotePath}`;
-      assert.equal(scp, expected);
+      const actual = cmd.scp(true, 'localPath', 'remotePath');
+      const expected = 'scp -r localPath db-team@140.114.87.87:remotePath';
+      assert.equal(actual, expected);
     });
   });
 
   describe('ssh', () => {
     it('should return a correct command', () => {
-      const ssh = cmd.ssh('ls -al');
-      const expected = `ssh ${userName}@${ip} "ls -al"`;
-      assert.equal(ssh, expected);
+      const actual = cmd.ssh('ls -al');
+      const expected = 'ssh db-team@140.114.87.87 "ls -al"';
+      assert.equal(actual, expected);
     });
   });
 });

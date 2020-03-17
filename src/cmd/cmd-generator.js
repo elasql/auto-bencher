@@ -58,6 +58,8 @@ class Cmd {
   }
 
   static grep (keyword, logPath) {
+    // use quotation mark to wrap the keyword
+    // or it will cause error if blanks exist
     let grep = `grep \\"${keyword}\\"`;
     grep += logPath ? ` ${logPath}` : '';
     return grep;

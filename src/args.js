@@ -1,3 +1,4 @@
+const process = require('process');
 const { ArgumentParser } = require('argparse');
 
 const parser = new ArgumentParser({
@@ -150,4 +151,13 @@ benchmark.addArgument(
   }
 );
 
-module.exports = parser;
+// make test easier
+let args;
+if (!process.argv[1].includes('mocha')) {
+  args = parser.parseArgs();
+}
+
+module.exports = {
+  parser: parser,
+  args: args
+};

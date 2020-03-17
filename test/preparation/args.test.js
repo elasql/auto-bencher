@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const parser = require('../../src/preparation/argParser');
+const { parser } = require('../../src/args');
 
 describe('parser', () => {
   describe('init', () => {

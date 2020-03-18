@@ -7,6 +7,7 @@ const { Properties } = require('../../src/preparation/properties');
 describe('Properties', () => {
   const propertiesPath = './test/test-properties/vanilladb.properties';
   const prop = new Properties('org.vanilladb.core.config.file', propertiesPath);
+
   describe('constructor', () => {
     it('should initialize with corret values and types', () => {
       assert.equal(prop.id, 'org.vanilladb.core.config.file');

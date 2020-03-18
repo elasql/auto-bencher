@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const Parameter = require('./parameter');
 const javaProperties = require('java-properties');
 const { loadSettings } = require('../utils');
 
@@ -61,12 +62,16 @@ function genPropertiestMap (propertiesDir) {
 }
 
 function overrideProperties (propMap, benchParam) {
-  Object.keys(benchParam).map(paramFile => {
-    if (!(paramFile === 'auto_bencher')) {
-      const userProperties = benchParam[paramFile];
+  if (!(benchParam instanceof Parameter)) {
+    throw Error('benchParam is not an instance of Parameter');
+  }
+  const param = benchParam.param;
+  Object.keys(param).map(paramFile => {
+    if (paramFile !== 'auto_bencher') {
+      const userProperties = param[paramFile];
 
-      Object.keys(userProperties).map(prop => {
-        propMap[paramFile].set(prop, userProperties[prop]);
+      Object.keys(userProperties).map(key => {
+        propMap[paramFile].set(key, userProperties[key]);
       });
     }
   });

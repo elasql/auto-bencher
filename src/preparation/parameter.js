@@ -1,7 +1,7 @@
 const _ = require('lodash');
-
 class Parameter {
   constructor (paramObject) {
+    // this.param = { ...paramObject };
     this.param = _.cloneDeep(paramObject);
   }
 

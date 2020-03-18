@@ -87,19 +87,18 @@ function findAllCombination (tables, tableIdx, pairIdx, current, results) {
     results.push(new Parameter(current));
   }
   return results;
-
-  /*
+}
+/*
     return a new object
   */
-  function addParam (currentObj, table, key, value) {
-    const obj = { ...currentObj };
+function addParam (currentObj, table, key, value) {
+  const obj = { ...currentObj };
 
-    if (!Object.prototype.hasOwnProperty.call(obj, table)) {
-      obj[table] = {};
-    }
-    obj[table][key] = value;
-    return obj;
+  if (!Object.prototype.hasOwnProperty.call(obj, table)) {
+    obj[table] = {};
   }
+  obj[table][key] = value;
+  return obj;
 }
 
 module.exports = {

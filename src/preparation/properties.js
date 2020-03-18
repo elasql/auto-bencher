@@ -1,9 +1,7 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
-const Parameter = require('./parameter');
 const javaProperties = require('java-properties');
-const { loadSettings } = require('../utils');
 
 // const { Connection } = require('../connection/connection');
 
@@ -48,49 +46,8 @@ class Properties {
   }
 }
 
-// Return a map that key is fileName and value is Properties object
-function genPropertiestMap (propertiesDir) {
-  const map = {};
-  const settings = loadSettings(path.posix.join(propertiesDir, 'settings.json'));
-
-  settings.map(setting => {
-    const filePath = path.posix.join(propertiesDir, setting.filename);
-    const prop = new Properties(setting.id, filePath);
-    map[prop.baseName] = prop;
-  });
-  return map;
-}
-
-function overrideProperties (propMap, benchParam) {
-  if (!(benchParam instanceof Parameter)) {
-    throw Error('benchParam is not an instance of Parameter');
-  }
-  const param = benchParam.param;
-  Object.keys(param).map(paramFile => {
-    if (paramFile !== 'auto_bencher') {
-      const userProperties = param[paramFile];
-
-      Object.keys(userProperties).map(key => {
-        propMap[paramFile].set(key, userProperties[key]);
-      });
-    }
-  });
-};
-
-//   setPaths (configParam) {
-//     const { dbDir, resultDir } = configParam;
-//     this.set(
-//       'vanilladb',
-//       'org.vanilladb.core.storage.file.FileMgr.DB_FILES_DIR',
-//       dbDir
-//     );
-
-//     this.set(
-//       'vanillabench',
-//       'org.vanilladb.bench.StatisticMgr.OUTPUT_DIR',
-//       resultDir
-//     );
-//   }
+// TODO:
+// function setConnectionsProperties
 
 //   // TODO: add test cases !!!
 //   setConnectionsProperties (sequencer, servers, clients) {
@@ -122,8 +79,4 @@ function overrideProperties (propMap, benchParam) {
 //   }
 // }
 
-module.exports = {
-  Properties,
-  genPropertiestMap,
-  overrideProperties
-};
+module.exports = Properties;

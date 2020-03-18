@@ -1,8 +1,6 @@
 const assert = require('chai').assert;
-// const path = require('path');
-
-// const { loadToml } = require('../src/utils');
-const { Properties, genPropertiestMap } = require('../../src/preparation/properties');
+const { loadToml } = require('../../src/utils');
+const { Properties, genPropertiestMap, overrideProperties } = require('../../src/preparation/properties');
 
 describe('Properties', () => {
   const propertiesPath = './test/test-properties/vanilladb.properties';
@@ -88,9 +86,8 @@ org.vanilladb.core.util.Profiler.MAX_LINES=1000
   });
 });
 
+const map = genPropertiestMap('./test/test-properties');
 describe('genPropertiesMap', () => {
-  const map = genPropertiestMap('./test/test-properties');
-
   it('should return an object', () => {
     assert.isObject(map);
   });
@@ -100,6 +97,14 @@ describe('genPropertiesMap', () => {
       assert.instanceOf(map[key], Properties);
     });
   });
+});
+
+describe('overrrideProperties', () => {
+  const notCombPath = './test/test-toml/benchmark-parameter.test.toml';
+  const notComb = loadToml(notCombPath);
+  const params = normalLoad(notComb);
+  const benchParam = params[0];
+  overrideProperties(map, benchParam);
 });
 
 // describe('PropertiesFileMap', () => {
@@ -125,59 +130,6 @@ describe('genPropertiesMap', () => {
 //       const fileNameWithoutExtension = path.posix.basename(fileName, '.properties');
 //       assert.hasAllKeys(map, ['elasql', 'elasqlbench', 'logging', 'vanillabench', 'vanilladb', 'vanilladbcomm']);
 //       assert.deepEqual(map[fileNameWithoutExtension], new prop.PropertiesFile(id, filePath));
-//     });
-//   });
-
-//   describe('loadSettingsToObject', () => {
-//     const settings = pfm.loadSettingsToObject();
-//     it('should return an array', () => {
-//       assert.isArray(settings);
-//     });
-
-//     it('should be an expected result', () => {
-//       const expected = [
-//         {
-//           id: 'java.util.logging.config.file',
-//           filename: 'logging.properties'
-//         },
-//         {
-//           id: 'org.vanilladb.core.config.file',
-//           filename: 'vanilladb.properties'
-//         },
-//         {
-//           id: 'org.vanilladb.bench.config.file',
-//           filename: 'vanillabench.properties'
-//         },
-//         {
-//           id: 'org.vanilladb.comm.config.file',
-//           filename: 'vanilladbcomm.properties'
-//         },
-//         {
-//           id: 'org.elasql.bench.config.file',
-//           filename: 'elasqlbench.properties'
-//         },
-//         {
-//           id: 'org.elasql.config.file',
-//           filename: 'elasql.properties'
-//         }
-//       ];
-//       assert.deepEqual(settings, expected);
-//     });
-//   });
-
-//   describe('set', () => {
-//     it('should throw an Error', () => {
-//       const fakeName = 'noThisFile';
-//       const errMsg = `cannot find properties file: ${fakeName}`;
-//       assert.throws(() => { pfm.set(fakeName, 'property', 'value'); }, Error, errMsg);
-//     });
-//   });
-
-//   describe('getVmArgs', () => {
-//     const result = pfm.getVmArgs(propertiesDir);
-//     it('should return an expected result', () => {
-//       const expected = `-Djava.util.logging.config.file=test/test-properties/logging.properties -Dorg.vanilladb.core.config.file=test/test-properties/vanilladb.properties -Dorg.vanilladb.bench.config.file=test/test-properties/vanillabench.properties -Dorg.vanilladb.comm.config.file=test/test-properties/vanilladbcomm.properties -Dorg.elasql.bench.config.file=test/test-properties/elasqlbench.properties -Dorg.elasql.config.file=test/test-properties/elasql.properties`;
-//       assert.equal(result, expected);
 //     });
 //   });
 

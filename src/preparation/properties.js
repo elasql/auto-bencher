@@ -60,17 +60,17 @@ function genPropertiestMap (propertiesDir) {
   return map;
 }
 
-//   overrideProperties (benchParam) {
-//     Object.keys(benchParam).map(paramFile => {
-//       if (!(paramFile === 'auto_bencher')) {
-//         const properties = benchParam[paramFile];
-//         Object.keys(properties).map(prop => {
-//           // pass filename with .properties
-//           this.set(paramFile, prop, properties[prop]);
-//         });
-//       }
-//     });
-//   }
+function overrideProperties (propMap, benchParam) {
+  Object.keys(benchParam).map(paramFile => {
+    if (!(paramFile === 'auto_bencher')) {
+      const userProperties = benchParam[paramFile];
+
+      Object.keys(userProperties).map(prop => {
+        propMap[paramFile].set(prop, userProperties[prop]);
+      });
+    }
+  });
+};
 
 //   setPaths (configParam) {
 //     const { dbDir, resultDir } = configParam;
@@ -119,5 +119,6 @@ function genPropertiestMap (propertiesDir) {
 
 module.exports = {
   Properties,
-  genPropertiestMap
+  genPropertiestMap,
+  overrideProperties
 };

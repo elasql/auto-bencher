@@ -2,13 +2,14 @@ const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const javaProperties = require('java-properties');
+const { loadSettings } = require('../utils');
 
 // const { Connection } = require('../connection/connection');
 
 class Properties {
   constructor (id, propertiesPath) {
-    if (typeof id !== 'number') {
-      throw Error('id should be type of number');
+    if (typeof id !== 'string') {
+      throw Error('id should be type of string');
     }
     this.id = id;
     this.fileName = propertiesPath;
@@ -27,6 +28,10 @@ class Properties {
   }
 
   outputToFile (outputDir) {
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir);
+    }
+
     const filePath = path.posix.join(outputDir, this.baseName);
     fs.writeFileSync(filePath, this.convertObjectToPropertiesText());
   }
@@ -42,57 +47,18 @@ class Properties {
   }
 }
 
-// class PropertiesFileMap {
-//   constructor (propertiesDir) {
-//     this.propertiesDir = propertiesDir;
-//     this.fileNameToPropertiesFileObject = this.genFileNameToPropertiesFileObjectMap();
-//   }
+// Return a map that key is fileName and value is Properties object
+function genPropertiestMap () {
+  const map = {};
+  const settings = loadSettings();
 
-//   genFileNameToPropertiesFileObjectMap () {
-//     const map = {};
-//     const settings = this.loadSettingsToObject();
-//     settings.map(setting => {
-//       const filePath = path.posix.join(this.propertiesDir, setting.filename);
-//       const pf = new PropertiesFile(setting.id, filePath);
-//       map[pf.fileName] = pf;
-//     });
-//     return map;
-//   }
-
-//   loadSettingsToObject () {
-//     const settingsPath = path.posix.join(this.propertiesDir, 'settings.json');
-//     const settings = fs.readFileSync(settingsPath);
-//     return JSON.parse(settings);
-//   }
-
-//   set (fileName, property, value) {
-//     if (!Object.prototype.hasOwnProperty.call(this.fileNameToPropertiesFileObject, fileName)) {
-//       throw Error(`cannot find properties file: ${fileName}`);
-//     }
-
-//     this.fileNameToPropertiesFileObject[fileName].set(property, value);
-//   }
-
-//   outputDir (dirPath) {
-//     if (!fs.existsSync(dirPath)) {
-//       fs.mkdirSync(dirPath);
-//     }
-
-//     Object.values(this.fileNameToPropertiesFileObject).map(pf => {
-//       pf.outputToFile(dirPath);
-//     });
-//   }
-
-//   getVmArgs (propertiesDir) {
-//     let vmArgs = '';
-
-//     Object.values(this.fileNameToPropertiesFileObject).map(pf => {
-//       vmArgs += '-D' + pf.id + '=' + path.posix.join(propertiesDir, pf.fileName + '.properties ');
-//     });
-
-//     // remove the last white space
-//     return vmArgs.slice(0, vmArgs.length - 1);
-//   }
+  settings.map(setting => {
+    const filePath = path.posix.join(this.propertiesDir, setting.filename);
+    const prop = new Properties(setting.id, filePath);
+    map[prop.baseName] = prop;
+  });
+  return map;
+}
 
 //   overrideProperties (benchParam) {
 //     Object.keys(benchParam).map(paramFile => {
@@ -152,6 +118,6 @@ class Properties {
 // }
 
 module.exports = {
-  Properties
-  // PropertiesFileMap
+  Properties,
+  genPropertiestMap
 };

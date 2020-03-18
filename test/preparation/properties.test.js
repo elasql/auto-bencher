@@ -6,16 +6,16 @@ const { Properties } = require('../../src/preparation/properties');
 
 describe('Properties', () => {
   const propertiesPath = './test/test-properties/vanilladb.properties';
-  const prop = new Properties(1, propertiesPath);
+  const prop = new Properties('1', propertiesPath);
   describe('constructor', () => {
     it('should initialize with corret values and types', () => {
-      assert.equal(prop.id, 1);
+      assert.equal(prop.id, '1');
       assert.equal(prop.fileName, propertiesPath);
       assert.equal(prop.baseName, 'vanilladb');
     });
 
-    it('should throw an error if pass string id', () => {
-      assert.throws(() => new Properties('1', propertiesPath), Error, 'id should be type of number');
+    it('should throw an error if pass id in type of number', () => {
+      assert.throws(() => new Properties(1, propertiesPath), Error, 'id should be type of string');
     });
   });
 

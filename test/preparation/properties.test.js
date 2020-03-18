@@ -2,7 +2,7 @@ const assert = require('chai').assert;
 // const path = require('path');
 
 // const { loadToml } = require('../src/utils');
-const { Properties } = require('../../src/preparation/properties');
+const { Properties, genPropertiestMap } = require('../../src/preparation/properties');
 
 describe('Properties', () => {
   const propertiesPath = './test/test-properties/vanilladb.properties';
@@ -84,6 +84,20 @@ org.vanilladb.core.util.Profiler.MAX_METHODS=1000
 org.vanilladb.core.util.Profiler.MAX_LINES=1000
 `;
       assert.equal(text, expected);
+    });
+  });
+});
+
+describe('genPropertiesMap', () => {
+  const map = genPropertiestMap('./test/test-properties');
+
+  it('should return an object', () => {
+    assert.isObject(map);
+  });
+
+  it('should contain instance of Properties', () => {
+    Object.keys(map).map(key => {
+      assert.instanceOf(map[key], Properties);
     });
   });
 });

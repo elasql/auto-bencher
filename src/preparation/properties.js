@@ -48,12 +48,12 @@ class Properties {
 }
 
 // Return a map that key is fileName and value is Properties object
-function genPropertiestMap () {
+function genPropertiestMap (propertiesDir) {
   const map = {};
-  const settings = loadSettings();
+  const settings = loadSettings(path.posix.join(propertiesDir, 'settings.json'));
 
   settings.map(setting => {
-    const filePath = path.posix.join(this.propertiesDir, setting.filename);
+    const filePath = path.posix.join(propertiesDir, setting.filename);
     const prop = new Properties(setting.id, filePath);
     map[prop.baseName] = prop;
   });

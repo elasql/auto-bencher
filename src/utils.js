@@ -5,6 +5,11 @@ function loadToml (filePath) {
   return toml.parse(fs.readFileSync(filePath, 'utf-8'));
 }
 
+function loadSettings (filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+}
+
 module.exports = {
-  loadToml: loadToml
+  loadToml,
+  loadSettings
 };

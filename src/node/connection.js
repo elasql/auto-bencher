@@ -3,9 +3,6 @@ const Action = {
   benchmarking: 2
 };
 
-// ms
-const CHECKING_INTERVAL = 1000;
-
 const INIT_PORT = 30000;
 class Connection {
   // use default port number if user doesn't provide it
@@ -108,6 +105,9 @@ class ConnectionLog {
     throw Error(`${this.prefix} ${this.id} error: ${stdout}`);
   }
 }
+
+// unit:ms
+const CHECKING_INTERVAL = 1000;
 
 const delay = (interval) => {
   return new Promise(resolve => setTimeout(resolve, interval));

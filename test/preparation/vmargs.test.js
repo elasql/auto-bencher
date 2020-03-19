@@ -1,7 +1,7 @@
 const assert = require('chai').assert;
 
 const { getVmArgs } = require('../../src/preparation/vmargs');
-const { genPropertiestMap } = require('../../src/preparation/preparation-actions');
+const { genPropertiestMap } = require('../../src/preparation/properties');
 
 describe('vmargs', () => {
   const propMap = genPropertiestMap('./test/test-properties');

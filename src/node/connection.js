@@ -114,9 +114,9 @@ const delay = (interval) => {
 };
 
 module.exports = {
-  Action: Action,
-  Connection: Connection,
-  ConnectionLog: ConnectionLog,
+  Action,
+  Connection,
+  ConnectionLog,
   CHECKING_INTERVAL,
   delay
 };

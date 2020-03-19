@@ -34,8 +34,8 @@ class Properties {
     this.properties[property] = value;
   }
 
-  outputToFile (outputDir) {
-    if (!fs.existsSync(outputDir)) {
+  outputToFile (outputDir, checkDir) {
+    if (checkDir && !fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir);
     }
 
@@ -121,11 +121,22 @@ function setElasqlProperties (propMap, serverCount) {
   );
 }
 
+function outputToFile (propMap, dirPath) {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath);
+  }
+
+  Object.values(propMap).map(prop => {
+    prop.outputToFile(dirPath, false);
+  });
+}
+
 module.exports = {
   Properties,
   genPropertiestMap,
   overrideProperties,
   setPaths,
   setConnectionsProperties,
-  setElasqlProperties
+  setElasqlProperties,
+  outputToFile
 };

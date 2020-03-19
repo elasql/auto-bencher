@@ -37,5 +37,5 @@ async function exec (cmd) {
 };
 
 module.exports = {
-  exec: exec
+  exec
 };

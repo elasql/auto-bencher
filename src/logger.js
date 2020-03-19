@@ -6,8 +6,15 @@ const customizedFormat = printf(({ level, message, label }) => {
   return `[${label}] ${level}: ${message}`;
 });
 
+let level;
+if (!args) {
+  level = 'debug';
+} else {
+  level = args.debug ? 'debug' : 'INFO';
+}
+
 const logger = createLogger({
-  level: args.debug ? 'debug' : 'INFO',
+  level: level,
   format: combine(
     label({
       label: 'Auto bencher'

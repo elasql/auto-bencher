@@ -71,8 +71,8 @@ class Connection {
   }
 }
 
-const ShellCmd = require('../shell-cmd');
-const { exec } = require('../child-process');
+const Cmd = require('../cmd/cmd-generator');
+const { exec } = require('../cmd/cmd-executor');
 
 // We need this class because both server and client will use these methods
 // Don't write the similar code in those two files, it is hard to maintain
@@ -85,7 +85,7 @@ class ConnectionLog {
   }
 
   async grepLog (keyword) {
-    const grep = ShellCmd.getGrep(keyword, this.logPath);
+    const grep = Cmd.getGrep(keyword, this.logPath);
     const ssh = this.shellCmd.getSsh(grep);
     // don't try catch here, let the outside function to handle
     // please return the result.

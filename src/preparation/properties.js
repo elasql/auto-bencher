@@ -1,9 +1,9 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const Parameter = require('./parameter');
 const javaProperties = require('java-properties');
-
-// const { Connection } = require('../connection/connection');
+const { loadSettings } = require('../utils');
 
 class Properties {
   constructor (id, propertiesPath) {
@@ -14,6 +14,14 @@ class Properties {
     this.fileName = propertiesPath;
     this.baseName = path.basename(propertiesPath, '.properties');
     this.properties = _.cloneDeep(javaProperties.of(propertiesPath).objs);
+  }
+
+  get (property) {
+    if (!Object.prototype.hasOwnProperty.call(this.properties, property)) {
+      throw Error(`cannot find the property: ${property} in ${this.fileName}`);
+    }
+
+    return this.properties[property];
   }
 
   set (property, value) {
@@ -46,37 +54,78 @@ class Properties {
   }
 }
 
-// TODO:
-// function setConnectionsProperties
+// Return a map that key is fileName and value is Properties object
+function genPropertiestMap (propertiesDir) {
+  const map = {};
+  const settings = loadSettings(path.posix.join(propertiesDir, 'settings.json'));
 
-//   // TODO: add test cases !!!
-//   setConnectionsProperties (sequencer, servers, clients) {
-//     this.set(
-//       'vanilladbcomm',
-//       'org.vanilladb.comm.server.ServerAppl.SERVER_VIEW',
-//       Connection.getView(servers.concat([sequencer]))
-//     );
+  settings.map(setting => {
+    const filePath = path.posix.join(propertiesDir, setting.filename);
+    const prop = new Properties(setting.id, filePath);
+    map[prop.baseName] = prop;
+  });
+  return map;
+}
 
-//     this.set(
-//       'vanilladbcomm',
-//       'org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW',
-//       Connection.getView(clients)
-//     );
+function overrideProperties (propMap, benchParam) {
+  if (!(benchParam instanceof Parameter)) {
+    throw Error('benchParam is not an instance of Parameter');
+  }
+  const param = benchParam.param;
+  Object.keys(param).map(paramFile => {
+    if (paramFile !== 'auto_bencher') {
+      const userProperties = param[paramFile];
 
-//     this.set(
-//       'vanilladbcomm',
-//       'org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER',
-//       sequencer ? 'true' : 'false'
-//     );
-//   }
+      Object.keys(userProperties).map(key => {
+        propMap[paramFile].set(key, userProperties[key]);
+      });
+    }
+  });
+};
 
-//   setElasqlProperties (serverCount) {
-//     this.set(
-//       'elasql',
-//       'org.elasql.storage.metadata.PartitionMetaMgr.NUM_PARTITIONS',
-//       String(serverCount)
-//     );
-//   }
-// }
+function setPaths (propMap, dbDir, resultDir) {
+  propMap.vanilladb.set('org.vanilladb.core.storage.file.FileMgr.DB_FILES_DIR', dbDir);
+  propMap.vanillabench.set('org.vanilladb.bench.StatisticMgr.OUTPUT_DIR', resultDir);
+};
 
-module.exports = Properties;
+function setConnectionsProperties (propMap, serverView, clientView, isSequencer) {
+  if (typeof isSequencer !== 'boolean') {
+    throw Error('isSequencer should be type of boolean');
+  }
+
+  propMap.vanilladbcomm.set(
+    'org.vanilladb.comm.server.ServerAppl.SERVER_VIEW',
+    serverView
+  );
+
+  propMap.vanilladbcomm.set(
+    'org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW',
+    clientView
+  );
+
+  propMap.vanilladbcomm.set(
+    'org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER',
+    // return string 'true' if there is a sequencer
+    isSequencer ? 'true' : 'false'
+  );
+}
+
+function setElasqlProperties (propMap, serverCount) {
+  if (typeof serverCount !== 'string') {
+    throw Error('serverCount should be type of string');
+  }
+
+  propMap.elasql.set(
+    'org.elasql.storage.metadata.PartitionMetaMgr.NUM_PARTITIONS',
+    serverCount
+  );
+}
+
+module.exports = {
+  Properties,
+  genPropertiestMap,
+  overrideProperties,
+  setPaths,
+  setConnectionsProperties,
+  setElasqlProperties
+};

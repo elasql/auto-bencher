@@ -1,9 +1,5 @@
-const Action = {
-  loading: 1,
-  benchmarking: 2
-};
-
 const INIT_PORT = 30000;
+
 class Connection {
   // use default port number if user doesn't provide it
   constructor (initPort = INIT_PORT) {
@@ -11,9 +7,14 @@ class Connection {
   }
 
   getConns (ips, totalConn, maxConnPerNode) {
-    if (!Number.isInteger(totalConn)) {
-      throw Error(`totalConn is not a Integer, you pass ${totalConn} to getConnList`);
+    if (typeof totalConn === 'string' || typeof maxConnPerNode === 'string') {
+      throw Error(`totalConn and maxConnPerNode should be type of number`);
     }
+
+    if (!Number.isInteger(totalConn)) {
+      throw Error(`totalConn is not a Integer, you pass ${totalConn} to getConns`);
+    }
+
     const nodeNum = ips.length;
     const connPerNode = Math.ceil(totalConn / nodeNum);
     if (connPerNode > maxConnPerNode) {
@@ -42,6 +43,14 @@ class Connection {
   }
 
   static getConn (id, ip, port) {
+    if (typeof id !== 'number' || !Number.isInteger(id)) {
+      throw Error('id should be an integer number');
+    }
+
+    if (typeof port !== 'number' || !Number.isInteger(port)) {
+      throw Error('port should be an integer number');
+    }
+
     return {
       id,
       ip,
@@ -68,44 +77,6 @@ class Connection {
   }
 }
 
-const Cmd = require('../cmd/cmd-generator');
-const { exec } = require('../cmd/cmd-executor');
-
-// We need this class because both server and client will use these methods
-// Don't write the similar code in those two files, it is hard to maintain
-class ConnectionLog {
-  constructor (shellCmd, logPath, id, isServer) {
-    this.shellCmd = shellCmd;
-    this.logPath = logPath;
-    this.id = id;
-    this.prefix = isServer ? 'server' : 'client';
-  }
-
-  async grepLog (keyword) {
-    const grep = Cmd.getGrep(keyword, this.logPath);
-    const ssh = this.shellCmd.getSsh(grep);
-    // don't try catch here, let the outside function to handle
-    // please return the result.
-    const result = await exec(ssh);
-    return result;
-  }
-
-  async grepError (keyword) {
-    let result;
-    try {
-      result = await this.grepLog(keyword);
-    } catch (err) {
-      if (err.code === 1) {
-        // return if grep nothing
-        return;
-      }
-      throw Error(err.stderr);
-    }
-    const { stdout } = result;
-    throw Error(`${this.prefix} ${this.id} error: ${stdout}`);
-  }
-}
-
 // unit:ms
 const CHECKING_INTERVAL = 1000;
 
@@ -113,10 +84,14 @@ const delay = (interval) => {
   return new Promise(resolve => setTimeout(resolve, interval));
 };
 
+const Action = {
+  loading: 1,
+  benchmarking: 2
+};
+
 module.exports = {
   Action,
   Connection,
-  ConnectionLog,
   CHECKING_INTERVAL,
   delay
 };

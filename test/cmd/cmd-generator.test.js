@@ -31,12 +31,12 @@ describe('Cmd', () => {
 
   describe('rm', () => {
     it('should return a correct command without -r', () => {
-      const actual = Cmd.rm(false, 'workDir', 'jdkPackageName');
+      const actual = Cmd.rm(false, 'workDir/jdkPackageName');
       const expected = 'rm workDir/jdkPackageName';
       assert.equal(actual, expected);
     });
     it('should return a correct command with -r', () => {
-      const actual = Cmd.rm(true, 'workDir', 'jdkPackageName');
+      const actual = Cmd.rm(true, 'workDir/jdkPackageName');
       const expected = 'rm -rf workDir/jdkPackageName';
       assert.equal(actual, expected);
     });

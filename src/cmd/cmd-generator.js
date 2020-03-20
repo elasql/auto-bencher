@@ -42,10 +42,9 @@ class Cmd {
     return 'tar -C ' + workDir + ' -zxf ' + join(workDir, target);
   }
 
-  static rm (isDir, workDir, target) {
+  static rm (isDir, target) {
     const cmd = isDir ? 'rm -rf ' : 'rm ';
-    const dest = target ? join(workDir, target) : workDir;
-    return cmd + dest;
+    return cmd + target;
   }
 
   static cp (isDir, src, dest) {

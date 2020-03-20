@@ -8,13 +8,17 @@ const Action = {
 };
 
 const delay = (interval) => {
+  logger.debug(`delay ${interval} ms`);
   return new Promise(resolve => setTimeout(resolve, interval));
 };
 
 // TODO: add logger.debug
 
 async function sendDir (localPath, remoteWorkDir, remoteInfo) {
+  const { prefix, id, ip } = remoteInfo;
   const scp = Cmd.scp(true, localPath, remoteWorkDir);
+
+  logger.info(`sendDir - ${prefix} ${id} ${ip} command - ${scp}`);
   // don't try catch here
   // let it error
   await exec(scp);
@@ -25,20 +29,7 @@ async function deleteDir (cmd, dir, remoteInfo) {
   const rm = Cmd.rm(true, dir);
   const ssh = cmd.ssh(rm);
 
-  try {
-    await exec(ssh);
-  } catch (err) {
-    if (err.code === 1) {
-      logger.info(`${dir} is not found on ${prefix} ${id} ${ip}`);
-    } else {
-      throw Error(err.stderr);
-    }
-  }
-}
-async function cleanDir (cmd, dir, remoteInfo) {
-  const { prefix, id, ip } = remoteInfo;
-  const rm = Cmd.rm(true, dir);
-  const ssh = cmd.ssh(rm);
+  logger.info(`deleteDir - ${prefix} ${id} ${ip} command - ${ssh}`);
 
   try {
     await exec(ssh);
@@ -63,20 +54,63 @@ async function runJar (cmd, action, javaBin, vmArgs, jarPath, logPath, remoteInf
   );
 
   const ssh = cmd.ssh(runJar);
-  logger.info(`${prefix} ${id} ${ip} is running`);
+
+  logger.info(`runJar ${prefix} ${id} ${ip} command - ${ssh}`);
 
   try {
     await exec(ssh);
   } catch (err) {
-    throw Error(err.message);
+    throw Error(err.stderr);
   }
 }
 
+async function pullCsv (cmd, resultDir, dest, remoteInfo) {
+  const { prefix, id, ip } = remoteInfo;
+  const grepCsv = Cmd.grepCsv(resultDir, id);
+  const ssh = cmd.ssh(grepCsv);
 
+  logger.info(`pullCsv ${prefix} ${id} ${ip} command - ${ssh}`);
 
-async function checkLog (cmd, keyword, logPath) {
+  try {
+    const { stdout } = await exec(ssh);
+    return stdout;
+  } catch (err) {
+    if (err.code === 1) {
+      throw Error(`cannot find the csv file on ${prefix} ${id} ${ip}`);
+    }
+    throw Error(err.stderr);
+  }
+}
+
+async function getTotalThroughput (cmd, resultDir, remoteInfo) {
+  const { prefix, id, ip } = remoteInfo;
+  const grepTotal = Cmd.grepTotal(resultDir, id);
+  const ssh = cmd.ssh(grepTotal);
+
+  logger.info(`getTotalThroughput ${prefix} ${id} ${ip} command - ${ssh}`);
+
+  let result;
+  try {
+    result = await exec(ssh);
+  } catch (err) {
+    if (err.code === 1) {
+      throw Error(`cannot find the total throughput file on ${prefix} ${id} ${ip}`);
+    }
+    throw Error(err.stderr);
+  }
+
+  const reg = /committed: (.*?),/g;
+  const matches = reg.exec(result.stdout);
+  return matches[0];
+}
+
+async function checkLog (cmd, keyword, logPath, remoteInfo) {
+  const { prefix, id, ip } = remoteInfo;
   const grep = Cmd.grep(keyword, logPath);
   const ssh = cmd.ssh(grep);
+
+  logger.info(`checkLog ${prefix} ${id} ${ip} command - ${ssh}`);
+
   // don't try catch here, let outside functions to handle
   // please return the result.
   const result = await exec(ssh);
@@ -85,9 +119,10 @@ async function checkLog (cmd, keyword, logPath) {
 
 async function checkError (cmd, keyword, logPath, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
+
   let result;
   try {
-    result = await checkLog(cmd, keyword, logPath);
+    result = await checkLog(cmd, keyword, logPath, remoteInfo);
   } catch (err) {
     // grep will return 1 if it greps nothing
     if (err.code === 1) {
@@ -106,8 +141,9 @@ module.exports = {
   delay,
   sendDir,
   deleteDir,
-  cleanDir,
   runJar,
   checkError,
-  checkLog
+  checkLog,
+  pullCsv,
+  getTotalThroughput
 };

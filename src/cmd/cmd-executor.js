@@ -4,9 +4,7 @@
 const util = require('util');
 const childProcessExec = util.promisify(require('child_process').exec);
 
-/*
-  return a promise
-*/
+// return a promise
 async function exec (cmd) {
 /*
   if childProcessExec is resolved
@@ -23,9 +21,7 @@ async function exec (cmd) {
     stdout: '',
     stderr: '...'
   }
-*/
 
-  /*
   PLEASE DO NOT TRY CATCH childProcessExec !!!!!
 
   A lot of functions depend on the returned values and errors of childProcessExec,

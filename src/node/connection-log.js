@@ -26,11 +26,13 @@ class ConnectionLog {
       result = await this.grepLog(keyword);
     } catch (err) {
       if (err.code === 1) {
-        // return if grep nothing
+        // grep nothing means the node is working properly, so let it return
         return;
       }
       throw Error(err.stderr);
     }
+
+    // find error on the node, so throw an error
     const { stdout } = result;
     throw Error(`${this.prefix} ${this.id} error: ${stdout}`);
   }

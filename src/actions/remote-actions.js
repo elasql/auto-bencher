@@ -25,8 +25,8 @@ async function sendDir (localPath, remoteWorkDir, remoteInfo) {
 }
 
 // start from here
-async function createDir (cmd, dir, remoteInfo) {
-  const { prefix, id, ip } = remoteInfo;
+async function createDir (cmd, dir) {
+  logger.info(`creating a working directory on - ${cmd.ip}`);
 }
 
 async function deleteDir (cmd, dir, remoteInfo) {

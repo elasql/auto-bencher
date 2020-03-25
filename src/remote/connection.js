@@ -77,21 +77,4 @@ class Connection {
   }
 }
 
-// unit:ms
-const CHECKING_INTERVAL = 1000;
-
-const delay = (interval) => {
-  return new Promise(resolve => setTimeout(resolve, interval));
-};
-
-const Action = {
-  loading: 1,
-  benchmarking: 2
-};
-
-module.exports = {
-  Action,
-  Connection,
-  CHECKING_INTERVAL,
-  delay
-};
+module.exports = Connection;

@@ -1,5 +1,5 @@
 /*
-  for the maintainability, leave comments beside the try catch blocks
+  for the maintainability, leave comments on the try catch blocks
 */
 const fs = require('fs');
 const logger = require('../logger');

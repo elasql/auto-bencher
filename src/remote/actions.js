@@ -12,8 +12,6 @@ const delay = (interval) => {
   return new Promise(resolve => setTimeout(resolve, interval));
 };
 
-// TODO: add logger.debug
-
 async function sendDir (localPath, remoteWorkDir, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const scp = Cmd.scp(true, localPath, remoteWorkDir);

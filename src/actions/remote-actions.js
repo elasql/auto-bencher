@@ -7,6 +7,8 @@ const Action = {
   benchmarking: 2
 };
 
+const defaultDirs = ['databases', 'results'];
+
 const delay = (interval) => {
   logger.debug(`delay ${interval} ms`);
   return new Promise(resolve => setTimeout(resolve, interval));
@@ -20,6 +22,11 @@ async function sendDir (localPath, remoteWorkDir, remoteInfo) {
   // don't try catch here
   // let it error
   await exec(scp);
+}
+
+// start from here
+async function createDir (cmd, dir, remoteInfo) {
+  const { prefix, id, ip } = remoteInfo;
 }
 
 async function deleteDir (cmd, dir, remoteInfo) {

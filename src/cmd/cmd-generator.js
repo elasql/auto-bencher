@@ -30,8 +30,8 @@ class Cmd {
     return this._host() + ':' + remotePath;
   }
 
-  static mkdir (workDir, dir) {
-    return 'mkdir -p ' + join(workDir, dir);
+  static mkdir (dir) {
+    return 'mkdir -p ' + dir;
   }
 
   static javaVersion (workDir, jdkDir) {

@@ -7,7 +7,7 @@ describe('Cmd', () => {
 
   describe('mkdir', () => {
     it('should return a correct command', () => {
-      const actual = Cmd.mkdir('workDir', 'dir');
+      const actual = Cmd.mkdir('workDir/dir');
       const expected = 'mkdir -p workDir/dir';
       assert.equal(actual, expected);
     });

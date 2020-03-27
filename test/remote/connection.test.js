@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const { Connection } = require('../../src/remote/connection');
+const Connection = require('../../src/remote/connection');
 
 describe('Connection', () => {
   const connection = new Connection();

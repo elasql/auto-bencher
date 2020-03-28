@@ -1,6 +1,8 @@
 const Cmd = require('../cmd/cmd-generator');
 const { exec } = require('../cmd/cmd-executor');
 const logger = require('../logger');
+const path = require('path');
+const join = path.posix.join;
 
 const Action = {
   loading: 1,
@@ -8,6 +10,69 @@ const Action = {
 };
 
 const defaultDirs = ['databases', 'results'];
+
+async function createWorkingDir (cmd, systemRemoteWorkDir) {
+  for (const dir of defaultDirs) {
+    const mkdir = Cmd.mkdir(join(systemRemoteWorkDir, dir));
+    const ssh = cmd.ssh(mkdir);
+
+    logger.info(`creating a working directory on - ${cmd.ip}`);
+
+    try {
+      await exec(ssh);
+    } catch (err) {
+      if (err.code === 1) {
+        logger.info(`error occurs on creating a working directory on ${cmd.ip}`);
+      } else {
+        throw Error(err.stderr);
+      }
+    }
+  }
+}
+
+async function checkjavaRunTime (cmd, systemRemoteWorkDir, jdkDir) {
+  const javaVersion = Cmd.javaVersion(systemRemoteWorkDir, jdkDir);
+  const ssh = cmd.ssh(javaVersion);
+
+  logger.info(`checking java runtime on - ${cmd.ip}`);
+
+  try {
+    await exec(ssh);
+  } catch (e) {
+    // doing nothing is OK
+    return false;
+  }
+  return true;
+}
+
+async function sendJdk (cmd, jdkPackagePath, systemRemoteWorkDir) {
+  const scp = cmd.scp(false, jdkPackagePath, systemRemoteWorkDir);
+
+  logger.info(`sending JDK to - ${cmd.ip}`);
+
+  // do NOT handle this execution, let it crash if error occurs
+  await exec(scp);
+}
+
+async function unpackJdk (cmd, systemRemoteWorkDir, jdkPackageName) {
+  const tar = Cmd.tar(systemRemoteWorkDir, jdkPackageName);
+  const ssh = cmd.ssh(tar);
+
+  logger.info(`unpacking ${jdkPackageName} on - ${cmd.ip}`);
+
+  // do NOT handle this execution, let it crash if error occurs
+  await exec(ssh);
+}
+
+async function removeJdk (cmd, systemRemoteWorkDir, jdkPackageName) {
+  const rm = Cmd.rm(false, systemRemoteWorkDir, jdkPackageName);
+  const ssh = cmd.ssh(rm);
+
+  logger.info(`removing ${jdkPackageName} on - ${cmd.ip}`);
+
+  // do NOT handle this execution, let it crash if error occurs
+  await exec(ssh);
+}
 
 const delay = (interval) => {
   logger.debug(`delay ${interval} ms`);
@@ -22,15 +87,6 @@ async function sendDir (localPath, remoteWorkDir, remoteInfo) {
   // don't try catch here
   // let it error
   await exec(scp);
-}
-
-// start from here
-async function createDir (cmd, systemRemoteWorkDir, remoteInfo) {
-  logger.info(`creating a working directory on - ${cmd.ip}`);
-
-  for (const dir of defaultDirs) {
-    const mkdir = Cmd.mkdir(di)
-  }
 }
 
 async function deleteDir (cmd, dir, remoteInfo) {
@@ -147,6 +203,11 @@ async function checkError (cmd, keyword, logPath, remoteInfo) {
 
 module.exports = {
   Action,
+  createWorkingDir,
+  checkjavaRunTime,
+  sendJdk,
+  unpackJdk,
+  removeJdk,
   delay,
   sendDir,
   deleteDir,

@@ -60,7 +60,7 @@ const paramInfo = {
   help: 'parameter file path',
   required: true,
   defaultValue: '',
-  metavar: 'path',
+  metavar: 'param_path',
   dest: 'paramPath'
 };
 
@@ -71,7 +71,7 @@ const dbInfo = {
   help: 'database directory name',
   required: true,
   defaultValue: '',
-  metavar: 'name',
+  metavar: 'db_name',
   dest: 'dbName'
 };
 
@@ -102,7 +102,7 @@ load.addArgument(
     help: 'jars directory',
     required: true,
     defaultValue: '',
-    metavar: 'dir',
+    metavar: 'jars_dir',
     dest: 'jarsDir'
   }
 );
@@ -115,7 +115,7 @@ load.addArgument(
     help: 'default-properties directory',
     required: true,
     defaultValue: '',
-    metavar: 'dir',
+    metavar: 'prop_dir',
     dest: 'propDir'
   }
 );

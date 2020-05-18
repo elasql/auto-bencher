@@ -4,7 +4,7 @@ const logger = require('./logger');
 const initEnv = require('./command/init-env');
 const load = require('./command/load');
 const { loadToml } = require('./utils');
-const args = require('./args');
+const { args } = require('./args');
 
 // Load parameters from config
 const configToml = loadToml(args.configPath[0]);

@@ -1,6 +1,6 @@
 const logger = require('../logger');
 const { loadToml } = require('../utils');
-const { normalLoad } = require('../benchmark-parameter');
+const { normalLoad } = require('../preparation/parameter-loader');
 
 const { run } = require('./runner');
 const { Action } = require('../connection/connection');

@@ -1,5 +1,5 @@
 require('colors');
-const Config = require('./config');
+const Config = require('./preparation/config');
 const logger = require('./logger');
 const initEnv = require('./command/init-env');
 const load = require('./command/load');

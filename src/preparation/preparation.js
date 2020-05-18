@@ -4,7 +4,7 @@ const Cmd = require('../cmd/cmd-generator');
 const { exec } = require('../cmd/cmd-executor');
 const logger = require('../logger');
 const { args } = require('../args');
-const { Connection } = require('../node/connection');
+const { Connection } = require('../remote/connection');
 const { getVmArgs } = require('./vmargs');
 
 const {

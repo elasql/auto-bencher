@@ -3,7 +3,7 @@ const { loadToml } = require('../utils');
 const { normalLoad } = require('../preparation/parameter-loader');
 
 const { run } = require('./runner');
-const { Action } = require('../connection/connection');
+const { Action } = require('../remote//connection');
 
 async function execute (configParam, args) {
   const dbName = args.dbName[0];

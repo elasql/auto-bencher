@@ -1,6 +1,6 @@
 const assert = require('chai').assert;
 
-const Cmd = require('../../src/cmd/cmd-generator');
+const Cmd = require('../../src/ssh/ssh-generator');
 
 describe('Cmd', () => {
   const cmd = new Cmd('db-team', '140.114.87.87');

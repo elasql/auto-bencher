@@ -1,8 +1,8 @@
 const logger = require('../logger');
 const Parameter = require('../preparation/parameter');
-const { Connection, Action } = require('../connection/connection');
-const Server = require('../connection/server');
-const Client = require('../connection/client');
+const { Connection, Action } = require('../remote/connection');
+const Server = require('../remote/server');
+const Client = require('../remote/client');
 const { prepareBenchDir } = require('../preparation');
 const ShellCmd = require('../shell-cmd');
 const { exec } = require('../child-process');

@@ -10,7 +10,7 @@ let level;
 if (!args) {
   level = 'debug';
 } else {
-  level = args.debug ? 'debug' : 'INFO';
+  level = args.debug ? 'debug' : 'info';
 }
 
 const logger = createLogger({

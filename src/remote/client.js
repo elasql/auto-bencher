@@ -1,6 +1,6 @@
 const logger = require('../logger');
-const ShellCmd = require('../shell-cmd');
-const { exec } = require('../child-process');
+const Cmd = require('../ssh/ssh-generator');
+const { exec } = require('../ssh/ssh-executor');
 const { Action, ConnectionLog, CHECKING_INTERVAL, delay } = require('./connection');
 
 class Client {
@@ -25,8 +25,8 @@ class Client {
     this.vmArgs = vmArgs;
 
     this.logPath = systemRemoteWorkDir + `/client-${conn.id}.log`;
-    this.shellCmd = new ShellCmd(systemUserName, conn.ip);
-    this.connLog = new ConnectionLog(this.shellCmd, this.logPath, conn.id, true);
+    this.cmd = new Cmd(systemUserName, conn.ip);
+    this.connLog = new ConnectionLog(this.cmd, this.logPath, conn.id, true);
   }
 
   async run (action, reportDir) {
@@ -51,13 +51,13 @@ class Client {
   }
 
   async sendBenchDir () {
-    const scp = this.shellCmd.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
+    const scp = this.cmd.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
     await exec(scp);
   }
 
   async cleanPreviousResults () {
-    const rm = ShellCmd.getRm(true, this.resultDir);
-    const ssh = this.shellCmd.getSsh(rm);
+    const rm = Cmd.getRm(true, this.resultDir);
+    const ssh = this.cmd.getSsh(rm);
     try {
       await exec(ssh);
     } catch (err) {
@@ -73,14 +73,14 @@ class Client {
     logger.debug(`starting client ${this.id}`);
     // [clientId] [action]
     const progArgs = `${this.id} ${action}`;
-    const runJar = ShellCmd.getRunJar(
+    const runJar = Cmd.getRunJar(
       this.javaBin,
       this.vmArgs,
       this.jarPath,
       progArgs,
       this.logPath
     );
-    const ssh = this.shellCmd.getSsh(runJar);
+    const ssh = this.cmd.getSsh(runJar);
     logger.debug(`client ${this.id} is running`);
 
     try {
@@ -122,8 +122,8 @@ class Client {
   }
 
   async pullCsv (dest) {
-    const grepCsv = ShellCmd.getGrepCsv(this.resultDir, this.id);
-    const ssh = this.shellCmd.getSsh(grepCsv);
+    const grepCsv = Cmd.getGrepCsv(this.resultDir, this.id);
+    const ssh = this.cmd.getSsh(grepCsv);
 
     try {
       const { stdout } = await exec(ssh);
@@ -137,8 +137,8 @@ class Client {
   }
 
   async getTotalThroughput () {
-    const grepTotal = ShellCmd.getGrepTotal(this.resultDir, this.id);
-    const ssh = this.shellCmd.getSsh(grepTotal);
+    const grepTotal = Cmd.getGrepTotal(this.resultDir, this.id);
+    const ssh = this.cmd.getSsh(grepTotal);
     let stdout = '';
     try {
       const result = await exec(ssh);

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const Cmd = require('../cmd/cmd-generator');
-const { exec } = require('../cmd/cmd-executor');
+const Cmd = require('../ssh/ssh-generator');
+const { exec } = require('../ssh/ssh-executor');
 const logger = require('../logger');
 const { args } = require('../args');
 const { Connection } = require('../remote/connection');

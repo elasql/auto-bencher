@@ -74,8 +74,8 @@ async function deployJdkToMachine (configParam, ip) {
     await removeJdk(cmd, systemRemoteWorkDir, jdkPackageName);
   }
 
-  const check = 'node ' + ip + ' checked';
-  logger.info(check.green);
+  const check = 'node checked - ' + ip;
+  logger.info(check);
 }
 
 module.exports = {

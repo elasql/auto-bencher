@@ -22,7 +22,7 @@ async function createWorkingDir (cmd, systemRemoteWorkDir) {
       await exec(ssh);
     } catch (err) {
       if (err.code === 1) {
-        logger.info(`error occurs on creating a working directory on ${cmd.ip}`);
+        logger.info(`error occurs on creating a working directory on - ${cmd.ip}`);
       } else {
         throw Error(err.stderr);
       }
@@ -30,7 +30,7 @@ async function createWorkingDir (cmd, systemRemoteWorkDir) {
   }
 }
 
-async function checkjavaRunTime (cmd, systemRemoteWorkDir, jdkDir) {
+async function checkJavaRunTime (cmd, systemRemoteWorkDir, jdkDir) {
   const javaVersion = Cmd.javaVersion(systemRemoteWorkDir, jdkDir);
   const ssh = cmd.ssh(javaVersion);
 
@@ -159,7 +159,7 @@ async function getTotalThroughput (cmd, resultDir, remoteInfo) {
     result = await exec(ssh);
   } catch (err) {
     if (err.code === 1) {
-      throw Error(`cannot find the total throughput file on ${prefix} ${id} ${ip}`);
+      throw Error(`cannot find the total throughput file on - ${prefix} ${id} ${ip}`);
     }
     throw Error(err.stderr);
   }
@@ -204,7 +204,7 @@ async function checkError (cmd, keyword, logPath, remoteInfo) {
 module.exports = {
   Action,
   createWorkingDir,
-  checkjavaRunTime,
+  checkJavaRunTime,
   sendJdk,
   unpackJdk,
   removeJdk,

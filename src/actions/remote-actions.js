@@ -65,7 +65,7 @@ async function unpackJdk (cmd, systemRemoteWorkDir, jdkPackageName) {
 }
 
 async function removeJdk (cmd, systemRemoteWorkDir, jdkPackageName) {
-  const rm = Cmd.rm(false, systemRemoteWorkDir, jdkPackageName);
+  const rm = Cmd.rm(false, join(systemRemoteWorkDir, jdkPackageName));
   const ssh = cmd.ssh(rm);
 
   logger.info(`removing ${jdkPackageName} on - ${cmd.ip}`);

@@ -18,7 +18,7 @@ parser.addArgument(
     help: 'config.toml path',
     required: true,
     defaultValue: '',
-    metavar: 'config.toml path',
+    metavar: 'configPath',
     dest: 'configPath'
   }
 );

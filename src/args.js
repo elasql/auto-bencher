@@ -18,7 +18,7 @@ parser.addArgument(
     help: 'config.toml path',
     required: true,
     defaultValue: '',
-    metavar: 'path',
+    metavar: 'config.toml path',
     dest: 'configPath'
   }
 );
@@ -30,7 +30,7 @@ parser.addArgument(
     nargs: 0,
     help: 'display debug messages',
     defaultValue: false,
-    metavar: 'debug',
+    metavar: 'debug mode',
     dest: 'debug'
   }
 );

@@ -1,10 +1,10 @@
 const logger = require('../logger');
 const Parameter = require('../preparation/parameter');
-const { Connection, Action } = require('../remote/connection');
 const Server = require('../remote/server');
 const Client = require('../remote/client');
-const { prepareBenchDir } = require('../preparation/preparation');
 const Cmd = require('../ssh/ssh-generator');
+const { Connection, Action } = require('../remote/connection');
+const { prepareBenchDir } = require('../preparation/preparation');
 const { exec } = require('../ssh/ssh-executor');
 
 async function run (configParam, benchParam, args, dbName, action, reportDir = '') {
@@ -54,9 +54,9 @@ function getParams (benchParam) {
   const param = Parameter(benchParam);
   return {
     serverCount: param.getNumValue(autoBencher, 'server_count'),
-    serverClientRatio: param.getNumValue(benchParam, autoBencher, 'server_client_ratio'),
-    maxServerPerMachine: param.getNumValue(benchParam, autoBencher, 'max_server_per_machine'),
-    maxClientPerMachine: param.getNumValue(benchParam, autoBencher, 'max_client_per_machine')
+    serverClientRatio: param.getNumValue(autoBencher, 'server_client_ratio'),
+    maxServerPerMachine: param.getNumValue(autoBencher, 'max_server_per_machine'),
+    maxClientPerMachine: param.getNumValue(autoBencher, 'max_client_per_machine')
   };
 }
 

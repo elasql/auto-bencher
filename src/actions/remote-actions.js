@@ -1,5 +1,5 @@
-const Cmd = require('../cmd/cmd-generator');
-const { exec } = require('../cmd/cmd-executor');
+const Cmd = require('../ssh/ssh-generator');
+const { exec } = require('../ssh/ssh-executor');
 const logger = require('../logger');
 const path = require('path');
 const join = path.posix.join;

@@ -3,9 +3,9 @@ const Parameter = require('../preparation/parameter');
 const { Connection, Action } = require('../remote/connection');
 const Server = require('../remote/server');
 const Client = require('../remote/client');
-const { prepareBenchDir } = require('../preparation');
-const ShellCmd = require('../shell-cmd');
-const { exec } = require('../child-process');
+const { prepareBenchDir } = require('../preparation/preparation');
+const Cmd = require('../ssh/ssh-generator');
+const { exec } = require('../ssh/ssh-executor');
 
 async function run (configParam, benchParam, args, dbName, action, reportDir = '') {
   // generate connection information (ip, port)
@@ -75,8 +75,8 @@ async function killAll (configParam, systemConn) {
 }
 
 async function killBenchmarker (configParam, conn) {
-  const kill = ShellCmd.getKillBenchmarker();
-  const ssh = new ShellCmd(configParam.systemUserName, conn.ip).getSsh(kill);
+  const kill = Cmd.getKillBenchmarker();
+  const ssh = new Cmd(configParam.systemUserName, conn.ip).getSsh(kill);
   try {
     await exec(ssh);
   } catch (err) {

@@ -56,7 +56,7 @@ function applyParameters (propMap, configParam, benchParam, systemConn) {
     Connection.getView(clientConns),
     seqConn !== undefined
   );
-  setElasqlProperties(propMap);
+  setElasqlProperties(propMap, serverConns.length.toString());
 }
 
 async function copyJars (benchParam, args) {

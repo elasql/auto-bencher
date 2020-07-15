@@ -152,30 +152,30 @@ describe('setConnectionsProperties', () => {
 
   it('should set connection properties correctly', () => {
     assert.equal(
-      propMap.vanillacomm.get('org.vanilladb.comm.server.ServerAppl.SERVER_VIEW'),
-      '0 127.0.0.1 42961'
+      propMap.vanillacomm.get('org.vanilladb.comm.view.ProcessView.SERVER_VIEW'),
+      '0 127.0.0.1 42961, 1 127.0.0.1 42962, 2 127.0.0.1 42963'
     );
     assert.equal(
-      propMap.vanillacomm.get('org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW'),
-      '0 127.0.0.1 30000'
+      propMap.vanillacomm.get('org.vanilladb.comm.view.ProcessView.CLIENT_VIEW'),
+      '0 127.0.0.1 30000, 1 127.0.0.1 30001'
     );
     assert.equal(
-      propMap.vanillacomm.get('org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER'),
+      propMap.vanillacomm.get('org.vanilladb.comm.ProcessView.STAND_ALONE_SEQUENCER'),
       'true'
     );
 
     setConnectionsProperties(propMap, 'serverView', 'clientView', false);
 
     assert.equal(
-      propMap.vanillacomm.get('org.vanilladb.comm.server.ServerAppl.SERVER_VIEW'),
+      propMap.vanillacomm.get('org.vanilladb.comm.view.ProcessView.SERVER_VIEW'),
       'serverView'
     );
     assert.equal(
-      propMap.vanillacomm.get('org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW'),
+      propMap.vanillacomm.get('org.vanilladb.comm.view.ProcessView.CLIENT_VIEW'),
       'clientView'
     );
     assert.equal(
-      propMap.vanillacomm.get('org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER'),
+      propMap.vanillacomm.get('org.vanilladb.comm.ProcessView.STAND_ALONE_SEQUENCER'),
       'false'
     );
   });
@@ -189,7 +189,7 @@ describe('setElasqlProperties', () => {
   const propMap = genPropertiestMap('./test/test-properties');
 
   it('should set elasql properties correctly', () => {
-    assert.equal(propMap.elasql.get('org.elasql.storage.metadata.PartitionMetaMgr.NUM_PARTITIONS'), '2');
+    assert.equal(propMap.elasql.get('org.elasql.storage.metadata.PartitionMetaMgr.NUM_PARTITIONS'), '1');
 
     setElasqlProperties(propMap, '87');
 

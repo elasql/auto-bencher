@@ -4,7 +4,7 @@ const Client = require('../remote/client');
 const Cmd = require('../ssh/cmd');
 const { generateConnectionList } = require('../remote/connection-list');
 
-const { prepareBenchDir } = require('../preparation/prepare-bench-dir');
+const { prepareBenchEnv } = require('../preparation/prepare-bench-dir');
 const { exec } = require('../ssh/ssh-executor');
 
 async function run (configParam, benchParam, args, dbName, action, reportDir = '') {
@@ -12,7 +12,7 @@ async function run (configParam, benchParam, args, dbName, action, reportDir = '
   const systemConn = generateConnectionList(configParam, benchParam, action);
 
   // prepare the benchmark directory
-  const vmArgs = await prepareBenchDir(configParam, benchParam, systemConn, args);
+  const vmArgs = await prepareBenchEnv(configParam, benchParam, systemConn, args);
 
   logger.info('connecting to the machines...');
 

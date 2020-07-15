@@ -67,10 +67,10 @@ async function copyJars (benchParam, args) {
 }
 
 async function lsAndCopy (jarPath) {
-  const ls = Cmd.getLs(jarPath);
+  const ls = Cmd.ls(jarPath);
   await exec(ls);
 
-  const cp = Cmd.getCp(false, jarPath, BENCH_DIR);
+  const cp = Cmd.cp(false, jarPath, BENCH_DIR);
   await exec(cp);
 }
 

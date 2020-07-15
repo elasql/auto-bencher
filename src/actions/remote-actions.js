@@ -11,6 +11,7 @@ const Action = {
 
 const defaultDirs = ['databases', 'results'];
 
+// init
 async function createWorkingDir (cmd, systemRemoteWorkDir) {
   for (const dir of defaultDirs) {
     const mkdir = Cmd.mkdir(join(systemRemoteWorkDir, dir));
@@ -30,6 +31,7 @@ async function createWorkingDir (cmd, systemRemoteWorkDir) {
   }
 }
 
+// init
 async function checkJavaRunTime (cmd, systemRemoteWorkDir, jdkDir) {
   const javaVersion = Cmd.javaVersion(systemRemoteWorkDir, jdkDir);
   const ssh = cmd.ssh(javaVersion);
@@ -45,6 +47,7 @@ async function checkJavaRunTime (cmd, systemRemoteWorkDir, jdkDir) {
   return true;
 }
 
+// init
 async function sendJdk (cmd, jdkPackagePath, systemRemoteWorkDir) {
   const scp = cmd.scp(false, jdkPackagePath, systemRemoteWorkDir);
 
@@ -54,6 +57,7 @@ async function sendJdk (cmd, jdkPackagePath, systemRemoteWorkDir) {
   await exec(scp);
 }
 
+// init
 async function unpackJdk (cmd, systemRemoteWorkDir, jdkPackageName) {
   const tar = Cmd.tar(systemRemoteWorkDir, jdkPackageName);
   const ssh = cmd.ssh(tar);
@@ -64,6 +68,7 @@ async function unpackJdk (cmd, systemRemoteWorkDir, jdkPackageName) {
   await exec(ssh);
 }
 
+// init
 async function removeJdk (cmd, systemRemoteWorkDir, jdkPackageName) {
   const rm = Cmd.rm(false, join(systemRemoteWorkDir, jdkPackageName));
   const ssh = cmd.ssh(rm);

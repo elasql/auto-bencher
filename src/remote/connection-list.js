@@ -1,4 +1,3 @@
-const Parameter = require('../preparation/parameter');
 const Connection = require('../remote/connection');
 const { Action } = require('../actions/remote-actions');
 
@@ -19,7 +18,7 @@ function generateConnectionList (configParam, benchParam, action) {
   const seqConn = Connection.getConn(serverCount, sequencer, initPort);
   const serverConns = connection.getConns(servers, serverCount, maxServerPerMachine);
 
-  const clientCount = action === Action.loading ? 1 : serverCount * serverClientRatio;
+  const clientCount = action === Action.loading ? 1 : Math.floor(serverCount * serverClientRatio);
   const clientConns = connection.getConns(clients, clientCount, maxClientPerMachine);
 
   return {
@@ -31,12 +30,11 @@ function generateConnectionList (configParam, benchParam, action) {
 
 function getParams (benchParam) {
   const autoBencher = 'auto_bencher';
-  const param = Parameter(benchParam);
   return {
-    serverCount: param.getNumValue(autoBencher, 'server_count'),
-    serverClientRatio: param.getNumValue(autoBencher, 'server_client_ratio'),
-    maxServerPerMachine: param.getNumValue(autoBencher, 'max_server_per_machine'),
-    maxClientPerMachine: param.getNumValue(autoBencher, 'max_client_per_machine')
+    serverCount: benchParam.getNumValue(autoBencher, 'server_count'),
+    serverClientRatio: benchParam.getNumValue(autoBencher, 'server_client_ratio'),
+    maxServerPerMachine: benchParam.getNumValue(autoBencher, 'max_server_per_machine'),
+    maxClientPerMachine: benchParam.getNumValue(autoBencher, 'max_client_per_machine')
   };
 }
 

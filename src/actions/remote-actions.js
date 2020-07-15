@@ -9,6 +9,8 @@ const Action = {
   benchmarking: 2
 };
 
+const CHECKING_INTERVAL = 1000;
+
 const defaultDirs = ['databases', 'results'];
 
 // init
@@ -208,6 +210,7 @@ async function checkError (cmd, keyword, logPath, remoteInfo) {
 
 module.exports = {
   Action,
+  CHECKING_INTERVAL,
   createWorkingDir,
   checkJavaRunTime,
   sendJdk,

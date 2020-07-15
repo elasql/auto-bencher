@@ -1,7 +1,8 @@
 const logger = require('../logger');
 const Cmd = require('../ssh/cmd');
 const { exec } = require('../ssh/ssh-executor');
-const { ConnectionLog, Action, CHECKING_INTERVAL, delay } = require('./connection');
+const ConnectionLog = require('./connection-log');
+const { CHECKING_INTERVAL, delay, Action } = require('../actions/remote-actions');
 
 class Server {
   constructor (configParam, conn, dbName, vmArgs, isSequencer) {

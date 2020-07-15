@@ -1,7 +1,8 @@
 const logger = require('../logger');
 const Cmd = require('../ssh/cmd');
 const { exec } = require('../ssh/ssh-executor');
-const { Action, ConnectionLog, CHECKING_INTERVAL, delay } = require('./connection');
+const { Action, CHECKING_INTERVAL, delay } = require('../actions/remote-actions');
+const ConnectionLog = require('../remote/connection-log');
 
 class Client {
   constructor (configParam, conn, vmArgs) {
@@ -51,13 +52,13 @@ class Client {
   }
 
   async sendBenchDir () {
-    const scp = this.cmd.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
+    const scp = this.cmd.scp(true, 'benchmarker', this.systemRemoteWorkDir);
     await exec(scp);
   }
 
   async cleanPreviousResults () {
-    const rm = Cmd.getRm(true, this.resultDir);
-    const ssh = this.cmd.getSsh(rm);
+    const rm = Cmd.rm(true, this.resultDir);
+    const ssh = this.cmd.ssh(rm);
     try {
       await exec(ssh);
     } catch (err) {
@@ -73,14 +74,14 @@ class Client {
     logger.debug(`starting client ${this.id}`);
     // [clientId] [action]
     const progArgs = `${this.id} ${action}`;
-    const runJar = Cmd.getRunJar(
+    const runJar = Cmd.runJar(
       this.javaBin,
       this.vmArgs,
       this.jarPath,
       progArgs,
       this.logPath
     );
-    const ssh = this.cmd.getSsh(runJar);
+    const ssh = this.cmd.ssh(runJar);
     logger.debug(`client ${this.id} is running`);
 
     try {
@@ -122,8 +123,8 @@ class Client {
   }
 
   async pullCsv (dest) {
-    const grepCsv = Cmd.getGrepCsv(this.resultDir, this.id);
-    const ssh = this.cmd.getSsh(grepCsv);
+    const grepCsv = Cmd.grepCsv(this.resultDir, this.id);
+    const ssh = this.cmd.ssh(grepCsv);
 
     try {
       const { stdout } = await exec(ssh);
@@ -137,8 +138,8 @@ class Client {
   }
 
   async getTotalThroughput () {
-    const grepTotal = Cmd.getGrepTotal(this.resultDir, this.id);
-    const ssh = this.cmd.getSsh(grepTotal);
+    const grepTotal = Cmd.grepTotal(this.resultDir, this.id);
+    const ssh = this.cmd.ssh(grepTotal);
     let stdout = '';
     try {
       const result = await exec(ssh);

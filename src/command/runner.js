@@ -67,11 +67,12 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
     throw Error(`error occurs at server initialization - ${err.message.red}`);
   }
 
-  logger.info(`successfully initialize all servers`);
+  logger.info(`successfully initialize all servers and sequencer`.green);
 
   try {
     // let client run and let server check error at the same time
     await Promise.all(clients.concat(allServers).map(obj => {
+      // I just use stopSignal as a server indicator.
       if (Object.prototype.hasOwnProperty.call(obj, 'stopSignal')) {
         return obj.checkError();
       } else {
@@ -81,6 +82,8 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   } catch (err) {
     throw Error(`${err.message.red}`);
   }
+
+  logger.info(`successfully initialize all servers and sequencer`.green);
 
   allServers.map(server => {
     server.stopSignal = true;

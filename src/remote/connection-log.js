@@ -1,4 +1,4 @@
-const Cmd = require('../ssh/ssh-generator');
+const Cmd = require('../ssh/cmd');
 const { exec } = require('../ssh/ssh-executor');
 
 // We need this class because both server and client will use these methods.

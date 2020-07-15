@@ -1,7 +1,7 @@
 const logger = require('../logger');
 const Server = require('../remote/server');
 const Client = require('../remote/client');
-const Cmd = require('../ssh/ssh-generator');
+const Cmd = require('../ssh/cmd');
 const { generateConnectionList } = require('../remote/connection-list');
 
 const { prepareBenchDir } = require('../preparation/prepare-bench-dir');

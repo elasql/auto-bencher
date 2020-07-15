@@ -1,4 +1,4 @@
-const Cmd = require('../ssh/ssh-generator');
+const Cmd = require('../ssh/cmd');
 const { exec } = require('../ssh/ssh-executor');
 const logger = require('../logger');
 const path = require('path');

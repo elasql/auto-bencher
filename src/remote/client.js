@@ -1,5 +1,5 @@
 const logger = require('../logger');
-const Cmd = require('../ssh/ssh-generator');
+const Cmd = require('../ssh/cmd');
 const { exec } = require('../ssh/ssh-executor');
 const { Action, ConnectionLog, CHECKING_INTERVAL, delay } = require('./connection');
 

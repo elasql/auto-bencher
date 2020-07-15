@@ -4,7 +4,7 @@ const Cmd = require('../ssh/ssh-generator');
 const { exec } = require('../ssh/ssh-executor');
 const logger = require('../logger');
 const { args } = require('../args');
-const { Connection } = require('../remote/connection');
+const Connection = require('../remote/connection');
 const { getVmArgs } = require('./vmargs');
 
 const {

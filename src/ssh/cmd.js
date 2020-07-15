@@ -2,7 +2,7 @@
 NOTICE!!
 
 Naming convention:
-path should contain directory name and file name
+path should contain the directory name and the file name
 
 path = workdir + dir + fileName
 

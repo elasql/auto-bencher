@@ -1,10 +1,10 @@
 const logger = require('../logger');
-const Parameter = require('../preparation/parameter');
 const Server = require('../remote/server');
 const Client = require('../remote/client');
 const Cmd = require('../ssh/ssh-generator');
-const { Connection, Action } = require('../remote/connection');
-const { prepareBenchDir } = require('../preparation/preparation');
+const { generateConnectionList } = require('../remote/connection-list');
+
+const { prepareBenchDir } = require('../preparation/prepare-bench-dir');
 const { exec } = require('../ssh/ssh-executor');
 
 async function run (configParam, benchParam, args, dbName, action, reportDir = '') {
@@ -20,44 +20,6 @@ async function run (configParam, benchParam, args, dbName, action, reportDir = '
   await killAll(configParam, systemConn);
 
   await start(configParam, dbName, action, reportDir, vmArgs, systemConn);
-}
-
-// TODO: should test this function !!!
-// This generate a simple object { id, ip, port }
-function generateConnectionList (configParam, benchParam, action) {
-  const {
-    serverCount,
-    serverClientRatio,
-    maxServerPerMachine,
-    maxClientPerMachine
-  } = getParams(benchParam);
-
-  const initPort = 30000;
-  const connection = new Connection(initPort);
-  const { sequencer, servers, clients } = configParam;
-
-  const seqConn = Connection.getConn(serverCount, sequencer, initPort);
-  const serverConns = connection.getConns(servers, serverCount, maxServerPerMachine);
-
-  const clientCount = action === Action.loading ? 1 : serverCount * serverClientRatio;
-  const clientConns = connection.getConns(clients, clientCount, maxClientPerMachine);
-
-  return {
-    seqConn,
-    serverConns,
-    clientConns
-  };
-}
-
-function getParams (benchParam) {
-  const autoBencher = 'auto_bencher';
-  const param = Parameter(benchParam);
-  return {
-    serverCount: param.getNumValue(autoBencher, 'server_count'),
-    serverClientRatio: param.getNumValue(autoBencher, 'server_client_ratio'),
-    maxServerPerMachine: param.getNumValue(autoBencher, 'max_server_per_machine'),
-    maxClientPerMachine: param.getNumValue(autoBencher, 'max_client_per_machine')
-  };
 }
 
 async function killAll (configParam, systemConn) {

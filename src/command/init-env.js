@@ -2,7 +2,7 @@
   for the maintainability, leave comments on the try catch blocks
 */
 const logger = require('../logger');
-const Cmd = require('../ssh/ssh-generator');
+const Cmd = require('../ssh/cmd');
 const {
   createWorkingDir,
   checkJavaRunTime,

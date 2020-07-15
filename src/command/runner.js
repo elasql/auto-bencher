@@ -37,7 +37,7 @@ async function killAll (configParam, systemConn) {
 }
 
 async function killBenchmarker (configParam, conn) {
-  const kill = Cmd.getKillBenchmarker();
+  const kill = Cmd.killBenchmarker();
   const ssh = new Cmd(configParam.systemUserName, conn.ip).getSsh(kill);
   try {
     await exec(ssh);

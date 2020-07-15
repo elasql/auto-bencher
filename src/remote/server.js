@@ -77,14 +77,14 @@ class Server {
 
   async sendBenchDir () {
     logger.debug(`sending benchmarker to ${this.procName}...`);
-    const cmd = this.cmd.getScp(true, 'benchmarker', this.systemRemoteWorkDir);
+    const cmd = this.cmd.scp(true, 'benchmarker', this.systemRemoteWorkDir);
     await exec(cmd);
   }
 
   async deleteDbDir () {
     logger.debug(`deleting database directory on ${this.procName}`);
-    const rm = Cmd.getRm(true, this.dbDir, this.dbName);
-    const ssh = this.cmd.getSsh(rm);
+    const rm = Cmd.rm(true, this.dbDir, this.dbName);
+    const ssh = this.cmd.ssh(rm);
     try {
       await exec(ssh);
     } catch (err) {
@@ -98,8 +98,8 @@ class Server {
 
   async deleteBackupDbDir () {
     logger.debug(`deleting backup directory on ${this.procName}`);
-    const rm = Cmd.getRm(true, this.dbDir, this.dbNameBackup);
-    const ssh = this.cmd.getSsh(rm);
+    const rm = Cmd.rm(true, this.dbDir, this.dbNameBackup);
+    const ssh = this.cmd.ssh(rm);
     try {
       await exec(ssh);
     } catch (err) {
@@ -118,8 +118,8 @@ class Server {
     }
 
     logger.debug(`backing up the db of ${this.procName}`);
-    const cp = Cmd.getCp(true, this.dbDir, this.dbNameBackup);
-    const ssh = this.cmd.getSsh(cp);
+    const cp = Cmd.cp(true, this.dbDir, this.dbNameBackup);
+    const ssh = this.cmd.ssh(cp);
     await exec(ssh);
   }
 
@@ -130,20 +130,20 @@ class Server {
     }
 
     logger.debug(`resetting the db of ${this.procName}`);
-    const cp = Cmd.getCp(true, this.dbDir, this.dbNameBackup);
-    const ssh = this.cmd.getSsh(cp);
+    const cp = Cmd.cp(true, this.dbDir, this.dbNameBackup);
+    const ssh = this.cmd.ssh(cp);
     await exec(ssh);
   }
 
   async start () {
-    const runJar = Cmd.getRunJar(
+    const runJar = Cmd.runJar(
       this.javaBin,
       this.vmArgs,
       this.jarPath,
       this.progArgs,
       this.logPath
     );
-    const ssh = this.cmd.getSsh(runJar);
+    const ssh = this.cmd.ssh(runJar);
     await exec(ssh);
   }
 

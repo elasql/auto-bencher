@@ -93,17 +93,17 @@ function setConnectionsProperties (propMap, serverView, clientView, isSequencer)
     throw Error('isSequencer should be type of boolean');
   }
 
-  propMap.vanilladbcomm.set(
+  propMap.vanillacomm.set(
     'org.vanilladb.comm.server.ServerAppl.SERVER_VIEW',
     serverView
   );
 
-  propMap.vanilladbcomm.set(
+  propMap.vanillacomm.set(
     'org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW',
     clientView
   );
 
-  propMap.vanilladbcomm.set(
+  propMap.vanillacomm.set(
     'org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER',
     // return string 'true' if there is a sequencer
     isSequencer ? 'true' : 'false'

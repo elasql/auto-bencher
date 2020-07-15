@@ -152,30 +152,30 @@ describe('setConnectionsProperties', () => {
 
   it('should set connection properties correctly', () => {
     assert.equal(
-      propMap.vanilladbcomm.get('org.vanilladb.comm.server.ServerAppl.SERVER_VIEW'),
+      propMap.vanillacomm.get('org.vanilladb.comm.server.ServerAppl.SERVER_VIEW'),
       '0 127.0.0.1 42961'
     );
     assert.equal(
-      propMap.vanilladbcomm.get('org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW'),
+      propMap.vanillacomm.get('org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW'),
       '0 127.0.0.1 30000'
     );
     assert.equal(
-      propMap.vanilladbcomm.get('org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER'),
+      propMap.vanillacomm.get('org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER'),
       'true'
     );
 
     setConnectionsProperties(propMap, 'serverView', 'clientView', false);
 
     assert.equal(
-      propMap.vanilladbcomm.get('org.vanilladb.comm.server.ServerAppl.SERVER_VIEW'),
+      propMap.vanillacomm.get('org.vanilladb.comm.server.ServerAppl.SERVER_VIEW'),
       'serverView'
     );
     assert.equal(
-      propMap.vanilladbcomm.get('org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW'),
+      propMap.vanillacomm.get('org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW'),
       'clientView'
     );
     assert.equal(
-      propMap.vanilladbcomm.get('org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER'),
+      propMap.vanillacomm.get('org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER'),
       'false'
     );
   });

@@ -86,6 +86,7 @@ describe('Connection', () => {
       assert.throws(() => { Connection.getConn('1', ip, port); }, Error, 'id should be an integer number');
       assert.throws(() => { Connection.getConn(1.5, ip, port); }, Error, 'id should be an integer number');
       assert.throws(() => { Connection.getConn(1, ip, '4444'); }, Error, 'port should be an integer number');
+      assert.throws(() => { Connection.getConn(1, 123, port); }, Error, 'ip should be type of string');
     });
   });
 

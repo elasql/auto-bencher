@@ -47,6 +47,10 @@ class Connection {
       throw Error('id should be an integer number');
     }
 
+    if (typeof ip !== 'string') {
+      throw Error('ip should be type of string');
+    }
+
     if (typeof port !== 'number' || !Number.isInteger(port)) {
       throw Error('port should be an integer number');
     }

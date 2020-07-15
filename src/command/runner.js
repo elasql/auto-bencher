@@ -29,6 +29,7 @@ async function killAll (configParam, systemConn) {
   if (seqConn) {
     nodeConns.push(seqConn);
   }
+  // generate an array including servers, a sequencer and clients
   nodeConns = nodeConns.concat(serverConns, clientConns);
 
   await Promise.all(

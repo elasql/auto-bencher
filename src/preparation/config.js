@@ -161,10 +161,21 @@ class Config {
     if (!Object.prototype.hasOwnProperty.call(mchns, sequencer)) {
       throw new Error(`config.${machines} has no property - ${sequencer}`);
     }
-    if (mchns[sequencer].length === 0) {
-      return undefined;
+    // in the config.toml
+    // the representation of empty suquencer can be [""] or ""
+    // therefore, we have to handle these cases properly
+    if (typeof mchns[sequencer] === 'object') {
+      if (mchns[sequencer].length === 0) {
+        return undefined;
+      }
+      return mchns[sequencer][0];
+    } else if (typeof mchns[sequencer] === 'string') {
+      if (mchns[sequencer].trim() === '') {
+        return undefined;
+      }
+      return mchns[sequencer];
     }
-    return mchns[sequencer][0];
+    return undefined;
   }
 
   _Clients () {

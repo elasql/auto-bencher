@@ -10,6 +10,10 @@ describe('generateConnectionList', () => {
   const config = new Config(tomlObject);
   const configParam = config.getParam();
 
+  const noSeqtomlObject = loadToml('./test/test-toml/config-no-sequencer.test.toml');
+  const noSeqConfig = new Config(noSeqtomlObject);
+  const noSeqConfigParam = noSeqConfig.getParam();
+
   const notComb = loadToml('./test/test-toml/parameter.test.toml');
   const benchParams = normalLoad(notComb);
 
@@ -41,6 +45,22 @@ describe('generateConnectionList', () => {
         ip: '192.168.1.24',
         port: 30000
       };
+      assert.deepEqual(actual.seqConn, expected);
+    });
+
+    it('serverConns should be 3', () => {
+      assert.lengthOf(actual.serverConns, 3);
+    });
+
+    it('clientConns should be 3', () => {
+      assert.lengthOf(actual.clientConns, 3);
+    });
+  });
+
+  describe('benchmarking without sequencer', () => {
+    const actual = generateConnectionList(noSeqConfigParam, benchParams[0], Action.benchmarking);
+    it('seqConn should be an expected result', () => {
+      const expected = undefined;
       assert.deepEqual(actual.seqConn, expected);
     });
 

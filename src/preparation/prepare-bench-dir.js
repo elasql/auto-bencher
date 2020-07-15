@@ -53,7 +53,8 @@ function applyParameters (propMap, configParam, benchParam, systemConn) {
   setConnectionsProperties(
     propMap,
     Connection.getView(serverConns.concat([seqConn])),
-    Connection.getView(clientConns)
+    Connection.getView(clientConns),
+    seqConn !== undefined
   );
   setElasqlProperties(propMap);
 }

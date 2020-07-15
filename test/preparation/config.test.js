@@ -24,6 +24,9 @@ describe('Config', () => {
     servers
   } = config.getParam();
 
+  const noSeqtomlObject = loadToml('./test/test-toml/config-no-sequencer.test.toml');
+  const noSeqConfig = new Config(noSeqtomlObject);
+
   describe('configParam.dbDir', () => {
     it('should be an expected result', () => {
       const expected = 'auto_test/databases';
@@ -118,7 +121,11 @@ describe('Config', () => {
     });
     it('should be an expected result', () => {
       const expected = '192.168.1.24';
-      assert.deepEqual(sequencer, expected);
+      assert.equal(sequencer, expected);
+    });
+    it('should return null if it is empty', () => {
+      const expected = undefined;
+      assert.equal(noSeqConfig.sequencer, expected);
     });
   });
 

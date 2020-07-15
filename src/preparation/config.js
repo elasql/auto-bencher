@@ -161,6 +161,9 @@ class Config {
     if (!Object.prototype.hasOwnProperty.call(mchns, sequencer)) {
       throw new Error(`config.${machines} has no property - ${sequencer}`);
     }
+    if (mchns[sequencer].length === 0) {
+      return undefined;
+    }
     return mchns[sequencer][0];
   }
 

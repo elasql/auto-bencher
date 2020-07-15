@@ -15,6 +15,6 @@ clients = "-Xmx4g -Xms4g"
 [machines]
 # [Optional] if no sequencer is set, the system will pick one of servers as the sequencer.
 # e.g sequencer = []
-sequencer = ["192.168.1.24"]
+sequencer = []
 servers = ["192.168.1.25", "192.168.1.26", "192.168.1.27"]
 clients = ["192.168.1.30","192.168.1.31"]

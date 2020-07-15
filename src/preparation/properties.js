@@ -94,17 +94,17 @@ function setConnectionsProperties (propMap, serverView, clientView, isSequencer)
   }
 
   propMap.vanillacomm.set(
-    'org.vanilladb.comm.server.ServerAppl.SERVER_VIEW',
+    'org.vanilladb.comm.view.ProcessView.SERVER_VIEW',
     serverView
   );
 
   propMap.vanillacomm.set(
-    'org.vanilladb.comm.client.ClientAppl.CLIENT_VIEW',
+    'org.vanilladb.comm.view.ProcessView.CLIENT_VIEW',
     clientView
   );
 
   propMap.vanillacomm.set(
-    'org.vanilladb.comm.server.ServerAppl.STAND_ALONE_SEQUENCER',
+    'org.vanilladb.comm.ProcessView.STAND_ALONE_SEQUENCER',
     // return string 'true' if there is a sequencer
     isSequencer ? 'true' : 'false'
   );

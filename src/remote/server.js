@@ -55,7 +55,7 @@ class Server {
     this.stopSignal = false;
   }
 
-  async init (action) {
+  async run (action) {
     await this.prepare(action);
 
     await this.start();
@@ -64,10 +64,11 @@ class Server {
       await delay(CHECKING_INTERVAL);
     }
 
-    logger.info(`server ${this.id} is ready`);
+    logger.debug(`server ${this.id} is ready`);
   }
 
   async checkError () {
+    logger.info(`${this.procName} starts checking error`);
     while (!this.stopSignal) {
       await this.checkForError();
       await delay(CHECKING_INTERVAL);
@@ -75,7 +76,7 @@ class Server {
   }
 
   async prepare (action) {
-    logger.info(`preparing servers... ip - ${this.ip}`);
+    logger.debug(`preparing servers... ip - ${this.ip}`);
 
     await this.sendBenchDir();
 

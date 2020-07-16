@@ -22,13 +22,13 @@ async function createWorkingDir (cmd, systemRemoteWorkDir) {
     const mkdir = Cmd.mkdir(join(systemRemoteWorkDir, dir));
     const ssh = cmd.ssh(mkdir);
 
-    logger.info(`creating a working directory on - ${cmd.ip}`);
+    logger.debug(`creating a working directory on - ${cmd.ip}`);
 
     try {
       await exec(ssh);
     } catch (err) {
       if (err.code === 1) {
-        logger.info(`error occurs on creating a working directory on - ${cmd.ip}`);
+        logger.debug(`error occurs on creating a working directory on - ${cmd.ip}`);
       } else {
         throw Error(err.stderr);
       }
@@ -41,7 +41,7 @@ async function checkJavaRunTime (cmd, systemRemoteWorkDir, jdkDir) {
   const javaVersion = Cmd.javaVersion(systemRemoteWorkDir, jdkDir);
   const ssh = cmd.ssh(javaVersion);
 
-  logger.info(`checking java runtime on - ${cmd.ip}`);
+  logger.debug(`checking java runtime on - ${cmd.ip}`);
 
   try {
     await exec(ssh);
@@ -56,7 +56,7 @@ async function checkJavaRunTime (cmd, systemRemoteWorkDir, jdkDir) {
 async function sendJdk (cmd, jdkPackagePath, systemRemoteWorkDir) {
   const scp = cmd.scp(false, jdkPackagePath, systemRemoteWorkDir);
 
-  logger.info(`sending JDK to - ${cmd.ip}`);
+  logger.debug(`sending JDK to - ${cmd.ip}`);
 
   // do NOT handle this execution, let it crash if error occurs
   await exec(scp);
@@ -67,7 +67,7 @@ async function unpackJdk (cmd, systemRemoteWorkDir, jdkPackageName) {
   const tar = Cmd.tar(systemRemoteWorkDir, jdkPackageName);
   const ssh = cmd.ssh(tar);
 
-  logger.info(`unpacking ${jdkPackageName} on - ${cmd.ip}`);
+  logger.debug(`unpacking ${jdkPackageName} on - ${cmd.ip}`);
 
   // do NOT handle this execution, let it crash if error occurs
   await exec(ssh);
@@ -78,7 +78,7 @@ async function removeJdk (cmd, systemRemoteWorkDir, jdkPackageName) {
   const rm = Cmd.rm(false, join(systemRemoteWorkDir, jdkPackageName));
   const ssh = cmd.ssh(rm);
 
-  logger.info(`removing ${jdkPackageName} on - ${cmd.ip}`);
+  logger.debug(`removing ${jdkPackageName} on - ${cmd.ip}`);
 
   // do NOT handle this execution, let it crash if error occurs
   await exec(ssh);
@@ -93,7 +93,7 @@ async function sendDir (cmd, localPath, remoteWorkDir, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const scp = cmd.scp(true, localPath, remoteWorkDir);
 
-  logger.info(`sendDir - ${prefix} ${id} ${ip} command - ${scp}`);
+  logger.debug(`sendDir - ${prefix} ${id} ${ip} command - ${scp}`);
   // don't try catch here
   // let it error
   await exec(scp);
@@ -104,7 +104,7 @@ async function copyDir (cmd, srcDir, destDir, remoteInfo) {
   const cp = Cmd.cp(true, srcDir, destDir);
   const ssh = this.cmd.ssh(cp);
 
-  logger.info(`copyDir - ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`copyDir - ${prefix} ${id} ${ip} command - ${ssh}`);
 
   await exec(ssh);
 }
@@ -114,13 +114,13 @@ async function deleteDir (cmd, dir, remoteInfo) {
   const rm = Cmd.rm(true, dir);
   const ssh = cmd.ssh(rm);
 
-  logger.info(`deleteDir - ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`deleteDir - ${prefix} ${id} ${ip} command - ${ssh}`);
 
   try {
     await exec(ssh);
   } catch (err) {
     if (err.code === 1) {
-      logger.info(`${dir} is not found on ${prefix} ${id} ${ip}`);
+      logger.debug(`${dir} is not found on ${prefix} ${id} ${ip}`);
     } else {
       throw Error(err.stderr);
     }
@@ -131,7 +131,7 @@ async function killBenchmarker (cmd) {
   const kill = Cmd.killBenchmarker();
   const ssh = cmd.ssh(kill);
 
-  logger.info(`kill benchmarker - ${cmd.ip} command - ${ssh}`);
+  logger.debug(`kill benchmarker - ${cmd.ip} command - ${ssh}`);
 
   try {
     await exec(ssh);
@@ -140,7 +140,7 @@ async function killBenchmarker (cmd) {
       // don't do anything because there may be no running process
       return;
     }
-    logger.info(err.message);
+    logger.debug(err.message);
   }
 }
 
@@ -156,7 +156,7 @@ async function runJar (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteI
 
   const ssh = cmd.ssh(runJar);
 
-  logger.info(`runJar ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`runJar ${prefix} ${id} ${ip} command - ${ssh}`);
 
   try {
     await exec(ssh);
@@ -170,7 +170,7 @@ async function pullCsv (cmd, resultDir, remoteInfo) {
   const grepCsv = Cmd.grepCsv(resultDir, id);
   const ssh = cmd.ssh(grepCsv);
 
-  logger.info(`pullCsv ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`pullCsv ${prefix} ${id} ${ip} command - ${ssh}`);
 
   const result = await exec(ssh);
   return result;
@@ -181,7 +181,7 @@ async function getTotalThroughput (cmd, resultDir, remoteInfo) {
   const grepTotal = Cmd.grepTotal(resultDir, id);
   const ssh = cmd.ssh(grepTotal);
 
-  logger.info(`get total throughput ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`get total throughput ${prefix} ${id} ${ip} command - ${ssh}`);
 
   const result = await exec(ssh);
   return result;

@@ -10,7 +10,9 @@ const { generateConnectionList } = require('../remote/connection-list');
 
 const { prepareBenchEnv } = require('../preparation/prepare-bench-dir');
 
-const { killBenchmarker } = require('../actions/remote-actions');
+const { killBenchmarker, Action } = require('../actions/remote-actions');
+
+// TODO: should move this class to remote
 
 async function run (configParam, benchParam, args, dbName, action, reportDir = '') {
   // generate connection information (ip, port)
@@ -58,8 +60,8 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   const allServers = servers.concat(sequencer);
 
   try {
-    // init servers and sequencer
-    await Promise.all(allServers.map(server => server.init(action)));
+    // run servers and sequencer
+    await Promise.all(allServers.map(server => server.run(action)));
   } catch (err) {
     throw Error(`error occurs at server initialization - ${err.message.red}`);
   }
@@ -69,18 +71,21 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   try {
     // let client run and let server check error at the same time
     await Promise.all(clients.concat(allServers).map(obj => {
-      // I just use stopSignal as a server indicator.
       if (Object.prototype.hasOwnProperty.call(obj, 'stopSignal')) {
-        return obj.checkError();
+        return obj.checkError(); // server starts checking error
       } else {
-        return obj.run(action, reportDir);
+        return obj.run(action, reportDir); // client starts running job
       }
     }));
   } catch (err) {
     throw Error(`${err.message.red}`);
   }
 
-  logger.info(`successfully initialize all servers and sequencer`.green);
+  if (action === Action.loading) {
+    logger.info(`loading procedure finished`.green);
+  } else if (action === Action.benchmarking) {
+    logger.info(`benchmarking finished`.green);
+  }
 
   allServers.map(server => {
     server.stopSignal = true;

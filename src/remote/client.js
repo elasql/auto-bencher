@@ -46,10 +46,10 @@ class Client {
   }
 
   async run (action, reportDir) {
-    logger.info(`cleaning previous results on client - ${this.id}`);
+    logger.debug(`cleaning previous results on client - ${this.id}`);
     await this.cleanPreviousResults();
 
-    logger.info(`send benchmark directory to client - ${this.id}`);
+    logger.debug(`send benchmark directory to client - ${this.id}`);
     await this.sendBenchDir();
 
     logger.info(`client - ${this.id} starts`);
@@ -62,8 +62,10 @@ class Client {
     if (action === Action.benchmarking) {
       await this.pullCsv(reportDir);
       const throughput = await this.getTotalThroughput();
-      logger.debug(`The total throughput of client ${this.id} is ${throughput}`);
+      logger.info(`The total throughput of client ${this.id} is ${throughput}`);
     }
+
+    logger.info(`${this.procName}'s job is done`);
   }
 
   async sendBenchDir () {

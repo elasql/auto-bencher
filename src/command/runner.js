@@ -68,19 +68,29 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
 
   logger.info(`successfully initialize all servers and sequencer`.green);
 
+  // let servers check error
+  // don't use await, it will block the program
+  Promise.all(allServers.map(server => server.checkError()));
+
   try {
-    // let servers check error
-    await Promise.all(allServers.map(server => server.checkError()));
     // let client run and let server check error at the same time
     await Promise.all(clients.map(client => client.run(action, reportDir)));
   } catch (err) {
     throw Error(`${err.message.red}`);
   }
 
-  // stop
+  // stop checking error
   allServers.map(server => {
     server.stopCheckingError();
   });
+
+  logger.info('backing up the db on all servers');
+  try {
+    // backupDb
+    await Promise.all(allServers.map(server => server.backupDb()));
+  } catch (err) {
+    throw Error(`error occurs at backing up db - ${err.message.red}`);
+  }
 
   if (action === Action.loading) {
     logger.info(`loading procedure finished`.green);

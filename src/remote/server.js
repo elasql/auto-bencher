@@ -157,6 +157,7 @@ class Server {
       const { code } = err;
       logger.debug(JSON.stringify(err));
       if (code === 1) {
+        // didn't grep the keyword
         return false;
       } else {
         throw Error(err.stderr);

@@ -194,40 +194,10 @@ async function grepLog (cmd, keyword, logPath, remoteInfo) {
 
   logger.info(`grep log ${prefix} ${id} ${ip} command - ${ssh}`);
 
-  const result = await exec(ssh);
-  return result;
-}
-
-async function checkLog (cmd, keyword, logPath, remoteInfo) {
-  const { prefix, id, ip } = remoteInfo;
-  const grep = Cmd.grep(keyword, logPath);
-  const ssh = cmd.ssh(grep);
-
-  logger.info(`checkLog ${prefix} ${id} ${ip} command - ${ssh}`);
-
   // don't try catch here, let outer functions to handle
   // please return the result.
   const result = await exec(ssh);
   return result;
-}
-
-async function checkError (cmd, keyword, logPath, remoteInfo) {
-  const { prefix, id, ip } = remoteInfo;
-
-  let result;
-  try {
-    result = await checkLog(cmd, keyword, logPath, remoteInfo);
-  } catch (err) {
-    // grep will return 1 if it greps nothing
-    if (err.code === 1) {
-      return;
-    }
-    throw Error(err.stderr);
-  }
-
-  // grep error keyword on the remote, so throw an error
-  const { stdout } = result;
-  throw Error(`grep error on ${prefix} ${id} ${ip} - ${stdout}`);
 }
 
 module.exports = {
@@ -245,8 +215,6 @@ module.exports = {
   deleteDir,
   killBenchmarker,
   runJar,
-  checkError,
-  checkLog,
   pullCsv,
   getTotalThroughput,
   grepLog

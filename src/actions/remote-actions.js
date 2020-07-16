@@ -127,6 +127,23 @@ async function deleteDir (cmd, dir, remoteInfo) {
   }
 }
 
+async function killBenchmarker (cmd) {
+  const kill = Cmd.killBenchmarker();
+  const ssh = cmd.ssh(kill);
+
+  logger.info(`kill benchmarker - ${cmd.ip} command - ${ssh}`);
+
+  try {
+    await exec(ssh);
+  } catch (err) {
+    if (err.code === 1) {
+      // don't do anything because there may be no running process
+      return;
+    }
+    logger.info(err.message);
+  }
+}
+
 async function runJar (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const runJar = Cmd.runJar(
@@ -139,7 +156,7 @@ async function runJar (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteI
 
   const ssh = cmd.ssh(runJar);
 
-  logger.debug(`runJar ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.info(`runJar ${prefix} ${id} ${ip} command - ${ssh}`);
 
   try {
     await exec(ssh);
@@ -226,6 +243,7 @@ module.exports = {
   sendDir,
   copyDir,
   deleteDir,
+  killBenchmarker,
   runJar,
   checkError,
   checkLog,

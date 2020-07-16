@@ -4,6 +4,8 @@
 const util = require('util');
 const childProcessExec = util.promisify(require('child_process').exec);
 
+// TODO: rename this class to cmd-executor!!!
+
 // return a promise
 async function exec (cmd) {
 /*

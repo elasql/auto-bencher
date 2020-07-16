@@ -1,11 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const Cmd = require('../ssh/cmd');
-const { exec } = require('../ssh/ssh-executor');
 const logger = require('../logger');
 const { args } = require('../args');
 const Connection = require('../remote/connection');
 const { getVmArgs } = require('./vmargs');
+const { ls, cp } = require('../actions/local-actions');
 
 const {
   genPropertiestMap,
@@ -67,11 +66,8 @@ async function copyJars (benchParam, args) {
 }
 
 async function lsAndCopy (jarPath) {
-  const ls = Cmd.ls(jarPath);
-  await exec(ls);
-
-  const cp = Cmd.cp(false, jarPath, BENCH_DIR);
-  await exec(cp);
+  await ls(jarPath);
+  await cp(jarPath, BENCH_DIR);
 }
 
 function getJars (benchParam, args) {

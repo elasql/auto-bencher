@@ -9,7 +9,6 @@ const Cmd = require('../ssh/cmd');
 const { generateConnectionList } = require('../remote/connection-list');
 
 const { prepareBenchEnv } = require('../preparation/prepare-bench-dir');
-const { exec } = require('../ssh/ssh-executor');
 
 async function run (configParam, benchParam, args, dbName, action, reportDir = '') {
   // generate connection information (ip, port)
@@ -42,17 +41,8 @@ async function killAll (configParam, systemConn) {
 }
 
 async function killBenchmarker (configParam, conn) {
-  const kill = Cmd.killBenchmarker();
-  const ssh = new Cmd(configParam.systemUserName, conn.ip).ssh(kill);
-  try {
-    await exec(ssh);
-  } catch (err) {
-    if (err.code === 1) {
-      // don't do anything because there may be no running process
-      return;
-    }
-    logger.info(err.message);
-  }
+  const cmd = new Cmd(configParam.systemUserName, conn.ip);
+  await killBenchmarker(cmd);
 }
 
 async function start (configParam, dbName, action, reportDir, vmArgs, systemConn) {

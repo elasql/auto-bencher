@@ -18,8 +18,9 @@ describe('Properties', () => {
   describe('constructor', () => {
     it('should initialize with corret values and types', () => {
       assert.equal(prop.id, 'org.vanilladb.core.config.file');
-      assert.equal(prop.fileName, propertiesPath);
+      assert.equal(prop.propertiesPath, propertiesPath);
       assert.equal(prop.baseName, 'vanilladb');
+      assert.equal(prop.fileName, 'vanilladb.properties');
     });
 
     it('should throw an error if pass id in type of number', () => {

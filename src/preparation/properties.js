@@ -5,20 +5,23 @@ const Parameter = require('./parameter');
 const javaProperties = require('java-properties');
 const { loadSettings } = require('../utils');
 
+const EXTENSION = '.properties';
+
 class Properties {
   constructor (id, propertiesPath) {
     if (typeof id !== 'string') {
       throw Error('id should be type of string');
     }
     this.id = id;
-    this.fileName = propertiesPath;
-    this.baseName = path.basename(propertiesPath) + '.properties';
+    this.propertiesPath = propertiesPath;
+    this.baseName = path.basename(propertiesPath, EXTENSION);
+    this.fileName = path.basename(propertiesPath);
     this.properties = _.cloneDeep(javaProperties.of(propertiesPath).objs);
   }
 
   get (property) {
     if (!Object.prototype.hasOwnProperty.call(this.properties, property)) {
-      throw Error(`cannot find the property: ${property} in ${this.fileName}`);
+      throw Error(`cannot find the property: ${property} in ${this.propertiesPath}`);
     }
 
     return this.properties[property];
@@ -26,7 +29,7 @@ class Properties {
 
   set (property, value) {
     if (!Object.prototype.hasOwnProperty.call(this.properties, property)) {
-      throw Error(`cannot find the property: ${property} in ${this.fileName}`);
+      throw Error(`cannot find the property: ${property} in ${this.propertiesPath}`);
     }
     if (typeof value !== 'string') {
       throw Error(`value ${value} is not in string type`);
@@ -39,7 +42,7 @@ class Properties {
       fs.mkdirSync(outputDir);
     }
 
-    const filePath = path.posix.join(outputDir, this.baseName);
+    const filePath = path.posix.join(outputDir, this.fileName);
     fs.writeFileSync(filePath, this.convertObjectToPropertiesText());
   }
 
@@ -54,7 +57,7 @@ class Properties {
   }
 }
 
-// Return a map that key is fileName and value is Properties object
+// Return a map that the key is a propertiesFile name and the value is an Properties object
 function genPropertiestMap (propertiesDir) {
   const map = {};
   const settings = loadSettings(path.posix.join(propertiesDir, 'settings.json'));

@@ -89,9 +89,9 @@ const delay = (interval) => {
   return new Promise(resolve => setTimeout(resolve, interval));
 };
 
-async function sendDir (localPath, remoteWorkDir, remoteInfo) {
+async function sendDir (cmd, localPath, remoteWorkDir, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
-  const scp = Cmd.scp(true, localPath, remoteWorkDir);
+  const scp = cmd.scp(true, localPath, remoteWorkDir);
 
   logger.info(`sendDir - ${prefix} ${id} ${ip} command - ${scp}`);
   // don't try catch here

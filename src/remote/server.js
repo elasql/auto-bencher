@@ -94,7 +94,7 @@ class Server {
 
   async sendBenchDir () {
     logger.debug(`sending benchmarker to ${this.procName}...`);
-    await sendDir(BENCH_DIR, this.systemRemoteWorkDir, this.remoteInfo);
+    await sendDir(this.cmd, BENCH_DIR, this.systemRemoteWorkDir, this.remoteInfo);
   }
 
   async deleteDbDir () {

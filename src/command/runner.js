@@ -1,3 +1,7 @@
+/*
+  runner will coordinate sequencer, servers and clients
+*/
+
 const logger = require('../logger');
 const Server = require('../remote/server');
 const Client = require('../remote/client');

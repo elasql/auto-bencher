@@ -83,6 +83,7 @@ class Client {
   }
 
   async checkForFinished (action) {
+    logger.debug(`check whether finished on ${this.procName}...`);
     const keyword = this._getExpectedMsgAfterActionFinished(action);
     // we grep Error keywords on the client
     try {

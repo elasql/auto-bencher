@@ -139,7 +139,7 @@ async function runJar (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteI
 
   const ssh = cmd.ssh(runJar);
 
-  logger.info(`runJar ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`runJar ${prefix} ${id} ${ip} command - ${ssh}`);
 
   try {
     await exec(ssh);

@@ -59,7 +59,7 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
 
   try {
     // init servers and sequencer
-    await Promise.all(allServers.map(server => server.init()));
+    await Promise.all(allServers.map(server => server.init(action)));
   } catch (err) {
     throw Error(`error occurs at server initialization - ${err.message.red}`);
   }

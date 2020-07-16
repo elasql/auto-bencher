@@ -12,7 +12,7 @@ class Properties {
     }
     this.id = id;
     this.fileName = propertiesPath;
-    this.baseName = path.basename(propertiesPath, '.properties');
+    this.baseName = path.basename(propertiesPath) + '.properties';
     this.properties = _.cloneDeep(javaProperties.of(propertiesPath).objs);
   }
 

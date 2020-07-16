@@ -34,7 +34,7 @@ class Client {
     logger.info(`cleaning previous results on client - ${this.id}`);
     await this.cleanPreviousResults();
 
-    logger.info(`send benchmark directory to cleint - ${this.id}`);
+    logger.info(`send benchmark directory to client - ${this.id}`);
     await this.sendBenchDir();
 
     logger.info(`client - ${this.id} starts`);

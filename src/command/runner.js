@@ -10,6 +10,8 @@ const { generateConnectionList } = require('../remote/connection-list');
 
 const { prepareBenchEnv } = require('../preparation/prepare-bench-dir');
 
+const { killBenchmarker } = require('../actions/remote-actions');
+
 async function run (configParam, benchParam, args, dbName, action, reportDir = '') {
   // generate connection information (ip, port)
   const systemConn = generateConnectionList(configParam, benchParam, action);
@@ -36,11 +38,12 @@ async function killAll (configParam, systemConn) {
   nodeConns = nodeConns.concat(serverConns, clientConns);
 
   await Promise.all(
-    nodeConns.map(nodeConn => killBenchmarker(configParam, nodeConn))
+    nodeConns.map(nodeConn => kill(configParam, nodeConn))
   );
 }
 
-async function killBenchmarker (configParam, conn) {
+// kill benchmarker
+async function kill (configParam, conn) {
   const cmd = new Cmd(configParam.systemUserName, conn.ip);
   await killBenchmarker(cmd);
 }

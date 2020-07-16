@@ -1,8 +1,18 @@
 const logger = require('../logger');
 const Cmd = require('../ssh/cmd');
-const { exec } = require('../ssh/ssh-executor');
 const ConnectionLog = require('./connection-log');
-const { CHECKING_INTERVAL, delay, Action } = require('../actions/remote-actions');
+const path = require('path');
+const join = path.posix.join;
+const {
+  BENCH_DIR,
+  CHECKING_INTERVAL,
+  delay,
+  Action,
+  sendDir,
+  copyDir,
+  deleteDir,
+  runJar
+} = require('../actions/remote-actions');
 
 class Server {
   constructor (configParam, conn, dbName, vmArgs, isSequencer) {
@@ -28,13 +38,19 @@ class Server {
     this.vmArgs = vmArgs;
     this.procName = `server ${conn.id}`;
     this.isSequencer = isSequencer;
+    this.prefix = this.isSequencer ? 'sequencer' : 'server';
+    this.remoteInfo = {
+      prefix: this.prefix,
+      id: this.id,
+      ip: this.ip
+    };
 
     this.cmd = new Cmd(systemUserName, conn.ip);
 
     // [this.dbName] [connection.id] ([isSequencer])
     this.progArgs = this.isSequencer ? `${this.dbName} ${conn.id} 1` : `${this.dbName} ${conn.id}`;
     this.logPath = this.isSequencer ? `${systemRemoteWorkDir}/server-seq.log` : `${systemRemoteWorkDir}/server-${conn.id}.log`;
-    this.connLog = new ConnectionLog(this.cmd, this.logPath, conn.id, true);
+    this.connLog = new ConnectionLog(this.cmd, this.logPath, this.remoteInfo);
 
     this.stopSignal = false;
   }
@@ -78,38 +94,17 @@ class Server {
 
   async sendBenchDir () {
     logger.debug(`sending benchmarker to ${this.procName}...`);
-    const cmd = this.cmd.scp(true, 'benchmarker', this.systemRemoteWorkDir);
-    await exec(cmd);
+    await sendDir(BENCH_DIR, this.systemRemoteWorkDir, this.remoteInfo);
   }
 
   async deleteDbDir () {
     logger.debug(`deleting database directory on ${this.procName}`);
-    const rm = Cmd.rm(true, this.dbDir, this.dbName);
-    const ssh = this.cmd.ssh(rm);
-    try {
-      await exec(ssh);
-    } catch (err) {
-      if (err.code === 1) {
-        logger.debug(`no previous database is found on ${this.ip}`);
-      } else {
-        throw Error(err.stderr);
-      }
-    }
+    await deleteDir(this.cmd, join(this.dbDir, this.dbName), this.remoteInfo);
   }
 
   async deleteBackupDbDir () {
     logger.debug(`deleting backup directory on ${this.procName}`);
-    const rm = Cmd.rm(true, this.dbDir, this.dbNameBackup);
-    const ssh = this.cmd.ssh(rm);
-    try {
-      await exec(ssh);
-    } catch (err) {
-      if (err.code === 1) {
-        logger.debug(`no backup database is found on ${this.ip}`);
-      } else {
-        throw Error(err.stderr);
-      }
-    }
+    await deleteDir(this.cmd, join(this.dbDir, this.dbNameBackup), this.remoteInfo);
   }
 
   async backupDb () {
@@ -119,9 +114,11 @@ class Server {
     }
 
     logger.debug(`backing up the db of ${this.procName}`);
-    const cp = Cmd.cp(true, this.dbDir, this.dbNameBackup);
-    const ssh = this.cmd.ssh(cp);
-    await exec(ssh);
+
+    // TODO: move the following two lines to constructer and test them
+    const srcDir = join(this.dbDir, this.dbName);
+    const destDir = join(this.dbDir, this.dbNameBackup);
+    await copyDir(this.cmd, srcDir, destDir, this.remoteInfo);
   }
 
   async resetDbDir () {
@@ -131,21 +128,15 @@ class Server {
     }
 
     logger.debug(`resetting the db of ${this.procName}`);
-    const cp = Cmd.cp(true, this.dbDir, this.dbNameBackup);
-    const ssh = this.cmd.ssh(cp);
-    await exec(ssh);
+
+    // TODO: move the following two lines to constructer and test them
+    const srcDir = join(this.dbDir, this.dbNameBackup);
+    const destDir = join(this.dbDir, this.dbName);
+    await copyDir(this.cmd, srcDir, destDir, this.remoteInfo);
   }
 
   async start () {
-    const runJar = Cmd.runJar(
-      this.javaBin,
-      this.vmArgs,
-      this.jarPath,
-      this.progArgs,
-      this.logPath
-    );
-    const ssh = this.cmd.ssh(runJar);
-    await exec(ssh);
+    await runJar(this.cmd, this.progArgs, this.javaBin, this.vmArgs, this.jarPath, this.logPath, this.remoteInfo);
   }
 
   async checkForReady () {

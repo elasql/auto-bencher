@@ -1,22 +1,18 @@
-const Cmd = require('../ssh/cmd');
-const { exec } = require('../ssh/ssh-executor');
+const { grepLog } = require('../actions/remote-actions');
 
 // We need this class because both server and client will use these methods.
 // Don't write the similar code in those two files, it is hard to maintain.
+
+// TODO: rename this class -> LogInspector
 class ConnectionLog {
-  constructor (cmd, logPath, id, isServer) {
+  constructor (cmd, logPath, remoteInfo) {
     this.cmd = cmd;
     this.logPath = logPath;
-    this.id = id;
-    this.prefix = isServer ? 'server' : 'client';
+    this.remoteInfo = remoteInfo;
   }
 
   async grepLog (keyword) {
-    const grep = Cmd.grep(keyword, this.logPath);
-    const ssh = this.cmd.ssh(grep);
-    // don't try catch here, let the outside function to handle
-    // please return the result.
-    const result = await exec(ssh);
+    const result = await grepLog(this.cmd, keyword, this.logPath, this.remoteInfo);
     return result;
   }
 
@@ -32,7 +28,7 @@ class ConnectionLog {
       throw Error(err.stderr);
     }
 
-    // find error on the node, so throw an error
+    // found error on the node, so throw an error
     const { stdout } = result;
     throw Error(`${this.prefix} ${this.id} error: ${stdout}`);
   }

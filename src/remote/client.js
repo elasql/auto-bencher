@@ -1,8 +1,17 @@
 const logger = require('../logger');
 const Cmd = require('../ssh/cmd');
 const { exec } = require('../ssh/ssh-executor');
-const { Action, CHECKING_INTERVAL, delay } = require('../actions/remote-actions');
 const ConnectionLog = require('../remote/connection-log');
+const {
+  Action,
+  BENCH_DIR,
+  CHECKING_INTERVAL,
+  delay,
+  sendDir,
+  deleteDir,
+  runJar
+
+} = require('../actions/remote-actions');
 
 class Client {
   constructor (configParam, conn, vmArgs) {
@@ -18,6 +27,11 @@ class Client {
     this.id = conn.id;
     this.ip = conn.ip;
     this.port = conn.port;
+    this.remoteInfo = {
+      prefix: 'client',
+      id: this.id,
+      ip: this.ip
+    };
 
     this.jarPath = clientJarPath;
     this.javaBin = javaBin;
@@ -27,7 +41,7 @@ class Client {
 
     this.logPath = systemRemoteWorkDir + `/client-${conn.id}.log`;
     this.cmd = new Cmd(systemUserName, conn.ip);
-    this.connLog = new ConnectionLog(this.cmd, this.logPath, conn.id, true);
+    this.connLog = new ConnectionLog(this.cmd, this.logPath, this.remoteInfo);
   }
 
   async run (action, reportDir) {
@@ -52,43 +66,20 @@ class Client {
   }
 
   async sendBenchDir () {
-    const scp = this.cmd.scp(true, 'benchmarker', this.systemRemoteWorkDir);
-    await exec(scp);
+    logger.debug(`sending benchmarker to ${this.procName}...`);
+    await sendDir(BENCH_DIR, this.systemRemoteWorkDir, this.remoteInfo);
   }
 
   async cleanPreviousResults () {
-    const rm = Cmd.rm(true, this.resultDir);
-    const ssh = this.cmd.ssh(rm);
-    try {
-      await exec(ssh);
-    } catch (err) {
-      if (err.code === 1) {
-        logger.debug(`no previous results are found on ${this.ip}`);
-      } else {
-        throw Error(err.stderr);
-      }
-    }
+    logger.debug(`deleting previous results on ${this.procName}...`);
+    await deleteDir(this.cmd, this.resultDir, this.remoteInfo);
   }
 
   async start (action) {
     logger.debug(`starting client ${this.id}`);
     // [clientId] [action]
     const progArgs = `${this.id} ${action}`;
-    const runJar = Cmd.runJar(
-      this.javaBin,
-      this.vmArgs,
-      this.jarPath,
-      progArgs,
-      this.logPath
-    );
-    const ssh = this.cmd.ssh(runJar);
-    logger.debug(`client ${this.id} is running`);
-
-    try {
-      await exec(ssh);
-    } catch (err) {
-      throw Error(err.message);
-    }
+    await runJar(this.cmd, progArgs, this.javaBin, this.vmArgs, this.jarPath, this.logPath, this.remoteInfo);
   }
 
   async checkForFinished (action) {

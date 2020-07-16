@@ -4,11 +4,14 @@ const logger = require('../logger');
 const path = require('path');
 const join = path.posix.join;
 
+// loading is 1 and benchmarking is 2
+// don't change the order because our benchmarker depended on these two args.
 const Action = {
   loading: 1,
   benchmarking: 2
 };
 
+const BENCH_DIR = 'benchmarker';
 const CHECKING_INTERVAL = 1000;
 
 const defaultDirs = ['databases', 'results'];
@@ -96,6 +99,16 @@ async function sendDir (localPath, remoteWorkDir, remoteInfo) {
   await exec(scp);
 }
 
+async function copyDir (cmd, srcDir, destDir, remoteInfo) {
+  const { prefix, id, ip } = remoteInfo;
+  const cp = Cmd.cp(true, srcDir, destDir);
+  const ssh = this.cmd.ssh(cp);
+
+  logger.info(`copyDir - ${prefix} ${id} ${ip} command - ${ssh}`);
+
+  await exec(ssh);
+}
+
 async function deleteDir (cmd, dir, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const rm = Cmd.rm(true, dir);
@@ -114,9 +127,8 @@ async function deleteDir (cmd, dir, remoteInfo) {
   }
 }
 
-async function runJar (cmd, action, javaBin, vmArgs, jarPath, logPath, remoteInfo) {
+async function runJar (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
-  const progArgs = `${id} ${action}`;
   const runJar = Cmd.runJar(
     javaBin,
     vmArgs,
@@ -135,7 +147,7 @@ async function runJar (cmd, action, javaBin, vmArgs, jarPath, logPath, remoteInf
     throw Error(err.stderr);
   }
 }
-
+// TODO: maybe let the outer function to check stdout...
 async function pullCsv (cmd, resultDir, dest, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const grepCsv = Cmd.grepCsv(resultDir, id);
@@ -153,13 +165,13 @@ async function pullCsv (cmd, resultDir, dest, remoteInfo) {
     throw Error(err.stderr);
   }
 }
-
+// TODO: maybe let the outer function to parse data
 async function getTotalThroughput (cmd, resultDir, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const grepTotal = Cmd.grepTotal(resultDir, id);
   const ssh = cmd.ssh(grepTotal);
 
-  logger.info(`getTotalThroughput ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.info(`get total throughput ${prefix} ${id} ${ip} command - ${ssh}`);
 
   let result;
   try {
@@ -176,6 +188,17 @@ async function getTotalThroughput (cmd, resultDir, remoteInfo) {
   return matches[0];
 }
 
+async function grepLog (cmd, keyword, logPath, remoteInfo) {
+  const { prefix, id, ip } = remoteInfo;
+  const grep = Cmd.grep(keyword, logPath);
+  const ssh = this.cmd.ssh(grep);
+
+  logger.info(`grep log ${prefix} ${id} ${ip} command - ${ssh}`);
+
+  const result = await exec(ssh);
+  return result;
+}
+
 async function checkLog (cmd, keyword, logPath, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const grep = Cmd.grep(keyword, logPath);
@@ -183,7 +206,7 @@ async function checkLog (cmd, keyword, logPath, remoteInfo) {
 
   logger.info(`checkLog ${prefix} ${id} ${ip} command - ${ssh}`);
 
-  // don't try catch here, let outside functions to handle
+  // don't try catch here, let outer functions to handle
   // please return the result.
   const result = await exec(ssh);
   return result;
@@ -210,6 +233,7 @@ async function checkError (cmd, keyword, logPath, remoteInfo) {
 
 module.exports = {
   Action,
+  BENCH_DIR,
   CHECKING_INTERVAL,
   createWorkingDir,
   checkJavaRunTime,
@@ -218,10 +242,12 @@ module.exports = {
   removeJdk,
   delay,
   sendDir,
+  copyDir,
   deleteDir,
   runJar,
   checkError,
   checkLog,
   pullCsv,
-  getTotalThroughput
+  getTotalThroughput,
+  grepLog
 };

@@ -69,27 +69,24 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   logger.info(`successfully initialize all servers and sequencer`.green);
 
   try {
+    // let servers check error
+    await Promise.all(allServers.map(server => server.checkError()));
     // let client run and let server check error at the same time
-    await Promise.all(clients.concat(allServers).map(obj => {
-      if (Object.prototype.hasOwnProperty.call(obj, 'stopSignal')) {
-        return obj.checkError(); // server starts checking error
-      } else {
-        return obj.run(action, reportDir); // client starts running job
-      }
-    }));
+    await Promise.all(clients.map(client => client.run(action, reportDir)));
   } catch (err) {
     throw Error(`${err.message.red}`);
   }
+
+  // stop
+  allServers.map(server => {
+    server.stopCheckingError();
+  });
 
   if (action === Action.loading) {
     logger.info(`loading procedure finished`.green);
   } else if (action === Action.benchmarking) {
     logger.info(`benchmarking finished`.green);
   }
-
-  allServers.map(server => {
-    server.stopSignal = true;
-  });
 }
 
 function newSequencer (seqConn, configParam, dbName, vmArgs) {

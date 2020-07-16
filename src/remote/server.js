@@ -75,6 +75,10 @@ class Server {
     }
   }
 
+  stopCheckingError () {
+    this.stopSignal = true;
+  }
+
   async prepare (action) {
     logger.debug(`preparing servers... ip - ${this.ip}`);
 

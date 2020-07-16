@@ -32,6 +32,7 @@ class Client {
       id: this.id,
       ip: this.ip
     };
+    this.procName = `client ${conn.id}`;
 
     this.jarPath = clientJarPath;
     this.javaBin = javaBin;
@@ -83,7 +84,7 @@ class Client {
   }
 
   async checkForFinished (action) {
-    logger.debug(`check whether finished on ${this.procName}...`);
+    logger.debug(`check whether client is finished - ${this.procName}...`);
     const keyword = this._getExpectedMsgAfterActionFinished(action);
     // we grep Error keywords on the client
     try {

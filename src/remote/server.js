@@ -59,14 +59,8 @@ class Server {
     await this.prepare(action);
 
     await this.start();
-    while (true) {
-      try {
-        await this.checkForReady();
-        break;
-      } catch (err) {
-        // It's Ok to do nothing
-        logger.debug(`server not ready - ${this.procName}...`);
-      }
+
+    while (!await this.checkForReady()) {
       await delay(CHECKING_INTERVAL);
     }
 

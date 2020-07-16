@@ -57,19 +57,11 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
 
   const allServers = servers.concat(sequencer);
 
-  // debug code
-  let serverRdy = false;
-
   try {
     // init servers and sequencer
     await Promise.all(allServers.map(server => server.init()));
-    serverRdy = true;
   } catch (err) {
     throw Error(`error occurs at server initialization - ${err.message.red}`);
-  }
-
-  if (!serverRdy) {
-    throw Error('debug code : servers are not ready');
   }
 
   logger.info(`successfully initialize all servers and sequencer`.green);

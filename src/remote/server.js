@@ -140,6 +140,14 @@ class Server {
   }
 
   async checkForReady () {
+    // we grep Error keywords on the server
+    try {
+      await this.checkForError();
+    } catch (err) {
+      throw Error(err);
+    }
+
+    // return true if we grep ready
     try {
       await this.connLog.grepLog('ElaSQL server ready');
       return true;

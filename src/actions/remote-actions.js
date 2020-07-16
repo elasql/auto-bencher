@@ -147,25 +147,18 @@ async function runJar (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteI
     throw Error(err.stderr);
   }
 }
-// TODO: maybe let the outer function to check stdout...
-async function pullCsv (cmd, resultDir, dest, remoteInfo) {
+
+async function pullCsv (cmd, resultDir, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const grepCsv = Cmd.grepCsv(resultDir, id);
   const ssh = cmd.ssh(grepCsv);
 
   logger.info(`pullCsv ${prefix} ${id} ${ip} command - ${ssh}`);
 
-  try {
-    const { stdout } = await exec(ssh);
-    return stdout;
-  } catch (err) {
-    if (err.code === 1) {
-      throw Error(`cannot find the csv file on ${prefix} ${id} ${ip}`);
-    }
-    throw Error(err.stderr);
-  }
+  const result = await exec(ssh);
+  return result;
 }
-// TODO: maybe let the outer function to parse data
+
 async function getTotalThroughput (cmd, resultDir, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const grepTotal = Cmd.grepTotal(resultDir, id);
@@ -173,19 +166,8 @@ async function getTotalThroughput (cmd, resultDir, remoteInfo) {
 
   logger.info(`get total throughput ${prefix} ${id} ${ip} command - ${ssh}`);
 
-  let result;
-  try {
-    result = await exec(ssh);
-  } catch (err) {
-    if (err.code === 1) {
-      throw Error(`cannot find the total throughput file on - ${prefix} ${id} ${ip}`);
-    }
-    throw Error(err.stderr);
-  }
-
-  const reg = /committed: (.*?),/g;
-  const matches = reg.exec(result.stdout);
-  return matches[0];
+  const result = await exec(ssh);
+  return result;
 }
 
 async function grepLog (cmd, keyword, logPath, remoteInfo) {

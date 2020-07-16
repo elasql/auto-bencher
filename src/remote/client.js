@@ -1,6 +1,5 @@
 const logger = require('../logger');
 const Cmd = require('../ssh/cmd');
-const { exec } = require('../ssh/ssh-executor');
 const ConnectionLog = require('../remote/connection-log');
 const {
   Action,
@@ -9,8 +8,9 @@ const {
   delay,
   sendDir,
   deleteDir,
-  runJar
-
+  runJar,
+  pullCsv,
+  getTotalThroughput
 } = require('../actions/remote-actions');
 
 class Client {
@@ -83,9 +83,16 @@ class Client {
   }
 
   async checkForFinished (action) {
-    const keyword = this._getExpectedMsgFromAction(action);
+    const keyword = this._getExpectedMsgAfterActionFinished(action);
+    // we grep Error keywords on the client
     try {
       await this.checkForError();
+    } catch (err) {
+      throw Error(err);
+    }
+
+    // return true if we grep the keyword of procedure finished
+    try {
       await this.connLog.grepLog(keyword);
       return true;
     } catch (err) {
@@ -102,7 +109,7 @@ class Client {
     await this.connLog.grepError('SEVERE');
   }
 
-  _getExpectedMsgFromAction (action) {
+  _getExpectedMsgAfterActionFinished (action) {
     switch (action) {
     case Action.benchmarking:
       return 'benchmark process finished';
@@ -114,11 +121,9 @@ class Client {
   }
 
   async pullCsv (dest) {
-    const grepCsv = Cmd.grepCsv(this.resultDir, this.id);
-    const ssh = this.cmd.ssh(grepCsv);
-
+    logger.debug(`pulling the csv file on ${this.procName}...`);
     try {
-      const { stdout } = await exec(ssh);
+      const { stdout } = await pullCsv(this.cmd, this.resultDir, this.remoteInfo);
       return stdout;
     } catch (err) {
       if (err.code === 1) {
@@ -129,11 +134,10 @@ class Client {
   }
 
   async getTotalThroughput () {
-    const grepTotal = Cmd.grepTotal(this.resultDir, this.id);
-    const ssh = this.cmd.ssh(grepTotal);
+    logger.debug(`get total throughput on ${this.procName}...`);
     let stdout = '';
     try {
-      const result = await exec(ssh);
+      const result = await getTotalThroughput(this.cmd, this.resultDir, this.remoteInfo);
       stdout = result.stdout;
     } catch (err) {
       if (err.code === 1) {

@@ -190,7 +190,7 @@ async function getTotalThroughput (cmd, resultDir, remoteInfo) {
 async function grepLog (cmd, keyword, logPath, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const grep = Cmd.grep(keyword, logPath);
-  const ssh = this.cmd.ssh(grep);
+  const ssh = cmd.ssh(grep);
 
   logger.info(`grep log ${prefix} ${id} ${ip} command - ${ssh}`);
 

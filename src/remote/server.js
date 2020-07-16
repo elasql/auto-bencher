@@ -65,6 +65,7 @@ class Server {
         break;
       } catch (err) {
         // It's Ok to do nothing
+        logger.debug(`server not ready - ${this.procName}...`);
       }
       await delay(CHECKING_INTERVAL);
     }

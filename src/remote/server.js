@@ -135,7 +135,7 @@ class Server {
   }
 
   async checkForReady () {
-    logger.debug(`check whether server is ready - ${this.procName}...`);
+    logger.debug(`check whether ${this.procName} is ready...`);
     // we grep Error keywords on the server
     try {
       await this.checkForError();

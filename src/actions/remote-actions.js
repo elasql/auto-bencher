@@ -192,7 +192,7 @@ async function grepLog (cmd, keyword, logPath, remoteInfo) {
   const grep = Cmd.grep(keyword, logPath);
   const ssh = cmd.ssh(grep);
 
-  logger.info(`grep log ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`grep log ${prefix} ${id} ${ip} command - ${ssh}`);
 
   // don't try catch here, let outer functions to handle
   // please return the result.

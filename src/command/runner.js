@@ -66,11 +66,15 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
     throw Error(`error occurs at server initialization - ${err.message.red}`);
   }
 
-  logger.info(`successfully initialize all servers and sequencer`.green);
+  logger.info(`successfully initialize all the servers and the sequencer`.green);
 
   // let servers check error
   // don't use await, it will block the program
-  Promise.all(allServers.map(server => server.checkError()));
+  try {
+    Promise.all(allServers.map(server => server.checkError()));
+  } catch (err) {
+    throw Error(`${err.message.red}`);
+  }
 
   try {
     // let client run and let server check error at the same time

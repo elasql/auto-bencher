@@ -84,6 +84,7 @@ async function removeJdk (cmd, systemRemoteWorkDir, jdkPackageName) {
   await exec(ssh);
 }
 
+// await delay(1000) means wait 1 second
 const delay = (interval) => {
   logger.debug(`delay ${interval} ms`);
   return new Promise(resolve => setTimeout(resolve, interval));
@@ -156,7 +157,7 @@ async function runJar (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteI
 
   const ssh = cmd.ssh(runJar);
 
-  logger.debug(`runJar ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`runJar on ${prefix} ${id} ${ip} command - ${ssh}`);
 
   try {
     await exec(ssh);
@@ -170,7 +171,7 @@ async function pullCsv (cmd, resultDir, remoteInfo) {
   const grepCsv = Cmd.grepCsv(resultDir, id);
   const ssh = cmd.ssh(grepCsv);
 
-  logger.debug(`pullCsv ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`pullCsv on ${prefix} ${id} ${ip} command - ${ssh}`);
 
   const result = await exec(ssh);
   return result;
@@ -181,7 +182,7 @@ async function getTotalThroughput (cmd, resultDir, remoteInfo) {
   const grepTotal = Cmd.grepTotal(resultDir, id);
   const ssh = cmd.ssh(grepTotal);
 
-  logger.debug(`get total throughput ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`get total throughput on ${prefix} ${id} ${ip} command - ${ssh}`);
 
   const result = await exec(ssh);
   return result;
@@ -192,7 +193,7 @@ async function grepLog (cmd, keyword, logPath, remoteInfo) {
   const grep = Cmd.grep(keyword, logPath);
   const ssh = cmd.ssh(grep);
 
-  logger.debug(`grep log ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`grep log on ${prefix} ${id} ${ip} command - ${ssh}`);
 
   // don't try catch here, let outer functions to handle
   // please return the result.

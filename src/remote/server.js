@@ -68,15 +68,15 @@ class Server {
   }
 
   async checkError () {
-    logger.info(`${this.procName} starts checking error`.white);
+    logger.debug(`${this.procName} starts checking error`.white);
     while (!this.stopSignal) {
       await this.checkForError();
       await delay(CHECKING_INTERVAL);
     }
+    logger.debug(`${this.procName} stops checking error`.white);
   }
 
   stopCheckingError () {
-    logger.info(`${this.procName} stops checking error`.white);
     this.stopSignal = true;
   }
 

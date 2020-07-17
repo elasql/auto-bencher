@@ -10,7 +10,7 @@ const { generateConnectionList } = require('../remote/connection-list');
 
 const { prepareBenchEnv } = require('../preparation/prepare-bench-dir');
 
-const { killBenchmarker, Action } = require('../actions/remote-actions');
+const { killBenchmarker } = require('../actions/remote-actions');
 
 // TODO: should move this class to remote
 
@@ -90,12 +90,6 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
     await Promise.all(allServers.map(server => server.backupDb()));
   } catch (err) {
     throw Error(`error occurs at backing up db - ${err.message.red}`);
-  }
-
-  if (action === Action.loading) {
-    logger.info(`loading procedure finished`.green);
-  } else if (action === Action.benchmarking) {
-    logger.info(`benchmarking finished`.green);
   }
 }
 

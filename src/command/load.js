@@ -19,7 +19,7 @@ async function execute (configParam, args) {
 
   await run(configParam, benchParams[0], args, dbName, Action.loading, null);
 
-  logger.info(`loading testbed finished`);
+  logger.info(`loading testbed finished`.green);
 }
 
 module.exports = {

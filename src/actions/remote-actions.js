@@ -102,7 +102,7 @@ async function sendDir (cmd, localPath, remoteWorkDir, remoteInfo) {
 async function copyDir (cmd, srcDir, destDir, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const cp = Cmd.cp(true, srcDir, destDir);
-  const ssh = this.cmd.ssh(cp);
+  const ssh = cmd.ssh(cp);
 
   logger.debug(`copyDir - ${prefix} ${id} ${ip} command - ${ssh}`);
 

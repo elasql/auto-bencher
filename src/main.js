@@ -17,13 +17,11 @@ const configParam = new Config(configToml).getParam();
 async function main (args) {
   switch (args.mode) {
   case 'init':
-
     try {
       await initEnv.execute(configParam);
     } catch (err) {
       // this try catch block is used to color the error message only
       logger.error(err.message.red);
-      throw Error(err.message);
     }
     break;
 
@@ -32,7 +30,6 @@ async function main (args) {
       await load.execute(configParam, args);
     } catch (err) {
       logger.error(err.message.red);
-      throw Error(err.message);
     }
     break;
 
@@ -41,7 +38,6 @@ async function main (args) {
       await benchmark.execute(configParam, args);
     } catch (err) {
       logger.error(err.message.red);
-      throw Error(err.message);
     }
     break;
 

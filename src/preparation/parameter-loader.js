@@ -107,5 +107,6 @@ function addParam (currentObj, table, key, value) {
 }
 
 module.exports = {
-  normalLoad
+  normalLoad,
+  multiLoad
 };

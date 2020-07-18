@@ -4,6 +4,10 @@
   by Pin-Yu
 */
 
+/*
+ssh error code 255 stands for connection failed!!!
+*/
+
 const Cmd = require('../ssh/cmd');
 const logger = require('../logger');
 

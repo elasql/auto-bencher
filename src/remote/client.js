@@ -147,7 +147,8 @@ class Client {
     }
 
     const remoteCsvPath = join(this.resultDir, csvFileName);
-    await pullCsv(this.cmd, remoteCsvPath, dest, this.remoteInfo);
+    const localCsvPath = join(dest, csvFileName);
+    await pullCsv(this.cmd, remoteCsvPath, localCsvPath, this.remoteInfo);
   }
 
   async _getTotalThroughput () {

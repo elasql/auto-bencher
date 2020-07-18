@@ -5,6 +5,7 @@ const createCsvWriter = require('csv-writer').createArrayCsvWriter;
 
 const logger = require('../logger');
 
+const { run } = require('./runner');
 const { Action } = require('../actions/remote-actions');
 const { multiLoad } = require('../preparation/parameter-loader');
 

@@ -147,7 +147,7 @@ async function killBenchmarker (cmd) {
       // don't do anything because there may be no running process
       return;
     }
-    logger.debug(err.message);
+    logger.debug(err.stderr);
   }
 }
 

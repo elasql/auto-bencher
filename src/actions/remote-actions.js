@@ -175,7 +175,11 @@ async function grepCsvFileName (cmd, resultDir, remoteInfo) {
   const grepCsv = Cmd.grepCsv(resultDir, id);
   const ssh = cmd.ssh(grepCsv);
 
+<<<<<<< HEAD
   logger.debug(`grep csv file name on ${prefix} ${id} ${ip} command - ${ssh}`);
+=======
+  logger.debug(`pullCsv on ${prefix} ${id} ${ip} command - ${ssh}`);
+>>>>>>> cce956d5184a2949c10e5460991c2821e5415370
 
   const result = await exec(ssh);
   return result;

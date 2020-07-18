@@ -75,6 +75,28 @@ const dbInfo = {
   dest: 'dbName'
 };
 
+const jarArg = ['-j', '--jars'];
+const jarInfo = {
+  type: 'string',
+  nargs: 1,
+  help: 'jars directory',
+  required: true,
+  defaultValue: '',
+  metavar: 'jars_dir',
+  dest: 'jarsDir'
+};
+
+const propArg = ['--properties'];
+const propInfo = {
+  type: 'string',
+  nargs: 1,
+  help: 'default-properties directory',
+  required: true,
+  defaultValue: '',
+  metavar: 'prop_dir',
+  dest: 'propDir'
+};
+
 // load
 const load = subparsers.addParser(
   'load',
@@ -95,29 +117,13 @@ load.addArgument(
 );
 
 load.addArgument(
-  ['-j', '--jars'],
-  {
-    type: 'string',
-    nargs: 1,
-    help: 'jars directory',
-    required: true,
-    defaultValue: '',
-    metavar: 'jars_dir',
-    dest: 'jarsDir'
-  }
+  jarArg,
+  jarInfo
 );
 
 load.addArgument(
-  ['--properties'],
-  {
-    type: 'string',
-    nargs: 1,
-    help: 'default-properties directory',
-    required: true,
-    defaultValue: '',
-    metavar: 'prop_dir',
-    dest: 'propDir'
-  }
+  propArg,
+  propInfo
 );
 
 // benchmark
@@ -137,6 +143,16 @@ benchmark.addArgument(
 benchmark.addArgument(
   dbArg,
   dbInfo
+);
+
+benchmark.addArgument(
+  jarArg,
+  jarInfo
+);
+
+benchmark.addArgument(
+  propArg,
+  propInfo
 );
 
 benchmark.addArgument(

@@ -3,14 +3,14 @@ const { parser } = require('../src/args');
 
 describe('parser', () => {
   describe('init', () => {
-    it('should not throw error in debug mode', () => {
+    it('should not throw errors in debug mode', () => {
       const args = parser.parseArgs(['-c', 'path', '-D', 'init']);
       assert.equal(args.configPath[0], 'path');
       assert.isTrue(args.debug);
       assert.equal(args.mode, 'init');
     });
 
-    it('should not throw error in normal mode', () => {
+    it('should not throw errors in normal mode', () => {
       const args = parser.parseArgs(['-c', 'path', 'init']);
       assert.equal(args.configPath[0], 'path');
       assert.isFalse(args.debug);
@@ -19,12 +19,12 @@ describe('parser', () => {
   });
 
   describe('load', () => {
-    it('should not throw error', () => {
+    it('should not throw errors', () => {
       const args = parser.parseArgs([
         '-c', 'path', 'load',
+        '-d', 'dbName',
         '-j', 'jarsDir',
         '--parameter', 'paramPath',
-        '-d', 'dbName',
         '--properties', 'propDir'
       ]);
       assert.equal(args.configPath[0], 'path');
@@ -38,12 +38,14 @@ describe('parser', () => {
   });
 
   describe('benchmark', () => {
-    it('should not throw error with -i', () => {
+    it('should not throw errors with -i', () => {
       const args = parser.parseArgs([
         '-c', 'path', 'benchmark',
-        '-i',
+        '-d', 'dbName',
+        '-j', 'jarsDir',
         '--parameter', 'paramPath',
-        '-d', 'dbName'
+        '--properties', 'propDir',
+        '-i'
       ]);
       assert.equal(args.configPath[0], 'path');
       assert.isFalse(args.debug);
@@ -53,11 +55,13 @@ describe('parser', () => {
       assert.equal(args.dbName[0], 'dbName');
     });
 
-    it('should not throw error without -i', () => {
+    it('should not throw errors without -i', () => {
       const args = parser.parseArgs([
         '-c', 'path', 'benchmark',
+        '-d', 'dbName',
+        '-j', 'jarsDir',
         '--parameter', 'paramPath',
-        '-d', 'dbName'
+        '--properties', 'propDir'
       ]);
       assert.equal(args.configPath[0], 'path');
       assert.isFalse(args.debug);

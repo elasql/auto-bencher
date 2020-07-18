@@ -22,7 +22,7 @@ const Action = {
 };
 
 const BENCH_DIR = 'benchmarker';
-const CHECKING_INTERVAL = 5000; // ms
+const CHECKING_INTERVAL = 10000; // ms
 
 const defaultDirs = ['databases', 'results'];
 

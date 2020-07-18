@@ -39,8 +39,17 @@ async function killAll (configParam, systemConn) {
   // generate an array including servers, a sequencer and clients
   nodeConns = nodeConns.concat(serverConns, clientConns);
 
+  // kill twice may cause ssh errors
+  const alreadyKill = {};
+
   await Promise.all(
-    nodeConns.map(nodeConn => kill(configParam, nodeConn))
+    nodeConns.map(nodeConn => {
+      if (Object.prototype.hasOwnProperty.call(alreadyKill, nodeConn.ip)) {
+        return;
+      }
+      alreadyKill[nodeConn.ip] = true;
+      return kill(configParam, nodeConn);
+    })
   );
 }
 

@@ -15,6 +15,7 @@ function generateConnectionList (configParam, benchParam, action) {
   const connection = new Connection(initPort);
   const { sequencer, servers, clients } = configParam;
 
+  // TODO: handle tha case that we don't declare sequencer explicitly(current way use undefined...)
   // seqConns is an object.
   const seqConn = sequencer ? Connection.getConn(serverCount, sequencer, initPort) : undefined;
 

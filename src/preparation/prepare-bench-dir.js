@@ -1,8 +1,10 @@
 const fs = require('fs');
-const path = require('path');
+
 const logger = require('../logger');
-const { args } = require('../args');
 const Connection = require('../remote/connection');
+
+const { args } = require('../args');
+const { join } = require('../utils');
 const { getVmArgs } = require('./vmargs');
 const { ls, cp } = require('../actions/local-actions');
 
@@ -29,11 +31,11 @@ async function prepareBenchEnv (configParam, benchParam, systemConn) {
   const propMap = genPropertiestMap(args.propDir[0]);
   applyParameters(propMap, configParam, benchParam, systemConn);
 
-  const propDir = path.posix.join(BENCH_DIR, PROP_DIR);
+  const propDir = join(BENCH_DIR, PROP_DIR);
   outputToFile(propMap, propDir);
 
   const { systemRemoteWorkDir } = configParam;
-  const remotePropDir = path.posix.join(systemRemoteWorkDir, propDir);
+  const remotePropDir = join(systemRemoteWorkDir, propDir);
   return getVmArgs(propMap, remotePropDir);
 }
 
@@ -74,7 +76,7 @@ function getJars (benchParam, args) {
   const jarDir = benchParam.getStrValue('auto_bencher', 'jar_dir');
   const fileNames = ['server.jar', 'client.jar'];
 
-  return fileNames.map(fileName => path.posix.join(args.jarsDir[0], jarDir, fileName));
+  return fileNames.map(fileName => join(args.jarsDir[0], jarDir, fileName));
 }
 
 module.exports = {

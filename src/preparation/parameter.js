@@ -5,6 +5,26 @@ class Parameter {
     this.param = _.cloneDeep(paramObject);
   }
 
+  getProperties () {
+    const properties = [];
+    for (const outer in this.param) {
+      for (const inner in this.param[outer]) {
+        properties.push(inner);
+      }
+    }
+    return properties;
+  }
+
+  getPropertiesValues () {
+    const values = [];
+    for (const outer in this.param) {
+      for (const inner in this.param[outer]) {
+        values.push(this.param[outer][inner]);
+      }
+    }
+    return values;
+  }
+
   getStrValue (table, prop) {
     let value = this._getValue(table, prop);
 

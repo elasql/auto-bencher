@@ -1,10 +1,14 @@
 require('colors');
-const Config = require('./preparation/config');
-const logger = require('./logger');
-const initEnv = require('./command/init-env');
-const load = require('./command/load');
-const { loadToml } = require('./utils');
+
 const { args } = require('./args');
+const { loadToml } = require('./utils');
+
+const logger = require('./logger');
+const Config = require('./preparation/config');
+
+const load = require('./command/load');
+const initEnv = require('./command/init-env');
+const benchmark = require('./command/benchmark');
 
 // Load parameters from config
 const configToml = loadToml(args.configPath[0]);
@@ -26,6 +30,15 @@ async function main (args) {
   case 'load':
     try {
       await load.execute(configParam, args);
+    } catch (err) {
+      logger.error(err.message.red);
+      throw Error(err.message);
+    }
+    break;
+
+  case 'benchmark':
+    try {
+      await benchmark.execute(configParam, args);
     } catch (err) {
       logger.error(err.message.red);
       throw Error(err.message);

@@ -1,6 +1,8 @@
 const fs = require('fs');
-const logger = require('../logger');
+
 const Cmd = require('../ssh/cmd');
+const logger = require('../logger');
+
 const { exec } = require('../ssh/ssh-executor');
 
 // local actions won't use SSH

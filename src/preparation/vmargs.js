@@ -1,10 +1,10 @@
-const path = require('path');
+const { join } = require('../utils');
 
 function getVmArgs (propMap, propDir) {
   let vmArgs = '';
 
   Object.values(propMap).map(prop => {
-    vmArgs += '-D' + prop.id + '=' + path.posix.join(propDir, prop.baseName + '.properties ');
+    vmArgs += '-D' + prop.id + '=' + join(propDir, prop.baseName + '.properties ');
   });
 
   // remove the last white space

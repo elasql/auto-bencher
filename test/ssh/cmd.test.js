@@ -122,6 +122,12 @@ describe('Cmd', () => {
       const expected = 'scp -r localPath db-team@140.114.87.87:remotePath';
       assert.equal(actual, expected);
     });
+
+    it('should return a correct command if it is from remote', () => {
+      const actual = cmd.scp(false, 'localPath', 'remotePath', true);
+      const expected = 'scp db-team@140.114.87.87:remotePath localPath';
+      assert.equal(actual, expected);
+    });
   });
 
   describe('ssh', () => {

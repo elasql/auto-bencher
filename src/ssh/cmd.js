@@ -13,8 +13,7 @@ dir == pinyu
 fileName == main.js
 */
 
-const path = require('path');
-const join = path.posix.join;
+const { join } = require('../utils');
 
 class Cmd {
   constructor (userName, ip) {
@@ -65,6 +64,7 @@ class Cmd {
   }
 
   static grepCsv (resultDir, id) {
+    // [.] is grep style regular expression
     return `${Cmd.ls(resultDir)} | ${Cmd.grep(`${id}[.]csv`)}`;
   }
 
@@ -80,8 +80,13 @@ class Cmd {
     return 'pkill -f benchmarker';
   }
 
-  scp (isDir, localPath, remotePath) {
+  scp (isDir, localPath, remotePath, fromRemote = false) {
     const cmd = isDir ? 'scp -r ' : 'scp ';
+
+    if (fromRemote) {
+      return cmd + this._remoteDest(remotePath) + ' ' + localPath;
+    }
+
     return cmd + localPath + ' ' + this._remoteDest(remotePath);
   }
 

@@ -1,11 +1,17 @@
+/*
+  If you don't know whether it needs to try catch exec,
+  then don't try catch !!!
+  by Pin-Yu
+*/
+
 const Cmd = require('../ssh/cmd');
-const { exec } = require('../ssh/ssh-executor');
 const logger = require('../logger');
-const path = require('path');
-const join = path.posix.join;
+
+const { join } = require('../utils');
+const { exec } = require('../ssh/ssh-executor');
 
 // loading is 1 and benchmarking is 2
-// don't change the order because our benchmarker depended on these two args.
+// don't change the order because our benchmarker depends on these two args.
 const Action = {
   loading: 1,
   benchmarking: 2
@@ -159,22 +165,29 @@ async function runJar (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteI
 
   logger.debug(`runJar on ${prefix} ${id} ${ip} command - ${ssh}`);
 
-  try {
-    await exec(ssh);
-  } catch (err) {
-    throw Error(err.stderr);
-  }
+  // don't try catch this execution
+  // let outer function handle
+  await exec(ssh);
 }
 
-async function pullCsv (cmd, resultDir, remoteInfo) {
+async function grepCsvFileName (cmd, resultDir, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const grepCsv = Cmd.grepCsv(resultDir, id);
   const ssh = cmd.ssh(grepCsv);
 
-  logger.debug(`pullCsv on ${prefix} ${id} ${ip} command - ${ssh}`);
+  logger.debug(`grep csv file name on ${prefix} ${id} ${ip} command - ${ssh}`);
 
   const result = await exec(ssh);
   return result;
+}
+
+async function pullCsv (cmd, remoteCsvPath, dest, remoteInfo) {
+  const { prefix, id, ip } = remoteInfo;
+  const scp = cmd.scp(false, dest, remoteCsvPath, true);
+
+  logger.debug(`pull csv file from ${prefix} ${id} ${ip} command - ${scp}`);
+
+  await exec(scp);
 }
 
 async function getTotalThroughput (cmd, resultDir, remoteInfo) {
@@ -216,6 +229,7 @@ module.exports = {
   deleteDir,
   killBenchmarker,
   runJar,
+  grepCsvFileName,
   pullCsv,
   getTotalThroughput,
   grepLog

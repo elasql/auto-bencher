@@ -57,7 +57,7 @@ const paramArg = ['--parameter'];
 const paramInfo = {
   type: 'string',
   nargs: 1,
-  help: 'parameter file path',
+  help: 'parameter file',
   required: true,
   defaultValue: '',
   metavar: 'param_path',
@@ -68,7 +68,7 @@ const dbArg = ['-d', '--db'];
 const dbInfo = {
   type: 'string',
   nargs: 1,
-  help: 'database directory name',
+  help: 'database name',
   required: true,
   defaultValue: '',
   metavar: 'db_name',

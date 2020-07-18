@@ -6,6 +6,8 @@
   "dependencies": {
     "argparse": "^1.0.10",
     "colors": "^1.4.0",
+    "csv-reader": "^1.0.6",
+    "csv-writer": "^1.6.0",
     "deepcopy": "^2.0.0",
     "hashmap": "^2.4.0",
     "java-properties": "^1.0.2",

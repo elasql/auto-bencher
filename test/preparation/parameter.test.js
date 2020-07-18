@@ -13,6 +13,32 @@ describe('Parameter', () => {
   };
   const p = new Parameter(obj);
 
+  describe('getProperties', () => {
+    const expected = [
+      'jar_dir',
+      'server_count',
+      'org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT'
+    ];
+
+    it('should return expected result', () => {
+      const actual = p.getProperties();
+      assert.deepEqual(expected, actual);
+    });
+  });
+
+  describe('getPropertiesValues', () => {
+    const expected = [
+      'test',
+      '3',
+      'true'
+    ];
+
+    it('should return expected result', () => {
+      const actual = p.getPropertiesValues();
+      assert.deepEqual(expected, actual);
+    });
+  });
+
   describe('getStrValue', () => {
     const actual = p.getStrValue('auto_bencher', 'server_count');
 

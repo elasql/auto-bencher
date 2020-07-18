@@ -1,6 +1,7 @@
-const logger = require('../logger');
 const Cmd = require('../ssh/cmd');
+const logger = require('../logger');
 const ConnectionLog = require('../remote/connection-log');
+const { join } = require('../utils');
 const {
   Action,
   BENCH_DIR,
@@ -9,6 +10,7 @@ const {
   sendDir,
   deleteDir,
   runJar,
+  grepCsvFileName,
   pullCsv,
   getTotalThroughput
 } = require('../actions/remote-actions');
@@ -45,7 +47,13 @@ class Client {
     this.connLog = new ConnectionLog(this.cmd, this.logPath, this.remoteInfo);
   }
 
-  async run (action, reportDir) {
+  async run (action, reportDir, tps) {
+    if (action === Action.benchmarking) {
+      if (typeof tps === 'undefined') {
+        throw Error('please pass throughput obj');
+      }
+    }
+
     logger.debug(`cleaning previous results on client - ${this.id}`);
     await this.cleanPreviousResults();
 
@@ -60,9 +68,10 @@ class Client {
     }
 
     if (action === Action.benchmarking) {
-      await this.pullCsv(reportDir);
-      const throughput = await this.getTotalThroughput();
-      logger.info(`The total throughput of client ${this.id} is ${throughput}`);
+      await this._pullCsv(reportDir);
+      const throughput = await this._getTotalThroughput();
+      tps[this.id] = throughput;
+      logger.debug(`The total throughput of client ${this.id} is ${throughput}`);
     }
 
     logger.info(`${this.procName}'s job is done`);
@@ -124,20 +133,24 @@ class Client {
     }
   }
 
-  async pullCsv (dest) {
+  async _pullCsv (dest) {
     logger.debug(`pulling the csv file on ${this.procName}...`);
+    let csvFileName;
     try {
-      const { stdout } = await pullCsv(this.cmd, this.resultDir, this.remoteInfo);
-      return stdout;
+      const { stdout } = await grepCsvFileName(this.cmd, this.resultDir, this.remoteInfo);
+      csvFileName = stdout;
     } catch (err) {
       if (err.code === 1) {
         throw Error(`cannot find the csv file on ${this.ip}`);
       }
       throw Error(err.stderr);
     }
+
+    const remoteCsvPath = join(this.resultDir, csvFileName);
+    await pullCsv(this.cmd, remoteCsvPath, dest, this.remoteInfo);
   }
 
-  async getTotalThroughput () {
+  async _getTotalThroughput () {
     logger.debug(`get total throughput on ${this.procName}...`);
     let stdout = '';
     try {
@@ -152,12 +165,13 @@ class Client {
     return this.parseTotalThroughput(stdout);
   }
 
+  // TODO: test this function
   parseTotalThroughput (text) {
     // Output should be 'TOTAL - committed: XXXX, aborted: yyyy, avg latency: zzz ms
     // we need to parse XXXX
     const reg = /committed: (.*?),/g;
     const matches = reg.exec(text);
-    return matches[0];
+    return parseInt(matches[0]);
   }
 }
 

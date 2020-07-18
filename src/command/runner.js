@@ -2,19 +2,19 @@
   runner will coordinate sequencer, servers and clients
 */
 
+const Cmd = require('../ssh/cmd');
 const logger = require('../logger');
 const Server = require('../remote/server');
 const Client = require('../remote/client');
-const Cmd = require('../ssh/cmd');
+
 const { generateConnectionList } = require('../remote/connection-list');
-
 const { prepareBenchEnv } = require('../preparation/prepare-bench-dir');
-
 const { killBenchmarker } = require('../actions/remote-actions');
 
 // TODO: should move this class to remote
 
-async function run (configParam, benchParam, args, dbName, action, reportDir = '') {
+// TODO: add basic checks for arguments
+async function run (configParam, benchParam, args, dbName, action, reportDir) {
   // generate connection information (ip, port)
   const systemConn = generateConnectionList(configParam, benchParam, action);
 
@@ -76,9 +76,12 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
     throw Error(`${err.message.red}`);
   }
 
+  // throughput object
+  // key is client id and value is throughtput
+  const tps = {};
   try {
     // let client run and let server check error at the same time
-    await Promise.all(clients.map(client => client.run(action, reportDir)));
+    await Promise.all(clients.map(client => client.run(action, reportDir, tps)));
   } catch (err) {
     throw Error(`${err.message.red}`);
   }
@@ -95,6 +98,9 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   } catch (err) {
     throw Error(`error occurs at backing up db - ${err.message.red}`);
   }
+
+  // return throughput object
+  return tps;
 }
 
 function newSequencer (seqConn, configParam, dbName, vmArgs) {

@@ -1,9 +1,14 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+
 const Parameter = require('./parameter');
 const javaProperties = require('java-properties');
-const { loadSettings } = require('../utils');
+
+const {
+  join,
+  loadSettings
+} = require('../utils');
 
 const EXTENSION = '.properties';
 
@@ -42,7 +47,7 @@ class Properties {
       fs.mkdirSync(outputDir);
     }
 
-    const filePath = path.posix.join(outputDir, this.fileName);
+    const filePath = join(outputDir, this.fileName);
     fs.writeFileSync(filePath, this.convertObjectToPropertiesText());
   }
 
@@ -60,10 +65,10 @@ class Properties {
 // Return a map that the key is a propertiesFile name and the value is an Properties object
 function genPropertiestMap (propertiesDir) {
   const map = {};
-  const settings = loadSettings(path.posix.join(propertiesDir, 'settings.json'));
+  const settings = loadSettings(join(propertiesDir, 'settings.json'));
 
   settings.map(setting => {
-    const filePath = path.posix.join(propertiesDir, setting.filename);
+    const filePath = join(propertiesDir, setting.filename);
     const prop = new Properties(setting.id, filePath);
     map[prop.baseName] = prop;
   });

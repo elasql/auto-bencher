@@ -1,14 +1,19 @@
 const Parameter = require('./parameter');
 
+// return a list with one parameter only
 function normalLoad (tomlObject) {
-  const tables = parseTables(tomlObject);
-  const params = findAllCombination(tables, 0, 0, [], []);
+  const params = multiLoad(tomlObject);
 
   if (params.length > 1) {
     throw new Error('combination (mutiple values in one property) in normal-load.toml is forbidden');
   }
 
   return params;
+}
+
+function multiLoad (tomlObject) {
+  const tables = parseTables(tomlObject);
+  return findAllCombination(tables, 0, 0, [], []);
 }
 
 /*

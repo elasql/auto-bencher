@@ -1,8 +1,8 @@
-const logger = require('../logger');
 const Cmd = require('../ssh/cmd');
+const logger = require('../logger');
 const ConnectionLog = require('./connection-log');
-const path = require('path');
-const join = path.posix.join;
+
+const { join } = require('../utils');
 const {
   BENCH_DIR,
   CHECKING_INTERVAL,

@@ -26,7 +26,8 @@ async function run (configParam, benchParam, args, dbName, action, reportDir) {
   logger.info('killing the existing benchmarker processes...');
   await killAll(configParam, systemConn);
 
-  await start(configParam, dbName, action, reportDir, vmArgs, systemConn);
+  const tps = await start(configParam, dbName, action, reportDir, vmArgs, systemConn);
+  return tps;
 }
 
 async function killAll (configParam, systemConn) {

@@ -28,9 +28,11 @@ class ConnectionLog {
       throw Error(err.stderr);
     }
 
+    const { prefix, id } = this.remoteInfo;
+
     // found error on the node, so throw an error
     const { stdout } = result;
-    throw Error(`${this.prefix} ${this.id} error: ${stdout}`);
+    throw Error(`${prefix} ${id} error: ${stdout}`);
   }
 };
 

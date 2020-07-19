@@ -138,7 +138,8 @@ class Client {
     let csvFileName;
     try {
       const { stdout } = await grepCsvFileName(this.cmd, this.resultDir, this.remoteInfo);
-      csvFileName = stdout;
+      // trim the returned value
+      csvFileName = stdout.trim();
     } catch (err) {
       if (err.code === 1) {
         throw Error(`cannot find the csv file on ${this.ip}`);

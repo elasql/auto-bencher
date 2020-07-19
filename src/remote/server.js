@@ -123,7 +123,7 @@ class Server {
   }
 
   async resetDbDir () {
-    this.deleteDbDir();
+    await this.deleteDbDir();
 
     // the only thing that sequencer has to do is to delete its own db directory
     if (this.isSequencer) {

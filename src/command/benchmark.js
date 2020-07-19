@@ -98,7 +98,8 @@ function writeHeader (mainReportPath, benchParam) {
 }
 
 async function writeReport (csvWriter, jobId, benchParam, throughput) {
-  const records = [jobId].concat(benchParam.getPropertiesValues, [throughput]);
+  // records must be a 2D array
+  const records = [[jobId].concat(benchParam.getPropertiesValues(), [throughput.toString()])];
   await csvWriter.writeRecords(records);
 }
 

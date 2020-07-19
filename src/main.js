@@ -22,6 +22,7 @@ async function main (args) {
     } catch (err) {
       // this try catch block is used to color the error message only
       logger.error(err.message.red);
+      process.exit(1);
     }
     break;
 
@@ -30,6 +31,7 @@ async function main (args) {
       await load.execute(configParam, args);
     } catch (err) {
       logger.error(err.message.red);
+      process.exit(1);
     }
     break;
 
@@ -38,6 +40,7 @@ async function main (args) {
       await benchmark.execute(configParam, args);
     } catch (err) {
       logger.error(err.message.red);
+      process.exit(1);
     }
     break;
 

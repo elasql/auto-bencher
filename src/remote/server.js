@@ -103,12 +103,12 @@ class Server {
 
   async deleteDbDir () {
     logger.debug(`deleting database directory on ${this.procName}`);
-    await deleteDir(this.cmd, join(this.dbDir, this.dbName), this.remoteInfo);
+    await deleteDir(this.cmd, this.dbPath, this.remoteInfo);
   }
 
   async deleteBackupDbDir () {
     logger.debug(`deleting backup directory on ${this.procName}`);
-    await deleteDir(this.cmd, join(this.dbDir, this.dbNameBackup), this.remoteInfo);
+    await deleteDir(this.cmd, this.dbBackupPath, this.remoteInfo);
   }
 
   async backupDb () {

@@ -58,7 +58,7 @@ async function execute (configParam, args) {
     logger.info(`the total throughput of job ${id} is ${totalTp}`);
 
     logger.info(`writing the result to the report`);
-    await aggregateResults(jobDir, id);
+    await aggregateResults(mainReportDir, jobDir, id);
     await writeReport(csvWriter, id, benchParams[id], totalTp);
   }
 
@@ -102,7 +102,7 @@ async function writeReport (csvWriter, jobId, benchParam, throughput) {
   await csvWriter.writeRecords(records);
 }
 
-async function aggregateResults (jobDir, jobId) {
+async function aggregateResults (mainReportDir, jobDir, jobId) {
   const timeline = {};
 
   const files = fs.readdirSync(jobDir);
@@ -116,7 +116,7 @@ async function aggregateResults (jobDir, jobId) {
   }
 
   const timelineWriter = createCsvWriter({
-    path: path.join(jobDir, `job-${jobId}-timeline.csv`),
+    path: path.join(mainReportDir, `job-${jobId}-timeline.csv`),
     header: ['time', 'throughput']
   });
 
@@ -139,12 +139,13 @@ async function readCsv (file, timeline) {
     const inputStream = fs.createReadStream(file, 'utf8');
     inputStream
       .pipe(new CsvReadableStream({
+        skipHeader: true,
         parseNumber: true,
         trim: true
       }))
       .on('data', row => {
         const t = row[0];
-        const tp = row[1];
+        const tp = parseInt(row[1]);
         if (!Object.prototype.hasOwnProperty.call(timeline, t)) {
           timeline[t] = 0;
         }

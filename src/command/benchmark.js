@@ -108,9 +108,10 @@ async function aggregateResults (jobDir, jobId) {
   const files = fs.readdirSync(jobDir);
   for (const file of files) {
     if (path.extname(file) === '.csv') {
-      logger.debug(`reading ${file}`);
-      await readCsv(file, timeline);
-      logger.debug(`finished parsing ${file}`);
+      const filePath = join(jobDir, file);
+      logger.debug(`reading ${filePath}`);
+      await readCsv(filePath, timeline);
+      logger.debug(`finished parsing ${filePath}`);
     }
   }
 

@@ -174,8 +174,8 @@ class Client {
     logger.debug(`grep line - ${text}`);
     const reg = /committed: (.*?),/g;
     const matches = reg.exec(text);
-    logger.debug(`regular expression match - ${matches[0]}`);
-    return parseInt(matches[0]);
+    logger.debug(`regular expression match - ${matches[1]}`);
+    return parseInt(matches[1]);
   }
 }
 

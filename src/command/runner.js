@@ -47,6 +47,7 @@ async function killAll (configParam, systemConn) {
       if (Object.prototype.hasOwnProperty.call(alreadyKill, nodeConn.ip)) {
         return;
       }
+      // assign whatever you want, just consider alreadyKill as a set
       alreadyKill[nodeConn.ip] = true;
       return kill(configParam, nodeConn);
     })
@@ -78,7 +79,7 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   logger.info(`successfully initialize all the servers and the sequencer`.green);
 
   // let servers check error
-  // don't use await, it will block the program
+  // don't use "await", it will block the following clients' actions
   try {
     Promise.all(allServers.map(server => server.checkError()));
   } catch (err) {

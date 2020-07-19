@@ -35,6 +35,9 @@ class Server {
 
     this.dbName = `${dbName}-${conn.id}`;
     this.dbNameBackup = this.dbName + '-backup';
+    this.dbDir = join(this.dbDir, this.dbName);
+    this.dbBackupDir = join(this.dbDir, this.dbNameBackup);
+
     this.vmArgs = vmArgs;
     this.procName = `server ${conn.id}`;
     this.isSequencer = isSequencer;
@@ -116,10 +119,7 @@ class Server {
 
     logger.debug(`backing up the db of ${this.procName}`);
 
-    // TODO: move the following two lines to constructer and test them
-    const srcDir = join(this.dbDir, this.dbName);
-    const destDir = join(this.dbDir, this.dbNameBackup);
-    await copyDir(this.cmd, srcDir, destDir, this.remoteInfo);
+    await copyDir(this.cmd, this.dbDir, this.dbBackupDir, this.remoteInfo);
   }
 
   async resetDbDir () {
@@ -131,10 +131,7 @@ class Server {
 
     logger.debug(`resetting the db of ${this.procName}`);
 
-    // TODO: move the following two lines to constructer and test them
-    const srcDir = join(this.dbDir, this.dbNameBackup);
-    const destDir = join(this.dbDir, this.dbName);
-    await copyDir(this.cmd, srcDir, destDir, this.remoteInfo);
+    await copyDir(this.cmd, this.dbBackupDir, this.dbDir, this.remoteInfo);
   }
 
   async start () {

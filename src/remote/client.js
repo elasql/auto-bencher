@@ -171,8 +171,10 @@ class Client {
   parseTotalThroughput (text) {
     // Output should be 'TOTAL - committed: XXXX, aborted: yyyy, avg latency: zzz ms
     // we need to parse XXXX
+    logger.debug(`grep line - ${text}`);
     const reg = /committed: (.*?),/g;
     const matches = reg.exec(text);
+    logger.debug(`regular expression match - ${matches[0]}`);
     return parseInt(matches[0]);
   }
 }

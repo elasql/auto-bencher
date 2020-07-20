@@ -33,6 +33,7 @@ async function execute (configParam, args) {
 
     const cmd = new Cmd(systemUserName, ip);
     try {
+      logger.info(`pull file - ${remotePath} to ${localDest}`);
       await pullFile(cmd, remotePath, localDest, {
         prefix: 'node',
         id: id,

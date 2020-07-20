@@ -17,15 +17,14 @@ async function execute (configParam, args) {
 
     logger.info(`run ssh on - ${ip}`);
 
-    let result;
     try {
-      result = await runSSH(cmd, command, {
+      await runSSH(cmd, command, {
         prefix: 'node',
         id: id,
         ip: ip
       });
     } catch (err) {
-      logger.info(result);
+      logger.info(err);
     }
   }
 };

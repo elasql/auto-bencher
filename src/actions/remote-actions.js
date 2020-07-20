@@ -227,6 +227,7 @@ async function runSSH (cmd, cmdStr, remoteInfo) {
   try {
     await exec(ssh);
   } catch (err) {
+    logger.info(err);
     throw Error(err.stderr);
   }
 }

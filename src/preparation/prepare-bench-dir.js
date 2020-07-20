@@ -61,9 +61,8 @@ function applyParameters (propMap, configParam, benchParam, systemConn) {
 }
 
 async function copyJars (benchParam, args) {
-  await Promise.all(getJars(benchParam, args).map(jarPath => {
-    lsAndCopy(jarPath);
-  })
+  await Promise.all(getJars(benchParam, args).map(jarPath =>
+    lsAndCopy(jarPath))
   );
 }
 

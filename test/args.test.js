@@ -41,11 +41,11 @@ describe('parser', () => {
     it('should not throw errors with -i', () => {
       const args = parser.parseArgs([
         '-c', 'path', 'benchmark',
+        '-i',
         '-d', 'dbName',
         '-j', 'jarsDir',
         '--parameter', 'paramPath',
-        '--properties', 'propDir',
-        '-i'
+        '--properties', 'propDir'
       ]);
       assert.equal(args.configPath[0], 'path');
       assert.isFalse(args.debug);
@@ -69,6 +69,36 @@ describe('parser', () => {
       assert.isFalse(args.ignore);
       assert.equal(args.paramPath[0], 'paramPath');
       assert.equal(args.dbName[0], 'dbName');
+    });
+  });
+
+  describe('pull', () => {
+    it('should not throw errors with -i', () => {
+      const args = parser.parseArgs([
+        '-c', 'path', 'pull',
+        '-s', '-i',
+        '-p', 'pattern'
+      ]);
+      console.log(args);
+      assert.equal(args.configPath[0], 'path');
+      assert.isFalse(args.debug);
+      assert.equal(args.mode, 'pull');
+      assert.isTrue(args.seperate);
+      assert.isTrue(args.ignore);
+      assert.equal(args.pattern[0], 'pattern');
+    });
+
+    it('should not throw errors without -i', () => {
+      const args = parser.parseArgs([
+        '-c', 'path', '-D', 'pull',
+        '-p', 'pattern'
+      ]);
+      assert.equal(args.configPath[0], 'path');
+      assert.isTrue(args.debug);
+      assert.equal(args.mode, 'pull');
+      assert.isFalse(args.seperate);
+      assert.isFalse(args.ignore);
+      assert.equal(args.pattern[0], 'pattern');
     });
   });
 });

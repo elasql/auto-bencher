@@ -11,7 +11,7 @@ const {
   deleteDir,
   runJar,
   grepCsvFileName,
-  pullCsv,
+  pullFile,
   getTotalThroughput
 } = require('../actions/remote-actions');
 
@@ -149,7 +149,7 @@ class Client {
 
     const remoteCsvPath = join(this.resultDir, csvFileName);
     const localCsvPath = join(dest, csvFileName);
-    await pullCsv(this.cmd, remoteCsvPath, localCsvPath, this.remoteInfo);
+    await pullFile(this.cmd, remoteCsvPath, localCsvPath, this.remoteInfo);
   }
 
   async _getTotalThroughput () {

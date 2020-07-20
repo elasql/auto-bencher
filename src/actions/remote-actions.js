@@ -185,11 +185,11 @@ async function grepCsvFileName (cmd, resultDir, remoteInfo) {
   return result;
 }
 
-async function pullCsv (cmd, remoteCsvPath, dest, remoteInfo) {
+async function pullFile (cmd, remotePath, dest, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
-  const scp = cmd.scp(false, dest, remoteCsvPath, true);
+  const scp = cmd.scp(false, dest, remotePath, true);
 
-  logger.debug(`pull csv file from ${prefix} ${id} ${ip} command - ${scp}`);
+  logger.debug(`pull file from ${prefix} ${id} ${ip} command - ${scp}`);
 
   await exec(scp);
 }
@@ -234,7 +234,7 @@ module.exports = {
   killBenchmarker,
   runJar,
   grepCsvFileName,
-  pullCsv,
+  pullFile,
   getTotalThroughput,
   grepLog
 };

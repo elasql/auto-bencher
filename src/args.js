@@ -27,10 +27,8 @@ parser.addArgument(
   ['-D', '--debug'],
   {
     action: 'storeTrue',
-    nargs: 0,
     help: 'display debug messages',
     defaultValue: false,
-    metavar: 'debug mode',
     dest: 'debug'
   }
 );
@@ -97,6 +95,8 @@ const propInfo = {
   dest: 'propDir'
 };
 
+const ignoreArg = ['-i', '--ignore'];
+
 // load
 const load = subparsers.addParser(
   'load',
@@ -156,13 +156,53 @@ benchmark.addArgument(
 );
 
 benchmark.addArgument(
-  ['-i', '--ignore'],
+  ignoreArg,
   {
     action: 'storeTrue',
-    nargs: 0,
     help: 'ignore error',
     defaultValue: false,
-    metavar: 'ignore',
+    dest: 'ignore'
+  }
+);
+
+// pull
+const pull = subparsers.addParser(
+  'pull',
+  {
+    addHelp: true,
+    required: true
+  }
+);
+
+pull.addArgument(
+  ['-p', '--pattern'],
+  {
+    type: 'string',
+    nargs: 1,
+    help: 'pattern e.g. *.csv',
+    required: true,
+    defaultValue: '',
+    metavar: 'pattern',
+    dest: 'pattern'
+  }
+);
+
+pull.addArgument(
+  ['-s', '--seperate'],
+  {
+    action: 'storeTrue',
+    help: 'save files respectively',
+    defaultValue: false,
+    dest: 'seperate'
+  }
+);
+
+pull.addArgument(
+  ignoreArg,
+  {
+    action: 'storeTrue',
+    help: 'ignore error',
+    defaultValue: false,
     dest: 'ignore'
   }
 );

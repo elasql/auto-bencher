@@ -224,7 +224,8 @@ async function runSSH (cmd, cmdStr, remoteInfo) {
 
   logger.debug(`run ssh on ${prefix} ${id} ${ip} command - ${ssh}`);
 
-  await exec(ssh);
+  const result = await exec(ssh);
+  return result;
 }
 
 module.exports = {

@@ -26,11 +26,7 @@ async function prepareBenchEnv (configParam, benchParam, systemConn) {
   createBenchDir();
 
   // copy the jar files to the benchmark directory
-  try {
-    await copyJars(benchParam, args);
-  } catch (err) {
-    throw Error(err.message);
-  }
+  await copyJars(benchParam, args);
 
   const propMap = genPropertiestMap(args.propDir[0]);
   applyParameters(propMap, configParam, benchParam, systemConn);
@@ -65,9 +61,8 @@ function applyParameters (propMap, configParam, benchParam, systemConn) {
 }
 
 async function copyJars (benchParam, args) {
-  await Promise.all(getJars(benchParam, args).map(jarPath => {
-    lsAndCopy(jarPath);
-  })
+  await Promise.all(getJars(benchParam, args).map(jarPath =>
+    lsAndCopy(jarPath))
   );
 }
 

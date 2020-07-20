@@ -82,7 +82,7 @@ function createDir (path) {
 }
 
 function sumTp (tps) {
-  logger.debug(`throughput - ${tps}`);
+  logger.debug(`throughput - ${JSON.stringify(tps)}`);
   let totalTp = 0;
   for (const clientId in tps) {
     totalTp += tps[clientId];
@@ -93,7 +93,7 @@ function sumTp (tps) {
 function writeHeader (mainReportPath, benchParam) {
   return createCsvWriter({
     path: mainReportPath,
-    header: ['job_id'].concat(benchParam.getProperties(), ['throughput'])
+    header: ['job_id'].concat(benchParam.getProperties().map(x => x.split('.').pop()), ['throughput'])
   });
 }
 

@@ -93,7 +93,7 @@ function sumTp (tps) {
 function writeHeader (mainReportPath, benchParam) {
   return createCsvWriter({
     path: mainReportPath,
-    header: ['job_id'].concat(benchParam.getProperties(), ['throughput'])
+    header: ['job_id'].concat(benchParam.getProperties().map(x => x.split('.').pop()), ['throughput'])
   });
 }
 

@@ -1,0 +1,20 @@
+
+[system]
+user_name = "USER_NAME"
+remote_work_dir = "auto-bencher-workspace"
+
+[jdk]
+use_custom_jdk = true # Reserved.
+dir_name = "jdk1.8.0_251"
+package_path = "../package/jdk-8u251-linux-x64.tar.gz"
+
+[jdk.vmargs]
+sequencer = "-Xmx4g -Xms4g"
+servers = "-Xmx4g -Xms4g"
+clients = "-Xmx4g -Xms4g"
+
+[machines]
+# [Optional] if no sequencer is set, the system will pick one of servers as the sequencer.
+sequencer = "192.168.1.1"
+servers = ["192.168.1.2", "192.168.1.3", "192.168.1.4"]
+clients = ["192.168.1.5"]

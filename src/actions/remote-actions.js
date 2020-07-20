@@ -224,12 +224,7 @@ async function runSSH (cmd, cmdStr, remoteInfo) {
 
   logger.debug(`run ssh on ${prefix} ${id} ${ip} command - ${ssh}`);
 
-  try {
-    await exec(ssh);
-  } catch (err) {
-    logger.info(err);
-    throw Error(err.stderr);
-  }
+  await exec(ssh);
 }
 
 module.exports = {

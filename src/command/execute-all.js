@@ -24,7 +24,7 @@ async function execute (configParam, args) {
         ip: ip
       });
     } catch (err) {
-      logger.info(err);
+      logger.info(err.stderr);
     }
   }
 };

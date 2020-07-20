@@ -7,6 +7,7 @@ const logger = require('./logger');
 const Config = require('./preparation/config');
 
 const load = require('./command/load');
+const pull = require('./command/pull');
 const initEnv = require('./command/init-env');
 const benchmark = require('./command/benchmark');
 
@@ -38,6 +39,15 @@ async function main (args) {
   case 'benchmark':
     try {
       await benchmark.execute(configParam, args);
+    } catch (err) {
+      logger.error(err.message.red);
+      process.exit(1);
+    }
+    break;
+
+  case 'pull':
+    try {
+      await pull.execute(configParam, args);
     } catch (err) {
       logger.error(err.message.red);
       process.exit(1);

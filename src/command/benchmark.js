@@ -82,7 +82,7 @@ function createDir (path) {
 }
 
 function sumTp (tps) {
-  logger.debug(`throughput - ${tps}`);
+  logger.debug(`throughput - ${JSON.stringify(tps)}`);
   let totalTp = 0;
   for (const clientId in tps) {
     totalTp += tps[clientId];

@@ -12,19 +12,26 @@ function loadSettings (filePath) {
 }
 
 function getYearMonthDateStr (dateObj) {
-  const year = dateObj.getFullYear();
-  const month = dateObj.getMonth() + 1;
-  const date = dateObj.getDate();
+  const year = fixWidth(dateObj.getFullYear());
+  const month = fixWidth(dateObj.getMonth() + 1);
+  const date = fixWidth(dateObj.getDate());
 
   return `${year}-${month}-${date}`;
 }
 
 function getHourMinSecStr (dateObj) {
-  const hours = dateObj.getHours();
-  const mins = dateObj.getMinutes();
-  const secs = dateObj.getSeconds();
+  const hours = fixWidth(dateObj.getHours());
+  const mins = fixWidth(dateObj.getMinutes());
+  const secs = fixWidth(dateObj.getSeconds());
 
   return `${hours}-${mins}-${secs}`;
+}
+
+function fixWidth (number) {
+  if (number < 10) {
+    return '0' + number.toString();
+  }
+  return number.toString();
 }
 
 module.exports = {

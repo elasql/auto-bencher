@@ -10,6 +10,7 @@ const load = require('./command/load');
 const pull = require('./command/pull');
 const initEnv = require('./command/init-env');
 const benchmark = require('./command/benchmark');
+const executeAll = require('./command/execute-all');
 
 // Load parameters from config
 const configToml = loadToml(args.configPath[0]);
@@ -48,6 +49,15 @@ async function main (args) {
   case 'pull':
     try {
       await pull.execute(configParam, args);
+    } catch (err) {
+      logger.error(err.message.red);
+      process.exit(1);
+    }
+    break;
+
+  case 'exec':
+    try {
+      await executeAll.execute(configParam, args);
     } catch (err) {
       logger.error(err.message.red);
       process.exit(1);

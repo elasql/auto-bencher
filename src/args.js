@@ -207,6 +207,28 @@ pull.addArgument(
   }
 );
 
+// exec
+const execute = subparsers.addParser(
+  'exec',
+  {
+    addHelp: true,
+    required: true
+  }
+);
+
+execute.addArgument(
+  ['-c', '--command'],
+  {
+    type: 'string',
+    nargs: 1,
+    help: 'ssh cmd e.g. pkill -f benchmarker',
+    required: true,
+    defaultValue: '',
+    metavar: 'command',
+    dest: 'command'
+  }
+);
+
 // make test easier
 let args;
 if (!process.argv[1].includes('mocha')) {

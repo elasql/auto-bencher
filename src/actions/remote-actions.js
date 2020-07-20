@@ -218,6 +218,16 @@ async function grepLog (cmd, keyword, logPath, remoteInfo) {
   return result;
 }
 
+async function runSSH (cmd, cmdStr, remoteInfo) {
+  const { prefix, id, ip } = remoteInfo;
+  const ssh = cmd.ssh(cmdStr);
+
+  logger.debug(`run ssh on ${prefix} ${id} ${ip} command - ${ssh}`);
+
+  const result = await exec(ssh);
+  return result;
+}
+
 module.exports = {
   Action,
   BENCH_DIR,
@@ -236,5 +246,6 @@ module.exports = {
   grepCsvFileName,
   pullFile,
   getTotalThroughput,
-  grepLog
+  grepLog,
+  runSSH
 };

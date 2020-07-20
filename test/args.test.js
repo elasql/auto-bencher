@@ -101,4 +101,18 @@ describe('parser', () => {
       assert.equal(args.pattern[0], 'pattern');
     });
   });
+
+  describe('execute', () => {
+    it('should not throw errors', () => {
+      const args = parser.parseArgs([
+        '-c', 'path', 'exec',
+        '-c', 'command'
+      ]);
+      console.log(args);
+      assert.equal(args.configPath[0], 'path');
+      assert.isFalse(args.debug);
+      assert.equal(args.mode, 'exec');
+      assert.equal(args.command[0], 'command');
+    });
+  });
 });

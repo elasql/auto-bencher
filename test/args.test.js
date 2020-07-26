@@ -53,6 +53,7 @@ describe('parser', () => {
       assert.isTrue(args.ignore);
       assert.equal(args.paramPath[0], 'paramPath');
       assert.equal(args.dbName[0], 'dbName');
+      assert.equal(args.propDir[0], 'propDir');
     });
 
     it('should not throw errors without -i', () => {
@@ -69,6 +70,7 @@ describe('parser', () => {
       assert.isFalse(args.ignore);
       assert.equal(args.paramPath[0], 'paramPath');
       assert.equal(args.dbName[0], 'dbName');
+      assert.equal(args.propDir[0], 'propDir');
     });
   });
 

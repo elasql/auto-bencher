@@ -95,13 +95,13 @@ const load = subparsers.addParser(
 );
 
 load.addArgument(
-  paramArg,
-  paramInfo
+  dbArg,
+  dbInfo
 );
 
 load.addArgument(
-  dbArg,
-  dbInfo
+  paramArg,
+  paramInfo
 );
 
 load.addArgument(
@@ -119,13 +119,13 @@ const benchmark = subparsers.addParser(
 );
 
 benchmark.addArgument(
-  paramArg,
-  paramInfo
+  dbArg,
+  dbInfo
 );
 
 benchmark.addArgument(
-  dbArg,
-  dbInfo
+  paramArg,
+  paramInfo
 );
 
 benchmark.addArgument(

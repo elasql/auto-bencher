@@ -29,7 +29,7 @@ async function prepareBenchEnv (configParam, benchParam, systemConn) {
   // copy the jar files to the benchmark directory
   await copyJars(benchParam, args);
 
-  const propMap = genPropertiestMap(args.propDir[0]);
+  const propMap = genPropertiestMap(args.propDir);
   applyParameters(propMap, configParam, benchParam, systemConn);
 
   const propDir = join(BENCH_DIR, PROP_DIR);

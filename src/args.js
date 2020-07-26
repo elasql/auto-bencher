@@ -76,10 +76,9 @@ const dbInfo = {
 const propArg = ['--properties'];
 const propInfo = {
   type: 'string',
-  nargs: 1,
+  nargs: '?',
   help: 'default-properties directory',
-  required: true,
-  defaultValue: '',
+  defaultValue: './default-properties',
   metavar: 'prop_dir',
   dest: 'propDir'
 };

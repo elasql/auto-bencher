@@ -73,17 +73,6 @@ const dbInfo = {
   dest: 'dbName'
 };
 
-const jarArg = ['-j', '--jars'];
-const jarInfo = {
-  type: 'string',
-  nargs: 1,
-  help: 'jars directory',
-  required: true,
-  defaultValue: '',
-  metavar: 'jars_dir',
-  dest: 'jarsDir'
-};
-
 const propArg = ['--properties'];
 const propInfo = {
   type: 'string',
@@ -117,11 +106,6 @@ load.addArgument(
 );
 
 load.addArgument(
-  jarArg,
-  jarInfo
-);
-
-load.addArgument(
   propArg,
   propInfo
 );
@@ -143,11 +127,6 @@ benchmark.addArgument(
 benchmark.addArgument(
   dbArg,
   dbInfo
-);
-
-benchmark.addArgument(
-  jarArg,
-  jarInfo
 );
 
 benchmark.addArgument(

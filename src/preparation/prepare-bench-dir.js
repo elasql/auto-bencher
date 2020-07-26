@@ -19,6 +19,7 @@ const {
 
 const BENCH_DIR = 'benchmarker';
 const PROP_DIR = 'props';
+const JAR_DIR = 'jars';
 
 async function prepareBenchEnv (configParam, benchParam, systemConn) {
   logger.info('preparing benchmark environment');
@@ -75,7 +76,7 @@ function getJars (benchParam, args) {
   const jarDir = benchParam.getStrValue('auto_bencher', 'jar_dir');
   const fileNames = ['server.jar', 'client.jar'];
 
-  return fileNames.map(fileName => join(args.jarsDir[0], jarDir, fileName));
+  return fileNames.map(fileName => join(JAR_DIR, jarDir, fileName));
 }
 
 module.exports = {

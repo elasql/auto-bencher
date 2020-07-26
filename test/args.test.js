@@ -23,14 +23,12 @@ describe('parser', () => {
       const args = parser.parseArgs([
         '-c', 'path', 'load',
         '-d', 'dbName',
-        '-j', 'jarsDir',
         '--parameter', 'paramPath',
         '--properties', 'propDir'
       ]);
       assert.equal(args.configPath[0], 'path');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'load');
-      assert.equal(args.jarsDir[0], 'jarsDir');
       assert.equal(args.paramPath[0], 'paramPath');
       assert.equal(args.dbName[0], 'dbName');
       assert.equal(args.propDir[0], 'propDir');
@@ -43,7 +41,6 @@ describe('parser', () => {
         '-c', 'path', 'benchmark',
         '-i',
         '-d', 'dbName',
-        '-j', 'jarsDir',
         '--parameter', 'paramPath',
         '--properties', 'propDir'
       ]);
@@ -60,7 +57,6 @@ describe('parser', () => {
       const args = parser.parseArgs([
         '-c', 'path', 'benchmark',
         '-d', 'dbName',
-        '-j', 'jarsDir',
         '--parameter', 'paramPath',
         '--properties', 'propDir'
       ]);

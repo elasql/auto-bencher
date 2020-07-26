@@ -51,7 +51,7 @@ subparsers.addParser(
 );
 
 // these objects will be used by multiple parsers
-const paramArg = ['--parameter'];
+const paramArg = ['-p', '--parameter'];
 const paramInfo = {
   type: 'string',
   nargs: 1,

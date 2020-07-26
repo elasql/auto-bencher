@@ -23,7 +23,7 @@ describe('parser', () => {
       const args = parser.parseArgs([
         '-c', 'path', 'load',
         '-d', 'dbName',
-        '--parameter', 'paramPath'
+        '-p', 'paramPath'
       ]);
       assert.equal(args.configPath[0], 'path');
       assert.isFalse(args.debug);
@@ -55,7 +55,7 @@ describe('parser', () => {
         '-c', 'path', 'benchmark',
         '-i',
         '-d', 'dbName',
-        '--parameter', 'paramPath',
+        '-p', 'paramPath',
         '--properties', 'propDir'
       ]);
       assert.equal(args.configPath[0], 'path');

@@ -19,21 +19,33 @@ describe('parser', () => {
   });
 
   describe('load', () => {
-    it('should not throw errors', () => {
+    it('should not throw errors without some parameters', () => {
       const args = parser.parseArgs([
         '-c', 'path', 'load',
         '-d', 'dbName',
-        '-j', 'jarsDir',
+        '-p', 'paramPath'
+      ]);
+      assert.equal(args.configPath[0], 'path');
+      assert.isFalse(args.debug);
+      assert.equal(args.mode, 'load');
+      assert.equal(args.paramPath[0], 'paramPath');
+      assert.equal(args.dbName[0], 'dbName');
+      assert.equal(args.propDir, './default-properties');
+    });
+
+    it('should not throw errors ', () => {
+      const args = parser.parseArgs([
+        '-c', 'path', 'load',
+        '-d', 'dbName',
         '--parameter', 'paramPath',
         '--properties', 'propDir'
       ]);
       assert.equal(args.configPath[0], 'path');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'load');
-      assert.equal(args.jarsDir[0], 'jarsDir');
       assert.equal(args.paramPath[0], 'paramPath');
       assert.equal(args.dbName[0], 'dbName');
-      assert.equal(args.propDir[0], 'propDir');
+      assert.equal(args.propDir, 'propDir');
     });
   });
 
@@ -43,8 +55,7 @@ describe('parser', () => {
         '-c', 'path', 'benchmark',
         '-i',
         '-d', 'dbName',
-        '-j', 'jarsDir',
-        '--parameter', 'paramPath',
+        '-p', 'paramPath',
         '--properties', 'propDir'
       ]);
       assert.equal(args.configPath[0], 'path');
@@ -53,13 +64,13 @@ describe('parser', () => {
       assert.isTrue(args.ignore);
       assert.equal(args.paramPath[0], 'paramPath');
       assert.equal(args.dbName[0], 'dbName');
+      assert.equal(args.propDir, 'propDir');
     });
 
     it('should not throw errors without -i', () => {
       const args = parser.parseArgs([
         '-c', 'path', 'benchmark',
         '-d', 'dbName',
-        '-j', 'jarsDir',
         '--parameter', 'paramPath',
         '--properties', 'propDir'
       ]);
@@ -69,6 +80,7 @@ describe('parser', () => {
       assert.isFalse(args.ignore);
       assert.equal(args.paramPath[0], 'paramPath');
       assert.equal(args.dbName[0], 'dbName');
+      assert.equal(args.propDir, 'propDir');
     });
   });
 

@@ -51,7 +51,7 @@ subparsers.addParser(
 );
 
 // these objects will be used by multiple parsers
-const paramArg = ['--parameter'];
+const paramArg = ['-p', '--parameter'];
 const paramInfo = {
   type: 'string',
   nargs: 1,
@@ -73,24 +73,12 @@ const dbInfo = {
   dest: 'dbName'
 };
 
-const jarArg = ['-j', '--jars'];
-const jarInfo = {
-  type: 'string',
-  nargs: 1,
-  help: 'jars directory',
-  required: true,
-  defaultValue: '',
-  metavar: 'jars_dir',
-  dest: 'jarsDir'
-};
-
 const propArg = ['--properties'];
 const propInfo = {
   type: 'string',
-  nargs: 1,
+  nargs: '?',
   help: 'default-properties directory',
-  required: true,
-  defaultValue: '',
+  defaultValue: './default-properties',
   metavar: 'prop_dir',
   dest: 'propDir'
 };
@@ -107,18 +95,13 @@ const load = subparsers.addParser(
 );
 
 load.addArgument(
-  paramArg,
-  paramInfo
-);
-
-load.addArgument(
   dbArg,
   dbInfo
 );
 
 load.addArgument(
-  jarArg,
-  jarInfo
+  paramArg,
+  paramInfo
 );
 
 load.addArgument(
@@ -136,18 +119,13 @@ const benchmark = subparsers.addParser(
 );
 
 benchmark.addArgument(
-  paramArg,
-  paramInfo
-);
-
-benchmark.addArgument(
   dbArg,
   dbInfo
 );
 
 benchmark.addArgument(
-  jarArg,
-  jarInfo
+  paramArg,
+  paramInfo
 );
 
 benchmark.addArgument(

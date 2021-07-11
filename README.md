@@ -1,4 +1,5 @@
 # AutoBench
+![Test](https://github.com/elasql/autobench/actions/workflows/github_actions.yml/badge.svg)
 
 ## Prerequisite
 The node version should be greater than 12.16.1.

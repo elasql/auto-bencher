@@ -1,35 +1,67 @@
-# Auto-bench
+# AutoBench
 
-## installation
+## Prerequisite
+The node version should be greater than 12.16.1.
 
-- 下載
-`git clone https://github.com/elasql/autobench.git`
+We suggest users use [nvm (node version manager)](https://github.com/nvm-sh/nvm) to manage and switch among the different node version. It would be stable to use LTS.
 
-- 進入資料夾
-`cd autobench`
+## Usage
 
-- 安裝dependencies
-`npm install`
+- Clone AutoBench
+    ```sh
+    git clone https://github.com/elasql/autobench.git
+    ```
 
-- 確認運行方式
-`node src/main.js -h`
+- Check into the directory
+    ```sh
+    `cd autobench`
+    ```
 
-## 功能
-- `node src/main.js -c config.toml init`
-    - 初始化與檢察環境
-- `node src/main.js -c config.toml exec -c [CMD]`
-    - 執行給定指令 `[CMD]`
-- `node src/main.js -c config.toml load --parameter [parameter file] -d [db name] -j [jars dir] --properties [properties dir]`
-    - 為給定數量的機器跑載入資料
-- `node src/main.js -c config.toml benchmark --parameter [parameter file] -d [db name] -j [jars dir] --properties [properties dir] [-i]`
-    - 用給定的參數跑 benchmarks
-- `node src/main.js -c config.toml pull --pattern [search pattern]`
-    - 用給定的pattern從remote抓資料
+- Install the dependencies
+    ```sh
+    npm install
+    ```
+    npm is a package manager of nodeJS.
 
-### 進版要求
+- To see how to run
+    ```sh
+    node src/main.js -h
+    ```
 
-- 通過eslint
-`npm run eslint`
+## Actions
+- Intialize and verify all machines
+    ```sh
+    node src/main.js -c config.toml init
+    ```
 
-- 通過test cases
-`npm run test`
+- Execute the shell commands on all machines
+    ```sh
+    node src/main.js -c config.toml exec -c [CMD]
+    ```
+
+- Load data on all machines
+    ```sh
+    node src/main.js -c config.toml load --parameter [parameter file] -d [db name] -j [jars dir] --properties [properties dir]
+    ```
+
+- Benchmark the DBMS
+    ```sh
+    node src/main.js -c config.toml benchmark --parameter [parameter file] -d [db name] -j [jars dir] --properties [properties dir] [-i]
+    ```
+
+- Grab the data according to the search pattern
+    ```sh
+    node src/main.js -c config.toml pull --pattern [search pattern]
+    ```
+
+## How to contribute this project
+1. Create a pull request and state the fixed issues
+    - it would be better to add some tesecases
+2. Pass eslint (formatting)
+    ```sh
+    npm run eslint
+    ```
+3. Pass unittests
+    ```sh
+    npm run test
+    ```

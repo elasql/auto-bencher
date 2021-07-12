@@ -110,12 +110,6 @@ function setConnectionsProperties (propMap, serverView, clientView, isSequencer)
     'org.vanilladb.comm.view.ProcessView.CLIENT_VIEW',
     clientView
   );
-
-  propMap.vanillacomm.set(
-    'org.vanilladb.comm.ProcessView.STAND_ALONE_SEQUENCER',
-    // return string 'true' if there is a sequencer
-    isSequencer ? 'true' : 'false'
-  );
 }
 
 function setElasqlProperties (propMap, serverCount) {

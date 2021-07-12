@@ -71,7 +71,7 @@ org.vanilladb.core.storage.file.FileMgr.LOG_FILES_DIR=
 org.vanilladb.core.storage.file.io.IoAllocator.USE_O_DIRECT=false
 org.vanilladb.core.storage.buffer.BufferMgr.MAX_TIME=10000
 org.vanilladb.core.storage.buffer.BufferMgr.EPSILON=50
-org.vanilladb.core.storage.buffer.BufferMgr.BUFFER_POOL_SIZE=102400
+org.vanilladb.core.storage.buffer.BufferMgr.BUFFER_POOL_SIZE=500000
 org.vanilladb.core.storage.log.LogMgr.LOG_FILE=vanilladb.log
 org.vanilladb.core.storage.tx.concurrency.LockTable.MAX_TIME=10000
 org.vanilladb.core.storage.tx.concurrency.LockTable.EPSILON=50
@@ -160,10 +160,6 @@ describe('setConnectionsProperties', () => {
       propMap.vanillacomm.get('org.vanilladb.comm.view.ProcessView.CLIENT_VIEW'),
       '0 127.0.0.1 30000, 1 127.0.0.1 30001'
     );
-    assert.equal(
-      propMap.vanillacomm.get('org.vanilladb.comm.ProcessView.STAND_ALONE_SEQUENCER'),
-      'true'
-    );
 
     setConnectionsProperties(propMap, 'serverView', 'clientView', false);
 
@@ -174,10 +170,6 @@ describe('setConnectionsProperties', () => {
     assert.equal(
       propMap.vanillacomm.get('org.vanilladb.comm.view.ProcessView.CLIENT_VIEW'),
       'clientView'
-    );
-    assert.equal(
-      propMap.vanillacomm.get('org.vanilladb.comm.ProcessView.STAND_ALONE_SEQUENCER'),
-      'false'
     );
   });
 
@@ -190,7 +182,7 @@ describe('setElasqlProperties', () => {
   const propMap = genPropertiestMap('./test/test-properties');
 
   it('should set elasql properties correctly', () => {
-    assert.equal(propMap.elasql.get('org.elasql.storage.metadata.PartitionMetaMgr.NUM_PARTITIONS'), '1');
+    assert.equal(propMap.elasql.get('org.elasql.storage.metadata.PartitionMetaMgr.NUM_PARTITIONS'), '2');
 
     setElasqlProperties(propMap, '87');
 

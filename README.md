@@ -42,13 +42,15 @@ We suggest users use [nvm (node version manager)](https://github.com/nvm-sh/nvm)
 
 - Load data on all machines
     ```sh
-    node src/main.js -c config.toml load --parameter [parameter file] -d [db name] -j [jars dir] --properties [properties dir]
+    node src/main.js -c config.toml load --parameter [parameter file] -d [db name]
     ```
+    - `--properties is an optional field`
 
 - Benchmark the DBMS
     ```sh
-    node src/main.js -c config.toml benchmark --parameter [parameter file] -d [db name] -j [jars dir] --properties [properties dir] [-i]
+    node src/main.js -c config.toml benchmark --parameter [parameter file] -d [db name]
     ```
+    - `--properties is an optional field`
 
 - Grab the data according to the search pattern
     ```sh

@@ -4,13 +4,13 @@ const { getVmArgs } = require('../../src/preparation/vmargs');
 const { genPropertiestMap } = require('../../src/preparation/properties');
 
 describe('vmargs', () => {
-  const propMap = genPropertiestMap('./test/test-properties');
+  const propMap = genPropertiestMap('./default-properties');
 
   describe('getVmArgs', () => {
-    const actual = getVmArgs(propMap, './test/test-properties');
+    const actual = getVmArgs(propMap, './default-properties');
 
     it('should be the expected result', () => {
-      const expected = `-Djava.util.logging.config.file=test/test-properties/logging.properties -Dorg.vanilladb.core.config.file=test/test-properties/vanilladb.properties -Dorg.vanilladb.bench.config.file=test/test-properties/vanillabench.properties -Dorg.vanilladb.comm.config.file=test/test-properties/vanillacomm.properties -Dorg.elasql.bench.config.file=test/test-properties/elasqlbench.properties -Dorg.elasql.config.file=test/test-properties/elasql.properties`;
+      const expected = `-Djava.util.logging.config.file=default-properties/logging.properties -Dorg.vanilladb.core.config.file=default-properties/vanilladb.properties -Dorg.vanilladb.bench.config.file=default-properties/vanillabench.properties -Dorg.vanilladb.comm.config.file=default-properties/vanillacomm.properties -Dorg.elasql.bench.config.file=default-properties/elasqlbench.properties -Dorg.elasql.config.file=default-properties/elasql.properties`;
       assert.equal(actual, expected);
     });
   });

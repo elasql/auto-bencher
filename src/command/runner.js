@@ -62,9 +62,9 @@ async function kill (configParam, conn) {
 }
 
 async function start (configParam, dbName, action, reportDir, vmArgs, systemConn) {
-  const { seqConn, serverConns, clientConns } = systemConn;
+  const { seqConn, serverConns, clientConns, isStandAlone } = systemConn;
 
-  const sequencer = newSequencer(seqConn, configParam, dbName, vmArgs);
+  const sequencer = newSequencer(seqConn, configParam, dbName, vmArgs, isStandAlone);
   const servers = newServers(serverConns, configParam, dbName, vmArgs);
   const clients = newClients(clientConns, configParam, vmArgs);
 
@@ -116,13 +116,13 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   return tps;
 }
 
-function newSequencer (seqConn, configParam, dbName, vmArgs) {
-  return new Server(configParam, seqConn, dbName, vmArgs, true);
+function newSequencer (seqConn, configParam, dbName, vmArgs, isStandAlone) {
+  return new Server(configParam, seqConn, dbName, vmArgs, true, isStandAlone);
 }
 
 function newServers (serverConns, configParam, dbName, vmArgs) {
   return serverConns.map(serverConn => {
-    return new Server(configParam, serverConn, dbName, vmArgs, false);
+    return new Server(configParam, serverConn, dbName, vmArgs, false, false);
   });
 }
 

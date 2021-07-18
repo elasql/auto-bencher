@@ -15,7 +15,7 @@ const {
 } = require('../actions/remote-actions');
 
 class Server {
-  constructor (configParam, conn, dbName, vmArgs, isSequencer) {
+  constructor (configParam, conn, dbName, vmArgs, isSequencer, isStandAlone) {
     const {
       dbDir,
       systemUserName,
@@ -47,6 +47,7 @@ class Server {
       id: this.id,
       ip: this.ip
     };
+    this.isStandAlone = isStandAlone;
 
     this.cmd = new Cmd(systemUserName, conn.ip);
 
@@ -112,8 +113,8 @@ class Server {
   }
 
   async backupDb () {
-    // sequencer does not have database
-    if (this.isSequencer) {
+    // stand alone sequencer does not have database
+    if (this.isSequencer && this.isStandAlone) {
       return;
     }
 
@@ -126,7 +127,7 @@ class Server {
     await this.deleteDbDir();
 
     // the only thing that sequencer has to do is to delete its own db directory
-    if (this.isSequencer) {
+    if (this.isSequencer && this.isStandAlone) {
       return;
     }
 

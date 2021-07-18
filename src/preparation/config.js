@@ -162,7 +162,7 @@ class Config {
       throw new Error(`config.${machines} has no property - ${sequencer}`);
     }
     // in the config.toml
-    // the representation of empty suquencer can be [""] or ""
+    // the representation of empty suquencer ip can be [""] or ""
     // therefore, we have to handle these cases properly
     if (typeof mchns[sequencer] === 'object') {
       if (mchns[sequencer].length === 0) {

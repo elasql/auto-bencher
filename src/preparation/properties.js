@@ -96,9 +96,9 @@ function setPaths (propMap, dbDir, resultDir) {
   propMap.vanillabench.set('org.vanilladb.bench.StatisticMgr.OUTPUT_DIR', resultDir);
 };
 
-function setConnectionsProperties (propMap, serverView, clientView, isSequencer) {
-  if (typeof isSequencer !== 'boolean') {
-    throw Error('isSequencer should be type of boolean');
+function setConnectionsProperties (propMap, serverView, clientView, hasSequencer) {
+  if (typeof hasSequencer !== 'boolean') {
+    throw Error('hasSequencer should be type of boolean');
   }
 
   propMap.vanillacomm.set(
@@ -112,15 +112,8 @@ function setConnectionsProperties (propMap, serverView, clientView, isSequencer)
   );
 }
 
-function setElasqlProperties (propMap, serverCount) {
-  if (typeof serverCount !== 'string') {
-    throw Error('serverCount should be type of string');
-  }
-
-  propMap.elasql.set(
-    'org.elasql.storage.metadata.PartitionMetaMgr.NUM_PARTITIONS',
-    serverCount
-  );
+function isStandAloneMode (propMap) {
+  return propMap.elasql.properties['org.elasql.server.Elasql.ENABLE_STAND_ALONE_SEQUENCER'] === 'true';
 }
 
 function outputToFile (propMap, dirPath) {
@@ -139,6 +132,6 @@ module.exports = {
   overrideProperties,
   setPaths,
   setConnectionsProperties,
-  setElasqlProperties,
+  isStandAloneMode,
   outputToFile
 };

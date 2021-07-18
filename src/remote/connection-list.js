@@ -13,6 +13,7 @@ function generateConnectionList (configParam, benchParam, action) {
 
   const initPort = 30000;
   const connection = new Connection(initPort);
+  // get sequencer IP, servers IP list, client IP list
   const { sequencer, servers, clients } = configParam;
 
   // TODO: handle tha case that we don't declare sequencer explicitly(current way use undefined...)
@@ -26,10 +27,13 @@ function generateConnectionList (configParam, benchParam, action) {
   const clientCount = action === Action.loading ? 1 : Math.floor(serverCount * serverClientRatio);
   const clientConns = connection.getConns(clients, clientCount, maxClientPerMachine);
 
+  const isStandAlone = false;
+
   return {
     seqConn,
     serverConns,
-    clientConns
+    clientConns,
+    isStandAlone
   };
 }
 

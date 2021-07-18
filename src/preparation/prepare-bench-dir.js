@@ -13,7 +13,7 @@ const {
   overrideProperties,
   setPaths,
   setConnectionsProperties,
-  setElasqlProperties,
+  isStandAloneMode,
   outputToFile
 } = require('./properties');
 
@@ -37,6 +37,7 @@ async function prepareBenchEnv (configParam, benchParam, systemConn) {
 
   const { systemRemoteWorkDir } = configParam;
   const remotePropDir = join(systemRemoteWorkDir, propDir);
+
   return getVmArgs(propMap, remotePropDir);
 }
 
@@ -52,13 +53,15 @@ function applyParameters (propMap, configParam, benchParam, systemConn) {
 
   overrideProperties(propMap, benchParam);
   setPaths(propMap, dbDir, resultDir);
+  const hasSequencer = seqConn !== undefined;
   setConnectionsProperties(
     propMap,
     Connection.getView(serverConns.concat([seqConn])),
     Connection.getView(clientConns),
-    seqConn !== undefined
+    hasSequencer
   );
-  setElasqlProperties(propMap, serverConns.length.toString());
+
+  systemConn.isStandAlone = isStandAloneMode(propMap);
 }
 
 async function copyJars (benchParam, args) {

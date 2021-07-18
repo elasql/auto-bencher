@@ -4,15 +4,14 @@ const {
   genPropertiestMap,
   overrideProperties,
   setPaths,
-  setConnectionsProperties,
-  setElasqlProperties
+  setConnectionsProperties
 } = require('../../src/preparation/properties');
 
 const { loadToml } = require('../../src/utils');
 const { normalLoad } = require('../../src/preparation/parameter-loader');
 
 describe('Properties', () => {
-  const propertiesPath = './test/test-properties/vanilladb.properties';
+  const propertiesPath = './default-properties/vanilladb.properties';
   const prop = new Properties('org.vanilladb.core.config.file', propertiesPath);
 
   describe('constructor', () => {
@@ -37,7 +36,7 @@ describe('Properties', () => {
     });
 
     it('should throw an error if passing a nonexistent properties', () => {
-      assert.throws(() => { prop.get('nonexistent property'); }, Error, `cannot find the property: nonexistent property in ./test/test-properties/vanilladb.properties`);
+      assert.throws(() => { prop.get('nonexistent property'); }, Error, `cannot find the property: nonexistent property in ./default-properties/vanilladb.properties`);
     });
   });
 
@@ -109,7 +108,7 @@ org.vanilladb.core.util.Profiler.MAX_LINES=1000
 });
 
 describe('genPropertiesMap', () => {
-  const propMap = genPropertiestMap('./test/test-properties');
+  const propMap = genPropertiestMap('./default-properties');
   it('should return an object', () => {
     assert.isObject(propMap);
   });
@@ -122,7 +121,7 @@ describe('genPropertiesMap', () => {
 });
 
 describe('overrrideProperties', () => {
-  const propMap = genPropertiestMap('./test/test-properties');
+  const propMap = genPropertiestMap('./default-properties');
   const notComb = loadToml('./test/test-toml/parameter.test.toml');
   const params = normalLoad(notComb);
   const benchParam = params[0];
@@ -135,7 +134,7 @@ describe('overrrideProperties', () => {
 });
 
 describe('setPaths', () => {
-  const propMap = genPropertiestMap('./test/test-properties');
+  const propMap = genPropertiestMap('./default-properties');
 
   it('should set path correctly', () => {
     assert.equal(propMap.vanilladb.get('org.vanilladb.core.storage.file.FileMgr.DB_FILES_DIR'), '');
@@ -149,7 +148,7 @@ describe('setPaths', () => {
 });
 
 describe('setConnectionsProperties', () => {
-  const propMap = genPropertiestMap('./test/test-properties');
+  const propMap = genPropertiestMap('./default-properties');
 
   it('should set connection properties correctly', () => {
     assert.equal(
@@ -173,23 +172,7 @@ describe('setConnectionsProperties', () => {
     );
   });
 
-  it('should throw an error if isSequencer is not type of boolean', () => {
-    assert.throws(() => { setConnectionsProperties(propMap, 'serverView', 'clientView', 'false'); }, Error, 'isSequencer should be type of boolean');
-  });
-});
-
-describe('setElasqlProperties', () => {
-  const propMap = genPropertiestMap('./test/test-properties');
-
-  it('should set elasql properties correctly', () => {
-    assert.equal(propMap.elasql.get('org.elasql.storage.metadata.PartitionMetaMgr.NUM_PARTITIONS'), '2');
-
-    setElasqlProperties(propMap, '87');
-
-    assert.equal(propMap.elasql.get('org.elasql.storage.metadata.PartitionMetaMgr.NUM_PARTITIONS'), '87');
-  });
-
-  it('should throw an error if serverCount is not type of string', () => {
-    assert.throws(() => { setElasqlProperties(propMap, 87); }, Error, 'serverCount should be type of string');
+  it('should throw an error if hasSequencer is not type of boolean', () => {
+    assert.throws(() => { setConnectionsProperties(propMap, 'serverView', 'clientView', 'false'); }, Error, 'hasSequencer should be type of boolean');
   });
 });

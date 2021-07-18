@@ -74,6 +74,7 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
     allServers = servers.concat(sequencer);
   } else {
     servers[servers.length - 1] = new Server(configParam, serverConns[serverConns.length - 1], dbName, vmArgs, true, false);
+    allServers = servers;
   }
 
   try {

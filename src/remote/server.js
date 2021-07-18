@@ -21,7 +21,9 @@ class Server {
       systemUserName,
       systemRemoteWorkDir,
       serverJarPath,
-      javaBin
+      javaBin,
+      sequencerVmHeap,
+      serversVmHeap
     } = configParam;
 
     this.id = conn.id;
@@ -38,7 +40,7 @@ class Server {
     this.dbPath = join(this.dbDir, this.dbName);
     this.dbBackupPath = join(this.dbDir, this.dbNameBackup);
 
-    this.vmArgs = vmArgs;
+    this.vmArgs = this.isSequencer ? `${sequencerVmHeap} ` : `${serversVmHeap} ` + vmArgs;
     this.procName = `server ${conn.id}`;
     this.isSequencer = isSequencer;
     this.prefix = this.isSequencer ? 'sequencer' : 'server';

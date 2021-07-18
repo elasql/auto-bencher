@@ -8,6 +8,9 @@ describe('Config', () => {
   const config = new Config(tomlObject);
 
   const {
+    sequencerVmHeap,
+    serversVmHeap,
+    clientsVmHeap,
     jdkDir,
     jdkPackageName,
     jdkPackagePath,
@@ -76,6 +79,27 @@ describe('Config', () => {
     it('should return a string', () => {
       const expected = 'jdk1.8.0_211';
       assert.equal(jdkDir, expected);
+    });
+  });
+
+  describe('sequencerVmHeap', () => {
+    it('should return a string', () => {
+      const expected = '-Xmx16g -Xms16g';
+      assert.equal(sequencerVmHeap, expected);
+    });
+  });
+
+  describe('serversVmHeap', () => {
+    it('should return a string', () => {
+      const expected = '-Xmx6g -Xms6g';
+      assert.equal(serversVmHeap, expected);
+    });
+  });
+
+  describe('clientsVmHeap', () => {
+    it('should return a string', () => {
+      const expected = '-Xmx4g -Xms4g';
+      assert.equal(clientsVmHeap, expected);
     });
   });
 

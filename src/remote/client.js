@@ -22,7 +22,8 @@ class Client {
       systemRemoteWorkDir,
       clientJarPath,
       javaBin,
-      resultDir
+      resultDir,
+      clientsVmHeap
     } = configParam;
     this.systemRemoteWorkDir = systemRemoteWorkDir;
 
@@ -40,7 +41,7 @@ class Client {
     this.javaBin = javaBin;
     this.resultDir = resultDir;
 
-    this.vmArgs = vmArgs;
+    this.vmArgs = `${clientsVmHeap} ` + vmArgs;
 
     this.logPath = systemRemoteWorkDir + `/client-${conn.id}.log`;
     this.cmd = new Cmd(systemUserName, conn.ip);

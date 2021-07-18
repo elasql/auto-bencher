@@ -6,6 +6,7 @@ const machines = 'machines';
 const userName = 'user_name';
 const packagePath = 'package_path';
 const remoteWorkDir = 'remote_work_dir';
+const vmargs = 'vmargs';
 const databases = 'databases';
 const serverJar = 'benchmarker/server.jar';
 const clientJar = 'benchmarker/client.jar';
@@ -29,6 +30,9 @@ class Config {
       jdkPackagePath: this._JdkPackagePath(),
       jdkPackageName: this._JdkPackageName(),
       jdkDir: this._JdkDir(),
+      sequencerVmHeap: this._SequencerVmHeap(),
+      serversVmHeap: this._ServersVmHeap(),
+      clientsVmHeap: this._ClientssVmHeap(),
       involvedMachines: this._InvolvedMachines(),
       systemUserName: this._SystemUserName(),
       systemRemoteWorkDir: this._SystemRemoteWorkDir(),
@@ -102,6 +106,51 @@ class Config {
     }
 
     return this.config[jdk][dirName];
+  }
+
+  /*
+        return sequencer heap vm args in string
+    */
+  _SequencerVmHeap () {
+    if (!Object.prototype.hasOwnProperty.call(this.config[jdk], vmargs)) {
+      throw new Error(`config has no property - jdk.${vmargs}`);
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(this.config[jdk][vmargs], 'sequencer')) {
+      throw new Error(`config.${dirName} has no property - sequencer`);
+    }
+
+    return this.config[jdk][vmargs].sequencer;
+  }
+
+  /*
+      return servers heap vm args in string
+  */
+  _ServersVmHeap () {
+    if (!Object.prototype.hasOwnProperty.call(this.config[jdk], vmargs)) {
+      throw new Error(`config has no property - jdk.${vmargs}`);
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(this.config[jdk][vmargs], 'servers')) {
+      throw new Error(`config.${dirName} has no property - servers`);
+    }
+
+    return this.config[jdk][vmargs].servers;
+  }
+
+  /*
+      return clients heap vm args in string
+  */
+  _ClientssVmHeap () {
+    if (!Object.prototype.hasOwnProperty.call(this.config[jdk], vmargs)) {
+      throw new Error(`config has no property - jdk.${vmargs}`);
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(this.config[jdk][vmargs], 'clients')) {
+      throw new Error(`config.${dirName} has no property - clients`);
+    }
+
+    return this.config[jdk][vmargs].clients;
   }
 
   /*

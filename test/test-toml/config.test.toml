@@ -8,8 +8,8 @@ dir_name = "jdk1.8.0_211"
 package_path = "package/jdk-8u211-linux-x64.tar.gz"
 
 [jdk.vmargs]
-sequencer = "-Xmx4g -Xms4g"
-servers = "-Xmx4g -Xms4g"
+sequencer = "-Xmx16g -Xms16g"
+servers = "-Xmx6g -Xms6g"
 clients = "-Xmx4g -Xms4g"
 
 [machines]

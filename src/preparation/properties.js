@@ -96,9 +96,9 @@ function setPaths (propMap, dbDir, resultDir) {
   propMap.vanillabench.set('org.vanilladb.bench.StatisticMgr.OUTPUT_DIR', resultDir);
 };
 
-function setConnectionsProperties (propMap, serverView, clientView, hasSequencer) {
-  if (typeof hasSequencer !== 'boolean') {
-    throw Error('hasSequencer should be type of boolean');
+function setConnectionsProperties (propMap, serverView, clientView, isStandAlone) {
+  if (typeof isStandAlone !== 'boolean') {
+    throw Error('isStandAlone should be type of boolean');
   }
 
   propMap.vanillacomm.set(
@@ -109,6 +109,11 @@ function setConnectionsProperties (propMap, serverView, clientView, hasSequencer
   propMap.vanillacomm.set(
     'org.vanilladb.comm.view.ProcessView.CLIENT_VIEW',
     clientView
+  );
+
+  propMap.elasql.set(
+    'org.elasql.server.Elasql.ENABLE_STAND_ALONE_SEQUENCER',
+    isStandAlone ? 'true' : 'false'
   );
 }
 

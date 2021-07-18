@@ -13,7 +13,6 @@ const {
   overrideProperties,
   setPaths,
   setConnectionsProperties,
-  isStandAloneMode,
   outputToFile
 } = require('./properties');
 
@@ -49,19 +48,24 @@ function createBenchDir () {
 
 function applyParameters (propMap, configParam, benchParam, systemConn) {
   const { dbDir, resultDir } = configParam;
-  const { seqConn, serverConns, clientConns } = systemConn;
+  const { seqConn, serverConns, clientConns, isStandAlone } = systemConn;
 
   overrideProperties(propMap, benchParam);
   setPaths(propMap, dbDir, resultDir);
-  systemConn.isStandAlone = isStandAloneMode(propMap);
 
-  const hasSequencer = seqConn !== undefined;
-  setConnectionsProperties(
-    propMap,
-    Connection.getView(serverConns.concat([seqConn])),
-    Connection.getView(clientConns),
-    hasSequencer
-  );
+  if (isStandAlone) {
+    setConnectionsProperties(
+      propMap,
+      Connection.getView(serverConns.concat([seqConn])),
+      Connection.getView(clientConns)
+    );
+  } else {
+    setConnectionsProperties(
+      propMap,
+      Connection.getView(serverConns),
+      Connection.getView(clientConns)
+    );
+  }
 }
 
 async function copyJars (benchParam, args) {

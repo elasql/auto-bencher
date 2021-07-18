@@ -18,7 +18,7 @@ describe('generateConnectionList', () => {
   const benchParams = normalLoad(notComb);
 
   describe('loading', () => {
-    const actual = generateConnectionList(configParam, benchParams[0], Action.loading, true);
+    const actual = generateConnectionList(configParam, benchParams[0], Action.loading);
     it('seqConn should be an expected result', () => {
       const expected = {
         id: 3,
@@ -36,30 +36,34 @@ describe('generateConnectionList', () => {
     it('clientConns should be 1', () => {
       assert.lengthOf(actual.clientConns, 1);
     });
+
+    it('isStandAlone should be false', () => {
+      assert.isTrue(actual.isStandAlone);
+    });
   });
 
   describe('loading - disable stand alone sequnecer', () => {
-    const actual = generateConnectionList(configParam, benchParams[0], Action.loading, false);
+    const actual = generateConnectionList(noSeqConfigParam, benchParams[0], Action.loading);
     it('seqConn should be an expected result', () => {
-      const expected = {
-        id: 2,
-        ip: '192.168.1.24',
-        port: 30000
-      };
+      const expected = undefined;
       assert.deepEqual(actual.seqConn, expected);
     });
 
-    it('serverConns should be 2', () => {
-      assert.lengthOf(actual.serverConns, 2);
+    it('serverConns should be 3', () => {
+      assert.lengthOf(actual.serverConns, 3);
     });
 
     it('clientConns should be 1', () => {
       assert.lengthOf(actual.clientConns, 1);
     });
+
+    it('isStandAlone should be true', () => {
+      assert.isFalse(actual.isStandAlone);
+    });
   });
 
   describe('benchmarking', () => {
-    const actual = generateConnectionList(configParam, benchParams[0], Action.benchmarking, true);
+    const actual = generateConnectionList(configParam, benchParams[0], Action.benchmarking);
     it('seqConn should be an expected result', () => {
       const expected = {
         id: 3,
@@ -76,30 +80,14 @@ describe('generateConnectionList', () => {
     it('clientConns should be 3', () => {
       assert.lengthOf(actual.clientConns, 3);
     });
+
+    it('isStandAlone should be false', () => {
+      assert.isTrue(actual.isStandAlone);
+    });
   });
 
   describe('benchmarking - disable stand alone sequnecer', () => {
-    const actual = generateConnectionList(configParam, benchParams[0], Action.benchmarking, false);
-    it('seqConn should be an expected result', () => {
-      const expected = {
-        id: 2,
-        ip: '192.168.1.24',
-        port: 30000
-      };
-      assert.deepEqual(actual.seqConn, expected);
-    });
-
-    it('serverConns should be 2', () => {
-      assert.lengthOf(actual.serverConns, 2);
-    });
-
-    it('clientConns should be 3', () => {
-      assert.lengthOf(actual.clientConns, 3);
-    });
-  });
-
-  describe('benchmarking without sequencer', () => {
-    const actual = generateConnectionList(noSeqConfigParam, benchParams[0], Action.benchmarking, true);
+    const actual = generateConnectionList(noSeqConfigParam, benchParams[0], Action.benchmarking);
     it('seqConn should be an expected result', () => {
       const expected = undefined;
       assert.deepEqual(actual.seqConn, expected);
@@ -111,6 +99,10 @@ describe('generateConnectionList', () => {
 
     it('clientConns should be 3', () => {
       assert.lengthOf(actual.clientConns, 3);
+    });
+
+    it('isStandAlone should be true', () => {
+      assert.isFalse(actual.isStandAlone);
     });
   });
 });

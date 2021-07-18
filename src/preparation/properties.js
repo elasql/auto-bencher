@@ -117,10 +117,6 @@ function setConnectionsProperties (propMap, serverView, clientView, isStandAlone
   );
 }
 
-function isStandAloneMode (propMap) {
-  return propMap.elasql.properties['org.elasql.server.Elasql.ENABLE_STAND_ALONE_SEQUENCER'] === 'true';
-}
-
 function outputToFile (propMap, dirPath) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath);
@@ -137,6 +133,5 @@ module.exports = {
   overrideProperties,
   setPaths,
   setConnectionsProperties,
-  isStandAloneMode,
   outputToFile
 };

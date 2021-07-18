@@ -57,13 +57,15 @@ function applyParameters (propMap, configParam, benchParam, systemConn) {
     setConnectionsProperties(
       propMap,
       Connection.getView(serverConns.concat([seqConn])),
-      Connection.getView(clientConns)
+      Connection.getView(clientConns),
+      isStandAlone
     );
   } else {
     setConnectionsProperties(
       propMap,
       Connection.getView(serverConns),
-      Connection.getView(clientConns)
+      Connection.getView(clientConns),
+      isStandAlone
     );
   }
 }

@@ -42,7 +42,7 @@ class Server {
 
     this.procName = `server ${conn.id}`;
     this.isSequencer = isSequencer;
-    this.vmArgs = this.isSequencer ? `${sequencerVmHeap} ` : `${serversVmHeap} ` + vmArgs;
+    this.vmArgs = (this.isSequencer ? `${sequencerVmHeap} ` : `${serversVmHeap} `) + vmArgs;
     this.prefix = this.isSequencer ? 'sequencer' : 'server';
     this.remoteInfo = {
       prefix: this.prefix,

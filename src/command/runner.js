@@ -64,13 +64,13 @@ async function kill (configParam, conn) {
 async function start (configParam, dbName, action, reportDir, vmArgs, systemConn) {
   const { seqConn, serverConns, clientConns, isStandAlone } = systemConn;
 
-  const sequencer = newSequencer(seqConn, configParam, dbName, vmArgs);
   const servers = newServers(serverConns, configParam, dbName, vmArgs);
   const clients = newClients(clientConns, configParam, vmArgs);
 
   let allServers;
 
   if (isStandAlone) {
+    const sequencer = newSequencer(seqConn, configParam, dbName, vmArgs);
     allServers = servers.concat(sequencer);
   } else {
     servers[servers.length - 1] = new Server(configParam, serverConns[serverConns.length - 1], dbName, vmArgs, true, false);

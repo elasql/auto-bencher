@@ -42,7 +42,7 @@ describe('generateConnectionList', () => {
     const actual = generateConnectionList(configParam, benchParams[0], Action.loading, false);
     it('seqConn should be an expected result', () => {
       const expected = {
-        id: 3,
+        id: 2,
         ip: '192.168.1.24',
         port: 30000
       };
@@ -55,26 +55,6 @@ describe('generateConnectionList', () => {
 
     it('clientConns should be 1', () => {
       assert.lengthOf(actual.clientConns, 1);
-    });
-  });
-
-  describe('benchmarking - disable stand alone sequnecer', () => {
-    const actual = generateConnectionList(configParam, benchParams[0], Action.benchmarking, false);
-    it('seqConn should be an expected result', () => {
-      const expected = {
-        id: 3,
-        ip: '192.168.1.24',
-        port: 30000
-      };
-      assert.deepEqual(actual.seqConn, expected);
-    });
-
-    it('serverConns should be 2', () => {
-      assert.lengthOf(actual.serverConns, 2);
-    });
-
-    it('clientConns should be 3', () => {
-      assert.lengthOf(actual.clientConns, 3);
     });
   });
 
@@ -91,6 +71,26 @@ describe('generateConnectionList', () => {
 
     it('serverConns should be 3', () => {
       assert.lengthOf(actual.serverConns, 3);
+    });
+
+    it('clientConns should be 3', () => {
+      assert.lengthOf(actual.clientConns, 3);
+    });
+  });
+
+  describe('benchmarking - disable stand alone sequnecer', () => {
+    const actual = generateConnectionList(configParam, benchParams[0], Action.benchmarking, false);
+    it('seqConn should be an expected result', () => {
+      const expected = {
+        id: 2,
+        ip: '192.168.1.24',
+        port: 30000
+      };
+      assert.deepEqual(actual.seqConn, expected);
+    });
+
+    it('serverConns should be 2', () => {
+      assert.lengthOf(actual.serverConns, 2);
     });
 
     it('clientConns should be 3', () => {

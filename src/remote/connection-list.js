@@ -21,6 +21,9 @@ function generateConnectionList (configParam, benchParam, action, isStandAloneMo
   const seqConn = sequencer ? Connection.getConn(serverCount, sequencer, initPort) : undefined;
 
   const serverConns = connection.getConns(servers, isStandAloneMode ? serverCount : (serverCount - 1), maxServerPerMachine); // serverConns is an array.
+  if (!isStandAloneMode) {
+    seqConn.id -= 1;
+  }
 
   // clientConss is an array.
   const clientCount = action === Action.loading ? 1 : Math.floor(serverCount * serverClientRatio);

@@ -53,6 +53,8 @@ function applyParameters (propMap, configParam, benchParam, systemConn) {
 
   overrideProperties(propMap, benchParam);
   setPaths(propMap, dbDir, resultDir);
+  systemConn.isStandAlone = isStandAloneMode(propMap);
+
   const hasSequencer = seqConn !== undefined;
   setConnectionsProperties(
     propMap,
@@ -60,8 +62,6 @@ function applyParameters (propMap, configParam, benchParam, systemConn) {
     Connection.getView(clientConns),
     hasSequencer
   );
-
-  systemConn.isStandAlone = isStandAloneMode(propMap);
 }
 
 async function copyJars (benchParam, args) {

@@ -1,14 +1,9 @@
 const Connection = require('../remote/connection');
 const { Action } = require('../actions/remote-actions');
-const { args } = require('../args');
-const {
-  genPropertiestMap,
-  isStandAloneMode
-} = require('./properties');
 
 // TODO: should test this function !!!
 // This generate a simple object { id, ip, port }
-function generateConnectionList (configParam, benchParam, action) {
+function generateConnectionList (configParam, benchParam, action, isStandAloneMode) {
   const {
     serverCount,
     serverClientRatio,
@@ -25,10 +20,7 @@ function generateConnectionList (configParam, benchParam, action) {
   // seqConns is an object.
   const seqConn = sequencer ? Connection.getConn(serverCount, sequencer, initPort) : undefined;
 
-  // check whether stand alone mode is off
-  const propMap = genPropertiestMap(args.propDir);
-
-  const serverConns = connection.getConns(servers, serverCount - !isStandAloneMode(propMap) ? 1 : 0, maxServerPerMachine); // serverConns is an array.
+  const serverConns = connection.getConns(servers, isStandAloneMode ? serverCount : (serverCount - 1), maxServerPerMachine); // serverConns is an array.
 
   // clientConss is an array.
   const clientCount = action === Action.loading ? 1 : Math.floor(serverCount * serverClientRatio);

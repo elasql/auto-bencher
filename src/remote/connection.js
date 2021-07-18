@@ -15,6 +15,10 @@ class Connection {
       throw Error(`totalConn is not a Integer, you pass ${totalConn} to getConns`);
     }
 
+    if (totalConn === 0) {
+      throw Error(`totalConn is zero`);
+    }
+
     const nodeNum = ips.length;
     const connPerNode = Math.ceil(totalConn / nodeNum);
     if (connPerNode > maxConnPerNode) {

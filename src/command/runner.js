@@ -11,12 +11,20 @@ const { generateConnectionList } = require('../remote/connection-list');
 const { prepareBenchEnv } = require('../preparation/prepare-bench-dir');
 const { killBenchmarker, Action } = require('../actions/remote-actions');
 
+const {
+  genPropertiestMap,
+  isStandAloneMode
+} = require('../preparation/properties');
+
 // TODO: should move this class to remote
 
 // TODO: add basic checks for arguments
 async function run (configParam, benchParam, args, dbName, action, reportDir) {
+  // check whether stand alone mode is off
+  const propMap = genPropertiestMap(args.propDir);
+
   // generate connection information (ip, port)
-  const systemConn = generateConnectionList(configParam, benchParam, action);
+  const systemConn = generateConnectionList(configParam, benchParam, action, isStandAloneMode(propMap));
 
   // prepare the benchmark directory
   const vmArgs = await prepareBenchEnv(configParam, benchParam, systemConn, args);

@@ -3,7 +3,7 @@ const fs = require('fs');
 const logger = require('../logger');
 const Connection = require('../remote/connection');
 
-const { args } = require('../args');
+// const { args } = require('../args');
 const { join } = require('../utils');
 const { getVmArgs } = require('./vmargs');
 const { ls, cp } = require('../actions/local-actions');
@@ -21,7 +21,7 @@ const BENCH_DIR = 'benchmarker';
 const PROP_DIR = 'props';
 const JAR_DIR = 'jars';
 
-async function prepareBenchEnv (configParam, benchParam, systemConn) {
+async function prepareBenchEnv (configParam, benchParam, systemConn, args) {
   logger.info('preparing benchmark environment');
 
   createBenchDir();

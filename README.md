@@ -58,7 +58,12 @@ We suggest users use [nvm (node version manager)](https://github.com/nvm-sh/nvm)
     ```
 
 ## Debug
-To run authbencher in debug mode, please add `--debug` in the commands.
+To run authbencher in debug mode, please add `--debug` before the main action.
+
+For example
+```sh
+node src/main.js -c config.toml [--debug] benchmark --parameter [parameter file] -d [db name]
+```
 
 ## How to contribute this project
 1. Create a pull request and state the fixed issues

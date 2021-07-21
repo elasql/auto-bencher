@@ -42,20 +42,21 @@ class Server {
 
     this.procName = `server ${conn.id}`;
     this.isSequencer = isSequencer;
-    this.vmArgs = this.isSequencer ? `${sequencerVmHeap} ` : `${serversVmHeap} ` + vmArgs;
+    this.isStandAlone = isStandAlone;
+
+    this.vmArgs = (this.isSequencer ? `${sequencerVmHeap} ` : `${serversVmHeap} `) + vmArgs;
     this.prefix = this.isSequencer ? 'sequencer' : 'server';
     this.remoteInfo = {
       prefix: this.prefix,
       id: this.id,
       ip: this.ip
     };
-    this.isStandAlone = isStandAlone;
 
     this.cmd = new Cmd(systemUserName, conn.ip);
 
     // [this.dbName] [connection.id] ([isSequencer])
-    this.progArgs = this.isSequencer ? `${this.dbName} ${conn.id} 1` : `${this.dbName} ${conn.id}`;
-    this.logPath = this.isSequencer ? `${systemRemoteWorkDir}/server-seq.log` : `${systemRemoteWorkDir}/server-${conn.id}.log`;
+    this.progArgs = `${this.dbName} ${conn.id}`;
+    this.logPath = this.isStandAlone ? `${systemRemoteWorkDir}/server-seq.log` : `${systemRemoteWorkDir}/server-${conn.id}.log`;
     this.connLog = new ConnectionLog(this.cmd, this.logPath, this.remoteInfo);
 
     this.stopSignal = false;

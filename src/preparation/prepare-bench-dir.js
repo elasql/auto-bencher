@@ -3,7 +3,7 @@ const fs = require('fs');
 const logger = require('../logger');
 const Connection = require('../remote/connection');
 
-const { args } = require('../args');
+// const { args } = require('../args');
 const { join } = require('../utils');
 const { getVmArgs } = require('./vmargs');
 const { ls, cp } = require('../actions/local-actions');
@@ -13,7 +13,6 @@ const {
   overrideProperties,
   setPaths,
   setConnectionsProperties,
-  isStandAloneMode,
   outputToFile
 } = require('./properties');
 
@@ -21,7 +20,7 @@ const BENCH_DIR = 'benchmarker';
 const PROP_DIR = 'props';
 const JAR_DIR = 'jars';
 
-async function prepareBenchEnv (configParam, benchParam, systemConn) {
+async function prepareBenchEnv (configParam, benchParam, systemConn, args) {
   logger.info('preparing benchmark environment');
 
   createBenchDir();
@@ -49,19 +48,26 @@ function createBenchDir () {
 
 function applyParameters (propMap, configParam, benchParam, systemConn) {
   const { dbDir, resultDir } = configParam;
-  const { seqConn, serverConns, clientConns } = systemConn;
+  const { seqConn, serverConns, clientConns, isStandAlone } = systemConn;
 
   overrideProperties(propMap, benchParam);
   setPaths(propMap, dbDir, resultDir);
-  const hasSequencer = seqConn !== undefined;
-  setConnectionsProperties(
-    propMap,
-    Connection.getView(serverConns.concat([seqConn])),
-    Connection.getView(clientConns),
-    hasSequencer
-  );
 
-  systemConn.isStandAlone = isStandAloneMode(propMap);
+  if (isStandAlone) {
+    setConnectionsProperties(
+      propMap,
+      Connection.getView(serverConns.concat([seqConn])),
+      Connection.getView(clientConns),
+      isStandAlone
+    );
+  } else {
+    setConnectionsProperties(
+      propMap,
+      Connection.getView(serverConns),
+      Connection.getView(clientConns),
+      isStandAlone
+    );
+  }
 }
 
 async function copyJars (benchParam, args) {

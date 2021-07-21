@@ -64,11 +64,18 @@ async function kill (configParam, conn) {
 async function start (configParam, dbName, action, reportDir, vmArgs, systemConn) {
   const { seqConn, serverConns, clientConns, isStandAlone } = systemConn;
 
-  const sequencer = newSequencer(seqConn, configParam, dbName, vmArgs, isStandAlone);
   const servers = newServers(serverConns, configParam, dbName, vmArgs);
   const clients = newClients(clientConns, configParam, vmArgs);
 
-  const allServers = servers.concat(sequencer);
+  let allServers;
+
+  if (isStandAlone) {
+    const sequencer = newSequencer(seqConn, configParam, dbName, vmArgs);
+    allServers = servers.concat(sequencer);
+  } else {
+    servers[servers.length - 1] = new Server(configParam, serverConns[serverConns.length - 1], dbName, vmArgs, true, false);
+    allServers = servers;
+  }
 
   try {
     // run servers and sequencer
@@ -116,8 +123,8 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   return tps;
 }
 
-function newSequencer (seqConn, configParam, dbName, vmArgs, isStandAlone) {
-  return new Server(configParam, seqConn, dbName, vmArgs, true, isStandAlone);
+function newSequencer (seqConn, configParam, dbName, vmArgs) {
+  return new Server(configParam, seqConn, dbName, vmArgs, true, true);
 }
 
 function newServers (serverConns, configParam, dbName, vmArgs) {

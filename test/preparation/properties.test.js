@@ -170,9 +170,28 @@ describe('setConnectionsProperties', () => {
       propMap.vanillacomm.get('org.vanilladb.comm.view.ProcessView.CLIENT_VIEW'),
       'clientView'
     );
+    assert.equal(
+      propMap.elasql.get('org.elasql.server.Elasql.ENABLE_STAND_ALONE_SEQUENCER'),
+      'false'
+    );
+
+    setConnectionsProperties(propMap, 'serverView2', 'clientView2', true);
+
+    assert.equal(
+      propMap.vanillacomm.get('org.vanilladb.comm.view.ProcessView.SERVER_VIEW'),
+      'serverView2'
+    );
+    assert.equal(
+      propMap.vanillacomm.get('org.vanilladb.comm.view.ProcessView.CLIENT_VIEW'),
+      'clientView2'
+    );
+    assert.equal(
+      propMap.elasql.get('org.elasql.server.Elasql.ENABLE_STAND_ALONE_SEQUENCER'),
+      'true'
+    );
   });
 
-  it('should throw an error if hasSequencer is not type of boolean', () => {
-    assert.throws(() => { setConnectionsProperties(propMap, 'serverView', 'clientView', 'false'); }, Error, 'hasSequencer should be type of boolean');
+  it('should throw an error if isStandAlone is not type of boolean', () => {
+    assert.throws(() => { setConnectionsProperties(propMap, 'serverView', 'clientView', 'false'); }, Error, 'isStandAlone should be type of boolean');
   });
 });

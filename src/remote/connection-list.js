@@ -20,14 +20,13 @@ function generateConnectionList (configParam, benchParam, action) {
   // seqConns is an object.
   const seqConn = sequencer ? Connection.getConn(serverCount, sequencer, initPort) : undefined;
 
-  // serverConns is an array.
-  const serverConns = connection.getConns(servers, serverCount, maxServerPerMachine);
+  const serverConns = connection.getConns(servers, serverCount, maxServerPerMachine); // serverConns is an array.
 
   // clientConss is an array.
   const clientCount = action === Action.loading ? 1 : Math.floor(serverCount * serverClientRatio);
   const clientConns = connection.getConns(clients, clientCount, maxClientPerMachine);
 
-  const isStandAlone = false;
+  const isStandAlone = seqConn !== undefined;
 
   return {
     seqConn,

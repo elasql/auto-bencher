@@ -79,12 +79,21 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
 
   try {
     // run servers and sequencer
-    await Promise.all(allServers.map(server => server.run(action)));
+    await Promise.all(allServers.slice(0, allServers.length - 1).map(server => server.run(action)));
   } catch (err) {
     throw Error(`error occurs at server initialization - ${err.message.red}`);
   }
 
-  logger.info(`successfully initialize all the servers and the sequencer`.green);
+  logger.info(`successfully initialize all servers`.green);
+
+  try {
+    // run servers and sequencer
+    await Promise.all(allServers[allServers.length - 1].map(server => server.run(action)));
+  } catch (err) {
+    throw Error(`error occurs at sequencer initialization - ${err.message.red}`);
+  }
+
+  logger.info(`successfully initialize the sequencer`.green);
 
   // let servers check error
   // don't use "await", it will block the following clients' actions

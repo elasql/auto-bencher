@@ -29,7 +29,6 @@ describe('generateConnectionList', () => {
     });
 
     it('serverConns should be 3', () => {
-      console.log(actual.serverConns);
       assert.lengthOf(actual.serverConns, 3);
     });
 

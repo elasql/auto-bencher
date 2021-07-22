@@ -27,8 +27,8 @@
     "path": "^0.12.7"
   },
   "scripts": {
-    "eslint": "./node_modules/.bin/eslint src/**/**.js test/**/**.js --fix",
-    "test": "./node_modules/.bin/mocha test/**/**.js"
+    "eslint": "./node_modules/.bin/eslint src test --ext .js --fix",
+    "test": "./node_modules/.bin/mocha test --recursive"
   },
   "repository": {
     "type": "git",

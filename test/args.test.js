@@ -91,7 +91,6 @@ describe('parser', () => {
         '-s', '-i',
         '-p', 'pattern'
       ]);
-      console.log(args);
       assert.equal(args.configPath[0], 'path');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'pull');
@@ -118,12 +117,12 @@ describe('parser', () => {
     it('should not throw errors', () => {
       const args = parser.parseArgs([
         '-c', 'path', 'exec',
-        '-c', 'command'
+        '--command', 'command'
       ]);
-      console.log(args);
       assert.equal(args.configPath[0], 'path');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'exec');
+      console.log(args.command[0]);
       assert.equal(args.command[0], 'command');
     });
   });

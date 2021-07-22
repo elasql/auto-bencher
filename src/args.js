@@ -195,7 +195,7 @@ const execute = subparsers.addParser(
 );
 
 execute.addArgument(
-  ['-c', '--command'],
+  ['--command'],
   {
     type: 'string',
     nargs: 1,

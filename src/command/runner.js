@@ -88,7 +88,7 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
 
   try {
     // run servers and sequencer
-    await Promise.all(allServers[allServers.length - 1].map(server => server.run(action)));
+    await Promise.all(allServers.slice(allServers.length - 1, allServers.length).map(server => server.run(action)));
   } catch (err) {
     throw Error(`error occurs at sequencer initialization - ${err.message.red}`);
   }

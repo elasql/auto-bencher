@@ -14,10 +14,10 @@ parser.addArgument(
   ['-c', '--config'],
   {
     type: 'string',
-    nargs: 1,
+    nargs: '?',
     help: 'config.toml path',
-    required: true,
-    defaultValue: '',
+    required: false,
+    defaultValue: './config.toml',
     metavar: 'configPath',
     dest: 'configPath'
   }

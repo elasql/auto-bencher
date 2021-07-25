@@ -6,7 +6,8 @@ const { runSSH } = require('../actions/remote-actions');
 async function execute (configParam, args) {
   const {
     involvedMachines,
-    systemUserName
+    systemUserName,
+    systemRemoteWorkDir
   } = configParam;
 
   const command = args.command[0].trim();
@@ -18,7 +19,7 @@ async function execute (configParam, args) {
     logger.info(`run ssh on - ${ip}`);
 
     try {
-      await runSSH(cmd, command, {
+      await runSSH(cmd, systemRemoteWorkDir, command, {
         prefix: 'node',
         id: id,
         ip: ip

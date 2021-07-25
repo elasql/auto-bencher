@@ -137,4 +137,12 @@ describe('Cmd', () => {
       assert.equal(actual, expected);
     });
   });
+
+  describe('sshOnRemoteWorkingDir', () => {
+    it('should return a correct command', () => {
+      const actual = cmd.sshOnRemoteWorkingDir('auto-bencher-workspace', 'ls -al');
+      const expected = 'ssh -t db-team@140.114.87.87 "cd auto-bencher-workspace; ls -al"';
+      assert.equal(actual, expected);
+    });
+  });
 });

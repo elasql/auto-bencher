@@ -13,7 +13,7 @@ const benchmark = require('./command/benchmark');
 const executeAll = require('./command/execute-all');
 
 // Load parameters from config
-const configToml = loadToml(args.configPath[0]);
+const configToml = loadToml(args.configPath);
 const configParam = new Config(configToml).getParam();
 
 async function main (args) {

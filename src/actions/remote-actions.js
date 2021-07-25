@@ -218,14 +218,14 @@ async function grepLog (cmd, keyword, logPath, remoteInfo) {
   return result;
 }
 
-async function runSSH (cmd, cmdStr, remoteInfo) {
+async function runSSH (cmd, systemRemoteWorkDir, cmdStr, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
-  const ssh = cmd.ssh(cmdStr);
+  const ssh = cmd.sshOnRemoteWorkingDir(systemRemoteWorkDir, cmdStr);
 
   logger.debug(`run ssh on ${prefix} ${id} ${ip} command - ${ssh}`);
 
   const result = await exec(ssh);
-  logger.info(`${ssh} - ${result.stdout}`);
+  logger.info(`${ssh}:\n${result.stdout}`);
 }
 
 module.exports = {

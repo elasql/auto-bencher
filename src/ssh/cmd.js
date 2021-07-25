@@ -94,6 +94,11 @@ class Cmd {
     const cmd = 'ssh ';
     return cmd + this._host() + ` "${remoteCmd}"`;
   }
+
+  sshOnRemoteWorkingDir (systemRemoteWorkDir, remoteCmd) {
+    const cmd = 'ssh ';
+    return cmd + `-t ` + this._host() + ` "cd ${systemRemoteWorkDir}; ${remoteCmd}"`;
+  }
 }
 
 module.exports = Cmd;

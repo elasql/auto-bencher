@@ -27,6 +27,11 @@
     "path": "^0.12.7"
   },
   "scripts": {
+    "init": "node src/main.js init",
+    "load": "node src/main.js load",
+    "benchmark": "node src/main.js benchmark",
+    "exec": "node src/main.js exec",
+    "pull": "node src/main.js pull",
     "eslint": "./node_modules/.bin/eslint src test --ext .js --fix",
     "test": "./node_modules/.bin/mocha test --recursive"
   },

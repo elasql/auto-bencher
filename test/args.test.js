@@ -5,14 +5,21 @@ describe('parser', () => {
   describe('init', () => {
     it('should not throw errors in debug mode', () => {
       const args = parser.parseArgs(['-c', 'path', '-D', 'init']);
-      assert.equal(args.configPath[0], 'path');
+      assert.equal(args.configPath, 'path');
       assert.isTrue(args.debug);
       assert.equal(args.mode, 'init');
     });
 
     it('should not throw errors in normal mode', () => {
       const args = parser.parseArgs(['-c', 'path', 'init']);
-      assert.equal(args.configPath[0], 'path');
+      assert.equal(args.configPath, 'path');
+      assert.isFalse(args.debug);
+      assert.equal(args.mode, 'init');
+    });
+
+    it('should not throw errors without -c', () => {
+      const args = parser.parseArgs(['init']);
+      assert.equal(args.configPath, './config.toml');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'init');
     });
@@ -25,12 +32,27 @@ describe('parser', () => {
         '-d', 'dbName',
         '-p', 'paramPath'
       ]);
-      assert.equal(args.configPath[0], 'path');
+      assert.equal(args.configPath, 'path');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'load');
       assert.equal(args.paramPath[0], 'paramPath');
       assert.equal(args.dbName[0], 'dbName');
       assert.equal(args.propDir, './default-properties');
+    });
+
+    it('should not throw errors without -c', () => {
+      const args = parser.parseArgs([
+        'load',
+        '-d', 'dbName',
+        '--parameter', 'paramPath',
+        '--properties', 'propDir'
+      ]);
+      assert.equal(args.configPath, './config.toml');
+      assert.isFalse(args.debug);
+      assert.equal(args.mode, 'load');
+      assert.equal(args.paramPath[0], 'paramPath');
+      assert.equal(args.dbName[0], 'dbName');
+      assert.equal(args.propDir, 'propDir');
     });
 
     it('should not throw errors ', () => {
@@ -40,7 +62,7 @@ describe('parser', () => {
         '--parameter', 'paramPath',
         '--properties', 'propDir'
       ]);
-      assert.equal(args.configPath[0], 'path');
+      assert.equal(args.configPath, 'path');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'load');
       assert.equal(args.paramPath[0], 'paramPath');
@@ -58,7 +80,7 @@ describe('parser', () => {
         '-p', 'paramPath',
         '--properties', 'propDir'
       ]);
-      assert.equal(args.configPath[0], 'path');
+      assert.equal(args.configPath, 'path');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'benchmark');
       assert.isTrue(args.ignore);
@@ -74,7 +96,23 @@ describe('parser', () => {
         '--parameter', 'paramPath',
         '--properties', 'propDir'
       ]);
-      assert.equal(args.configPath[0], 'path');
+      assert.equal(args.configPath, 'path');
+      assert.isFalse(args.debug);
+      assert.equal(args.mode, 'benchmark');
+      assert.isFalse(args.ignore);
+      assert.equal(args.paramPath[0], 'paramPath');
+      assert.equal(args.dbName[0], 'dbName');
+      assert.equal(args.propDir, 'propDir');
+    });
+
+    it('should not throw errors without -c', () => {
+      const args = parser.parseArgs([
+        'benchmark',
+        '-d', 'dbName',
+        '--parameter', 'paramPath',
+        '--properties', 'propDir'
+      ]);
+      assert.equal(args.configPath, './config.toml');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'benchmark');
       assert.isFalse(args.ignore);
@@ -91,7 +129,7 @@ describe('parser', () => {
         '-s', '-i',
         '-p', 'pattern'
       ]);
-      assert.equal(args.configPath[0], 'path');
+      assert.equal(args.configPath, 'path');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'pull');
       assert.isTrue(args.seperate);
@@ -104,7 +142,20 @@ describe('parser', () => {
         '-c', 'path', '-D', 'pull',
         '-p', 'pattern'
       ]);
-      assert.equal(args.configPath[0], 'path');
+      assert.equal(args.configPath, 'path');
+      assert.isTrue(args.debug);
+      assert.equal(args.mode, 'pull');
+      assert.isFalse(args.seperate);
+      assert.isFalse(args.ignore);
+      assert.equal(args.pattern[0], 'pattern');
+    });
+
+    it('should not throw errors without -c', () => {
+      const args = parser.parseArgs([
+        '-D', 'pull',
+        '-p', 'pattern'
+      ]);
+      assert.equal(args.configPath, './config.toml');
       assert.isTrue(args.debug);
       assert.equal(args.mode, 'pull');
       assert.isFalse(args.seperate);
@@ -119,7 +170,19 @@ describe('parser', () => {
         '-c', 'path', 'exec',
         '--command', 'command'
       ]);
-      assert.equal(args.configPath[0], 'path');
+      assert.equal(args.configPath, 'path');
+      assert.isFalse(args.debug);
+      assert.equal(args.mode, 'exec');
+      console.log(args.command[0]);
+      assert.equal(args.command[0], 'command');
+    });
+
+    it('should not throw errors without -c', () => {
+      const args = parser.parseArgs([
+        'exec',
+        '--command', 'command'
+      ]);
+      assert.equal(args.configPath, './config.toml');
       assert.isFalse(args.debug);
       assert.equal(args.mode, 'exec');
       console.log(args.command[0]);

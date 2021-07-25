@@ -32,30 +32,33 @@ We suggest users use [nvm (node version manager)](https://github.com/nvm-sh/nvm)
 ## Actions
 - Intialize and verify all machines
     ```sh
-    node src/main.js -c config.toml init
+    node src/main.js [-c config.toml] init
     ```
+    - `-c` is an optional field
 
 - Execute the shell commands on all machines
     ```sh
-    node src/main.js -c config.toml exec -c [CMD]
+    node src/main.js [-c config.toml] exec --command [CMD]
     ```
+    - `-c` is an optional field
 
 - Load data on all machines
     ```sh
-    node src/main.js -c config.toml load --parameter [parameter file] -d [db name]
+    node src/main.js [-c config.toml] load --parameter [parameter file] -d [db name]
     ```
-    - `--properties is an optional field`
+    - `--properties` is an optional field
 
 - Benchmark the DBMS
     ```sh
-    node src/main.js -c config.toml benchmark --parameter [parameter file] -d [db name]
+    node src/main.js [-c config.toml] benchmark --parameter [parameter file] -d [db name]
     ```
-    - `--properties is an optional field`
+    - `--properties` is an optional field
 
 - Grab the data according to the search pattern
     ```sh
-    node src/main.js -c config.toml pull --pattern [search pattern]
+    node src/main.js [-c config.toml] pull --pattern [search pattern]
     ```
+    - `-c` is an optional field
 
 ## Debug
 To run authbencher in debug mode, please add `--debug` before the main action.

@@ -8,6 +8,10 @@ use_custom_jdk = true # Reserved.
 dir_name = "jdk1.8.0_251"
 package_path = "../package/jdk-8u251-linux-x64.tar.gz"
 
+
+# ----------------------------------------------------------------------------------------------
+# -verbose:gc -Xloggc:gc.log -XX:+PrintGCTimeStamps -XX:+PrintGCDetails => print the GC events
+# ----------------------------------------------------------------------------------------------
 [jdk.vmargs]
 sequencer = "-Xmx4g -Xms4g"
 servers = "-Xmx4g -Xms4g"

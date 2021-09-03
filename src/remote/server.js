@@ -169,11 +169,15 @@ class Server {
   }
 
   async checkForError () {
-    // These three grepError should be in order
-    // Error occurs only if we grep these keywords on the remote
-    await this.connLog.grepError('Exception');
-    await this.connLog.grepError('error');
-    await this.connLog.grepError('SEVERE');
+    try {
+      // These three grepError should be in order
+      // Error occurs only if we grep these keywords on the remote
+      await this.connLog.grepError('Exception');
+      await this.connLog.grepError('error');
+      await this.connLog.grepError('SEVERE');
+    } catch (err) {
+      throw Error(err);
+    }
   }
 }
 

@@ -12,4 +12,6 @@ scp $SEQUENCER:~/transaction-dependencies.txt training-data
 for server in $SERVERS
 do
         scp $server:~/transaction-latency-server-*.csv training-data
+        scp $server:~/transaction-diskio-count-server-*.csv training-data
+        scp $server:~/transaction-cpu-time-server-*.csv training-data
 done

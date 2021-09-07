@@ -1,4 +1,4 @@
-# AutoBench
+# Auto-Bencher
 ![Test](https://github.com/elasql/autobench/actions/workflows/github_actions.yml/badge.svg)
 
 ## Prerequisite
@@ -10,12 +10,12 @@ We suggest users use [nvm (node version manager)](https://github.com/nvm-sh/nvm)
 
 - Clone AutoBench
     ```sh
-    git clone https://github.com/elasql/autobencher.git
+    git clone https://github.com/elasql/auto-bencher.git
     ```
 
 - Check into the directory
     ```sh
-    `cd autobencher`
+    `cd auto-bencher`
     ```
 
 - Install the dependencies

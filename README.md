@@ -10,12 +10,12 @@ We suggest users use [nvm (node version manager)](https://github.com/nvm-sh/nvm)
 
 - Clone AutoBench
     ```sh
-    git clone https://github.com/elasql/autobench.git
+    git clone https://github.com/elasql/autobencher.git
     ```
 
 - Check into the directory
     ```sh
-    `cd autobench`
+    `cd autobencher`
     ```
 
 - Install the dependencies

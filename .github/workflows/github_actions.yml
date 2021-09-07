@@ -1,4 +1,4 @@
-name: autobench tests
+name: Run Tests
 on: 
   push:
     paths-ignore:

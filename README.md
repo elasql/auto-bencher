@@ -1,5 +1,5 @@
 # Auto-Bencher
-![Test](https://github.com/elasql/autobench/actions/workflows/github_actions.yml/badge.svg)
+![Test](https://github.com/elasql/auto-bencher/actions/workflows/github_actions.yml/badge.svg)
 
 ## Prerequisite
 The node version should be greater than 12.16.1.

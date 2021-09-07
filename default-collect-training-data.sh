@@ -6,7 +6,7 @@ mkdir -p training-data
 
 # Collect the features from the sequencer
 scp $SEQUENCER:~/transaction-features.csv training-data
-scp $SEQUENCER:~/transaction-dependencies.csv training-data
+scp $SEQUENCER:~/transaction-dependencies.txt training-data
 
 # Collect the labels from the servers
 for server in $SERVERS

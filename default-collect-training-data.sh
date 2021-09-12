@@ -14,4 +14,6 @@ do
         scp $server:~/transaction-latency-server-*.csv training-data
         scp $server:~/transaction-diskio-count-server-*.csv training-data
         scp $server:~/transaction-cpu-time-server-*.csv training-data
+        scp $server:~/transaction-networkin-size-server-*.csv training-data
+        scp $server:~/transaction-networkout-size-server-*.csv training-data
 done

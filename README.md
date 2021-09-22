@@ -70,7 +70,7 @@ node src/main.js -c config.toml [--debug] benchmark --parameter [parameter file]
 
 ## How to contribute this project
 1. Create a pull request and state the fixed issues
-    - it would be better to add some tesecases
+    - it would be better to add some test cases
 2. Pass eslint (formatting)
     ```sh
     npm run eslint

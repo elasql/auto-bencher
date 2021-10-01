@@ -67,6 +67,10 @@ class Server {
 
     await this.start();
 
+    const WAIT_FOR_JAVA_PROCESS_INIT = 5000; // ms
+
+    await delay(WAIT_FOR_JAVA_PROCESS_INIT);
+
     while (!await this.checkForReady()) {
       await delay(CHECKING_INTERVAL);
     }

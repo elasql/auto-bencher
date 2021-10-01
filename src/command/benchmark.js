@@ -52,6 +52,7 @@ async function execute (configParam, args) {
         throw Error(err.message);
       }
       logger.info(`job ${id} failed - ignore`.red);
+      continue;
     }
     const totalTp = sumTp(tps);
     logger.info(`job ${id} finished successfully`.green);

@@ -175,6 +175,7 @@ class Server {
 
   async checkForError () {
     if (this.stopSignal) {
+      logger.debug(`${this.procName} stop signal is ON`.white);
       return;
     }
     try {

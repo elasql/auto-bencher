@@ -118,6 +118,15 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
     server.stopCheckingError();
   });
 
+  // confirm stop checking error
+  allServers.map(server => {
+    while (!server.confimedStop) {
+      // pass
+    }
+    logger.debug(`${server.procName} confirmed stop`.white);
+    server.confimedStop = false;
+  });
+
   if (action === Action.loading) {
     logger.info('backing up the db on all servers');
     try {

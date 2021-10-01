@@ -60,6 +60,7 @@ class Server {
     this.connLog = new ConnectionLog(this.cmd, this.logPath, this.remoteInfo);
 
     this.stopSignal = false;
+    this.confimedStop = false;
   }
 
   async run (action) {
@@ -84,6 +85,7 @@ class Server {
       await this.checkForError();
       await delay(CHECKING_INTERVAL);
     }
+    this.confimedStop = true;
     logger.debug(`${this.procName} stops checking error`.white);
   }
 

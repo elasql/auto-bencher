@@ -60,7 +60,6 @@ class Server {
     this.connLog = new ConnectionLog(this.cmd, this.logPath, this.remoteInfo);
 
     this.stopSignal = false;
-    this.confimedStop = false;
   }
 
   async run (action) {
@@ -85,7 +84,7 @@ class Server {
       await this.checkForError();
       await delay(CHECKING_INTERVAL);
     }
-    this.confimedStop = true;
+    this.stopSignal = false;
     logger.debug(`${this.procName} stops checking error`.white);
   }
 
@@ -175,6 +174,9 @@ class Server {
   }
 
   async checkForError () {
+    if (this.stopSignal) {
+      return;
+    }
     try {
       // These three grepError should be in order
       // Error occurs only if we grep these keywords on the remote

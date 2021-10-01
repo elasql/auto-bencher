@@ -9,7 +9,7 @@ const Client = require('../remote/client');
 
 const { generateConnectionList } = require('../remote/connection-list');
 const { prepareBenchEnv } = require('../preparation/prepare-bench-dir');
-const { killBenchmarker, Action } = require('../actions/remote-actions');
+const { killBenchmarker, Action} = require('../actions/remote-actions');
 
 // TODO: should move this class to remote
 
@@ -116,15 +116,6 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   // stop checking error
   allServers.map(server => {
     server.stopCheckingError();
-  });
-
-  // confirm stop checking error
-  allServers.map(server => {
-    while (!server.confimedStop) {
-      // pass
-    }
-    logger.debug(`${server.procName} confirmed stop`.white);
-    server.confimedStop = false;
   });
 
   if (action === Action.loading) {

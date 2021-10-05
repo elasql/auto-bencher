@@ -97,11 +97,11 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
 
   // let servers check error
   // don't use "await", it will block the following clients' actions
-  try {
-    Promise.all(allServers.map(server => server.checkError()));
-  } catch (err) {
-    throw Error(`${err.message.red}`);
-  }
+
+  Promise.all(allServers.map(server => server.checkError())).catch(reason => {
+    logger.error(reason);
+    throw Error(`${reason.red}`);
+  });
 
   // throughput object
   // key is client id and value is throughtput

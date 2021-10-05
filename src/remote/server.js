@@ -81,7 +81,11 @@ class Server {
   async checkError () {
     logger.debug(`${this.procName} starts checking error`.white);
     while (!this.stopSignal) {
-      await this.checkForError();
+      try {
+        await this.checkForError();
+      } catch (err) {
+        throw Error(err);
+      }
       await delay(CHECKING_INTERVAL);
     }
     this.stopSignal = false;

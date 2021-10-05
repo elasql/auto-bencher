@@ -10,7 +10,6 @@ const Client = require('../remote/client');
 const { generateConnectionList } = require('../remote/connection-list');
 const { prepareBenchEnv } = require('../preparation/prepare-bench-dir');
 const { killBenchmarker, Action } = require('../actions/remote-actions');
-const { reject } = require('lodash');
 
 // TODO: should move this class to remote
 

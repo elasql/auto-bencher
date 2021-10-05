@@ -104,6 +104,10 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   // don't use "await", it will block the following clients' actions
 
   Promise.all(allServers.map(server => server.checkError())).catch(err => {
+    // stop checking error
+    allServers.map(server => {
+      server.stopCheckingError();
+    });
     logger.error(err);
     return reject();
   });

@@ -10,6 +10,7 @@ const Client = require('../remote/client');
 const { generateConnectionList } = require('../remote/connection-list');
 const { prepareBenchEnv } = require('../preparation/prepare-bench-dir');
 const { killBenchmarker, Action } = require('../actions/remote-actions');
+const { reject } = require('lodash');
 
 // TODO: should move this class to remote
 
@@ -102,14 +103,10 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   // let servers check error
   // don't use "await", it will block the following clients' actions
 
-  try {
-    Promise.all(allServers.map(server => server.checkError())).catch(err => {
-      logger.error(err);
-      throw Error(`${err.message.red}`);
-    });
-  } catch (err) {
-    throw Error(`${err.message.red}`);
-  }
+  Promise.all(allServers.map(server => server.checkError())).catch(err => {
+    logger.error(err);
+    return reject();
+  });
 
   // throughput object
   // key is client id and value is throughtput

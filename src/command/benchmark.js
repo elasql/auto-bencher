@@ -49,6 +49,7 @@ async function execute (configParam, args) {
       tps = await run(configParam, benchParams[id], args, dbName, Action.benchmarking, jobDir);
     } catch (err) {
       if (!ignoreError) {
+        logger.error(`job ${id} failed - this autobencher will be terminated. You can set --ignore to change this behavior`.red);
         throw Error(err.message);
       }
       logger.info(`job ${id} failed - ignore`.red);

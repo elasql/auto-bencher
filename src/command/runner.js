@@ -28,7 +28,7 @@ async function run (configParam, benchParam, args, dbName, action, reportDir) {
     logger.info('killing the existing benchmarker processes...');
     await killAll(configParam, systemConn);
 
-    const tps = await start(configParam, dbName, action, reportDir, vmArgs, systemConn);
+    const tps = await start(configParam, dbName, args, action, reportDir, vmArgs, systemConn);
     return tps;
   } catch (err) {
     throw Error(`${err.message.red}`);
@@ -66,11 +66,12 @@ async function kill (configParam, conn) {
   await killBenchmarker(cmd);
 }
 
-async function start (configParam, dbName, action, reportDir, vmArgs, systemConn) {
+async function start (configParam, dbName, args, action, reportDir, vmArgs, systemConn) {
   const { seqConn, serverConns, clientConns, isStandAlone } = systemConn;
 
   const servers = newServers(serverConns, configParam, dbName, vmArgs);
   const clients = newClients(clientConns, configParam, vmArgs);
+  const ignoreError = args.ignore;
 
   let allServers;
 
@@ -104,12 +105,11 @@ async function start (configParam, dbName, action, reportDir, vmArgs, systemConn
   // don't use "await", it will block the following clients' actions
 
   Promise.all(allServers.map(server => server.checkError())).catch(err => {
-    // stop checking error
-    allServers.map(server => {
-      server.stopCheckingError();
-    });
     logger.error(err);
-    return reject();
+    if (!ignoreError) {
+      logger.error(`autobencher will be terminated. You can set --ignore to change this behavior`.red);
+      process.exit(1);
+    }
   });
 
   // throughput object

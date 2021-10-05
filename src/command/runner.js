@@ -18,16 +18,20 @@ async function run (configParam, benchParam, args, dbName, action, reportDir) {
   // generate connection information (ip, port)
   const systemConn = generateConnectionList(configParam, benchParam, action);
 
-  // prepare the benchmark directory
-  const vmArgs = await prepareBenchEnv(configParam, benchParam, systemConn, args);
+  try {
+    // prepare the benchmark directory
+    const vmArgs = await prepareBenchEnv(configParam, benchParam, systemConn, args);
 
-  logger.info('connecting to the machines...');
+    logger.info('connecting to the machines...');
 
-  logger.info('killing the existing benchmarker processes...');
-  await killAll(configParam, systemConn);
+    logger.info('killing the existing benchmarker processes...');
+    await killAll(configParam, systemConn);
 
-  const tps = await start(configParam, dbName, action, reportDir, vmArgs, systemConn);
-  return tps;
+    const tps = await start(configParam, dbName, action, reportDir, vmArgs, systemConn);
+    return tps;
+  } catch (err) {
+    throw Error(`${err.message.red}`);
+  }
 }
 
 async function killAll (configParam, systemConn) {

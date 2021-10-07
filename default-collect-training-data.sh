@@ -4,6 +4,9 @@ SERVERS='IP-server1 IP-server2'
 # Create output directory
 mkdir -p training-data
 
+# Clean the directory
+rm training-data/*
+
 # Collect the features from the sequencer
 scp $SEQUENCER:~/transaction-features.csv training-data
 scp $SEQUENCER:~/transaction-dependencies.txt training-data

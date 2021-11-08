@@ -52,7 +52,7 @@ class Cmd {
   }
 
   static runJar (javaBin, vmArgs, jarPath, progArgs, logPath) {
-    return `${javaBin} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
+    return `sudo ${javaBin} ${vmArgs} -XX:ThreadPriorityPolicy=1 -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
   }
 
   static grep (keyword, logPath) {

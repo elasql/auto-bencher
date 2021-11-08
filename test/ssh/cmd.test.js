@@ -65,7 +65,7 @@ describe('Cmd', () => {
     it('should return a correct command', () => {
       const actual = Cmd.runJar(
         'workDir/jdkDir/bin/java', '-vmarg1 -vmarg2', 'jarPath', '-progArg1 -progArg2', 'logPath');
-      const expected = 'workDir/jdkDir/bin/java -vmarg1 -vmarg2 -jar jarPath -progArg1 -progArg2 > logPath 2>&1 &';
+      const expected = 'sudo workDir/jdkDir/bin/java -vmarg1 -vmarg2 -XX:ThreadPriorityPolicy=1 -jar jarPath -progArg1 -progArg2 > logPath 2>&1 &';
       assert.equal(actual, expected);
     });
   });

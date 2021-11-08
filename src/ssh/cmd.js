@@ -42,7 +42,7 @@ class Cmd {
   }
 
   static rm (isDir, target) {
-    const cmd = isDir ? 'rm -rf ' : 'rm ';
+    const cmd = isDir ? 'sudo rm -rf ' : 'sudo rm ';
     return cmd + target;
   }
 

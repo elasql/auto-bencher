@@ -77,7 +77,7 @@ class Cmd {
   }
 
   static killBenchmarker () {
-    return 'pkill -f benchmarker';
+    return 'sudo pkill -f benchmarker';
   }
 
   scp (isDir, localPath, remotePath, fromRemote = false) {

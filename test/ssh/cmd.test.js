@@ -105,7 +105,7 @@ describe('Cmd', () => {
   describe('killBenchmarker', () => {
     it('should return a correct command', () => {
       const actual = Cmd.killBenchmarker();
-      const expected = 'pkill -f benchmarker';
+      const expected = 'sudo pkill -f benchmarker';
       assert.equal(actual, expected);
     });
   });

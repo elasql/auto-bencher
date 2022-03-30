@@ -70,6 +70,15 @@ describe('Cmd', () => {
     });
   });
 
+  describe('runJarWithBatchPolicy', () => {
+    it('should return a correct command', () => {
+      const actual = Cmd.runJarWithBatchPolicy(
+        'workDir/jdkDir/bin/java', '-vmarg1 -vmarg2', 'jarPath', '-progArg1 -progArg2', 'logPath');
+      const expected = 'chrt -b -a 0 workDir/jdkDir/bin/java -vmarg1 -vmarg2 -jar jarPath -progArg1 -progArg2 > logPath 2>&1 &';
+      assert.equal(actual, expected);
+    });
+  });
+
   describe('grep', () => {
     it('should return a correct command', () => {
       const actual = Cmd.grep('keyword', 'logPath');

@@ -174,6 +174,25 @@ async function runJar (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteI
   await exec(ssh);
 }
 
+async function runJarWithBatchPolicy (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteInfo) {
+  const { prefix, id, ip } = remoteInfo;
+  const runJar = Cmd.runJarWithBatchPolicy(
+    javaBin,
+    vmArgs,
+    jarPath,
+    progArgs,
+    logPath
+  );
+
+  const ssh = cmd.ssh(runJar);
+
+  logger.debug(`runJar on ${prefix} ${id} ${ip} command - ${ssh}`);
+
+  // don't try catch this execution
+  // let outer function handle
+  await exec(ssh);
+}
+
 async function grepCsvFileName (cmd, resultDir, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
   const grepCsv = Cmd.grepCsv(resultDir, id);
@@ -243,6 +262,7 @@ module.exports = {
   deleteDir,
   killBenchmarker,
   runJar,
+  runJarWithBatchPolicy,
   grepCsvFileName,
   pullFile,
   getTotalThroughput,

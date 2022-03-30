@@ -55,6 +55,10 @@ class Cmd {
     return `${javaBin} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
   }
 
+  static runJarWithBatchPolicy (javaBin, vmArgs, jarPath, progArgs, logPath) {
+    return `chrt -b -a 0 ${javaBin} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
+  }
+
   static grep (keyword, logPath) {
     // use quotation mark to wrap the keyword
     // or it will cause error if blanks exist

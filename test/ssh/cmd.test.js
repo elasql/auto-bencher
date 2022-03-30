@@ -74,7 +74,7 @@ describe('Cmd', () => {
     it('should return a correct command', () => {
       const actual = Cmd.runJarWithBatchPolicy(
         'workDir/jdkDir/bin/java', '-vmarg1 -vmarg2', 'jarPath', '-progArg1 -progArg2', 'logPath');
-      const expected = 'chrt -b -a 0 workDir/jdkDir/bin/java -vmarg1 -vmarg2 -jar jarPath -progArg1 -progArg2 > logPath 2>&1 &';
+      const expected = 'chrt -b 0 workDir/jdkDir/bin/java -vmarg1 -vmarg2 -jar jarPath -progArg1 -progArg2 > logPath 2>&1 &';
       assert.equal(actual, expected);
     });
   });

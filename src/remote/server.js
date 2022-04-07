@@ -11,7 +11,7 @@ const {
   sendDir,
   copyDir,
   deleteDir,
-  runJarWithBatchPolicy
+  runJarWithFifoPolicy
 } = require('../actions/remote-actions');
 
 class Server {
@@ -150,7 +150,7 @@ class Server {
 
   async start () {
     // await runJar(this.cmd, this.progArgs, this.javaBin, this.vmArgs, this.jarPath, this.logPath, this.remoteInfo);
-    await runJarWithBatchPolicy(this.cmd, this.progArgs, this.javaBin, this.vmArgs, this.jarPath, this.logPath, this.remoteInfo);
+    await runJarWithFifoPolicy(this.cmd, this.progArgs, this.javaBin, this.vmArgs, this.jarPath, this.logPath, this.remoteInfo);
   }
 
   async checkForReady () {

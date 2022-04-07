@@ -6,7 +6,7 @@ remote_work_dir = "auto-bencher-workspace"
 [jdk]
 use_custom_jdk = true # Reserved.
 dir_name = "jdk1.8.0_251"
-package_path = "../package/jdk-8u251-linux-x64.tar.gz"
+package_path = "package/jdk-8u251-linux-x64.tar.gz"
 
 
 # ----------------------------------------------------------------------------------------------

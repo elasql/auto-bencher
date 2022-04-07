@@ -174,9 +174,9 @@ async function runJar (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteI
   await exec(ssh);
 }
 
-async function runJarWithBatchPolicy (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteInfo) {
+async function runJarWithFifoPolicy (cmd, progArgs, javaBin, vmArgs, jarPath, logPath, remoteInfo) {
   const { prefix, id, ip } = remoteInfo;
-  const runJar = Cmd.runJarWithBatchPolicy(
+  const runJar = Cmd.runJarWithFifoPolicy(
     javaBin,
     vmArgs,
     jarPath,
@@ -262,7 +262,7 @@ module.exports = {
   deleteDir,
   killBenchmarker,
   runJar,
-  runJarWithBatchPolicy,
+  runJarWithFifoPolicy,
   grepCsvFileName,
   pullFile,
   getTotalThroughput,

@@ -56,7 +56,7 @@ class Cmd {
   }
 
   static runJarWithFifoPolicy (javaBin, vmArgs, jarPath, progArgs, logPath) {
-    return `sudo chrt -f 1 ${javaBin} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
+    return `${javaBin} ${vmArgs} -jar ${jarPath} ${progArgs} > ${logPath} 2>&1 &`;
   }
 
   static grep (keyword, logPath) {
@@ -81,7 +81,7 @@ class Cmd {
   }
 
   static killBenchmarker () {
-    return 'sudo pkill -f benchmarker';
+    return 'pkill -f benchmarker';
   }
 
   scp (isDir, localPath, remotePath, fromRemote = false) {

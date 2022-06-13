@@ -12,13 +12,14 @@ function generateConnectionList (configParam, benchParam, action) {
   } = getParams(benchParam);
 
   const initPort = 30000;
+  const seqInitPort = 31000;
   const connection = new Connection(initPort);
   // get sequencer IP, servers IP list, client IP list
   const { sequencer, servers, clients } = configParam;
 
   // TODO: handle tha case that we don't declare sequencer explicitly(current way use undefined...)
   // seqConns is an object.
-  const seqConn = sequencer ? Connection.getConn(serverCount, sequencer, initPort) : undefined;
+  const seqConn = sequencer ? Connection.getConn(serverCount, sequencer, seqInitPort) : undefined;
 
   const serverConns = connection.getConns(servers, serverCount, maxServerPerMachine); // serverConns is an array.
 

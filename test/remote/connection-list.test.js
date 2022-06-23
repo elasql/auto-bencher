@@ -23,7 +23,7 @@ describe('generateConnectionList', () => {
       const expected = {
         id: 3,
         ip: '192.168.1.24',
-        port: 30000
+        port: 31000
       };
       assert.deepEqual(actual.seqConn, expected);
     });
@@ -68,7 +68,7 @@ describe('generateConnectionList', () => {
       const expected = {
         id: 3,
         ip: '192.168.1.24',
-        port: 30000
+        port: 31000
       };
       assert.deepEqual(actual.seqConn, expected);
     });

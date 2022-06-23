@@ -74,7 +74,7 @@ describe('Cmd', () => {
     it('should return a correct command', () => {
       const actual = Cmd.runJarWithFifoPolicy(
         'workDir/jdkDir/bin/java', '-vmarg1 -vmarg2', 'jarPath', '-progArg1 -progArg2', 'logPath');
-      const expected = 'sudo chrt -f 1 workDir/jdkDir/bin/java -vmarg1 -vmarg2 -jar jarPath -progArg1 -progArg2 > logPath 2>&1 &';
+      const expected = 'workDir/jdkDir/bin/java -vmarg1 -vmarg2 -jar jarPath -progArg1 -progArg2 > logPath 2>&1 &';
       assert.equal(actual, expected);
     });
   });
@@ -114,7 +114,7 @@ describe('Cmd', () => {
   describe('killBenchmarker', () => {
     it('should return a correct command', () => {
       const actual = Cmd.killBenchmarker();
-      const expected = 'sudo pkill -f benchmarker';
+      const expected = 'pkill -f benchmarker';
       assert.equal(actual, expected);
     });
   });

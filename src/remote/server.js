@@ -11,7 +11,8 @@ const {
   sendDir,
   copyDir,
   deleteDir,
-  runJarWithFifoPolicy
+  runJarWithFifoPolicy,
+  runJar
 } = require('../actions/remote-actions');
 
 class Server {
@@ -149,8 +150,11 @@ class Server {
   }
 
   async start () {
-    // await runJar(this.cmd, this.progArgs, this.javaBin, this.vmArgs, this.jarPath, this.logPath, this.remoteInfo);
-    await runJarWithFifoPolicy(this.cmd, this.progArgs, this.javaBin, this.vmArgs, this.jarPath, this.logPath, this.remoteInfo);
+    if (this.isSequencer) {
+      await runJar(this.cmd, this.progArgs, this.javaBin, this.vmArgs, this.jarPath, this.logPath, this.remoteInfo);
+    } else {
+      await runJarWithFifoPolicy(this.cmd, this.progArgs, this.javaBin, this.vmArgs, this.jarPath, this.logPath, this.remoteInfo);
+    }
   }
 
   async checkForReady () {
